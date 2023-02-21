@@ -77,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )),
       ),
       body: Center(
+        //ginetai kai me Card(), na dokimasw kai expansed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -184,7 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         endIndent: 0,
                         color: Color.fromARGB(255, 173, 172, 172),
                       ),
-                      Text("sss"),
                     ]),
                   ),
                 ),
