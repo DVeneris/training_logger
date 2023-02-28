@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/widgets/home_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -77,119 +78,23 @@ class _MyHomePageState extends State<MyHomePage> {
             )),
       ),
       body: Center(
-        //ginetai kai me Card(), na dokimasw kai expansed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-                child: ListView(scrollDirection: Axis.vertical, children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 20.0,
-                  right: 20.0,
-                ),
-                child: Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.blue[50],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(children: [
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            backgroundColor: Color.fromARGB(255, 201, 78, 223),
-                            radius: 25,
-                            child: Text(
-                              "D",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Dveneris",
-                                  textAlign: TextAlign.left,
-                                ),
-                                Text(
-                                  "333 days ago",
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DataTable(
-                            dividerThickness: 0,
-                            dataRowHeight: 25,
-                            dataTextStyle: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                color: Colors.grey.shade600),
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Time',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Volumes',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Sets',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ),
-                            ],
-                            rows: const <DataRow>[
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('45min')),
-                                  DataCell(Text('9000kg')),
-                                  DataCell(Text('28')),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        height: 20,
-                        thickness: 1,
-                        indent: 20,
-                        endIndent: 0,
-                        color: Color.fromARGB(255, 173, 172, 172),
-                      ),
-                    ]),
-                  ),
-                ),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: const [
+                  HomeCard(),
+                  HomeCard(),
+                  HomeCard(),
+                  HomeCard(),
+                  HomeCard(),
+                  HomeCard(),
+                  HomeCard(),
+                ],
               ),
-            ]))
+            )
           ],
         ),
       ),
