@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/widgets/exercise_list.dart';
 import 'package:training_tracker/widgets/history_page.dart';
 import 'package:training_tracker/widgets/workout.dart';
 import 'package:training_tracker/widgets/workout_history_card.dart';
@@ -34,6 +35,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const SingleWorkout();
+    return const ExcerciseList();
   }
 }

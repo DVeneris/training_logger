@@ -76,7 +76,7 @@ class SingleWorkout extends StatelessWidget {
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: DataTable(
-                columnSpacing: 40,
+                columnSpacing: 30,
                 columns: const <DataColumn>[
                   DataColumn(
                     label: Expanded(
@@ -97,6 +97,7 @@ class SingleWorkout extends StatelessWidget {
                   DataColumn(
                     label: Expanded(
                       child: Text(
+                        textAlign: TextAlign.center,
                         'kg',
                         style: TextStyle(fontStyle: FontStyle.normal),
                       ),
@@ -105,6 +106,7 @@ class SingleWorkout extends StatelessWidget {
                   DataColumn(
                     label: Expanded(
                       child: Text(
+                        textAlign: TextAlign.center,
                         'Reps',
                         style: TextStyle(fontStyle: FontStyle.normal),
                       ),
@@ -112,7 +114,7 @@ class SingleWorkout extends StatelessWidget {
                   ),
                   DataColumn(
                     label: Expanded(
-                      child: Icon(Icons.check),
+                      child: Text(''),
                     ),
                   ),
                 ],
@@ -121,25 +123,53 @@ class SingleWorkout extends StatelessWidget {
                     cells: <DataCell>[
                       const DataCell(Text('1')),
                       const DataCell(Text('-')),
-                      const DataCell(
-                        SizedBox(
-                            width: 50,
-                            child: TextField(
-                              maxLength: 5,
-                              decoration: InputDecoration(
-                                counterText: "",
+                      DataCell(
+                        Container(
+                          width: 90,
+                          height: 30,
+                          child: const TextField(
+                            textAlign: TextAlign.center,
+                            maxLength: 5,
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none,
                               ),
-                            )),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none,
+                              ),
+                              counterText: "",
+                            ),
+                          ),
+                        ),
                       ),
-                      const DataCell(
-                        SizedBox(
-                            width: 50,
-                            child: TextField(
-                              maxLength: 5,
-                              decoration: InputDecoration(
-                                counterText: "",
+                      DataCell(
+                        Container(
+                          width: 90,
+                          height: 30,
+                          child: const TextField(
+                            textAlign: TextAlign.center,
+                            maxLength: 5,
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none,
                               ),
-                            )),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none,
+                              ),
+                              counterText: "",
+                            ),
+                          ),
+                        ),
                       ),
                       DataCell(Checkbox(
                           value: true, onChanged: (bool? onChanged) {})),
@@ -148,6 +178,54 @@ class SingleWorkout extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 9.0, bottom: 9),
+                child: Text(
+                  "Add Set",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 9.0, bottom: 9),
+                child: Text(
+                  "Add Exercise",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(top: 9.0, bottom: 9),
+                child: Text(
+                  "Cancel Workout",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
           )
         ]),
       ),
