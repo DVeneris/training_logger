@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/widgets/exercise_list.dart';
 import 'package:training_tracker/widgets/history_page.dart';
 import 'package:training_tracker/widgets/workout.dart';
@@ -16,26 +17,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      onGenerateTitle: (context) => "Random App",
+      onGenerateInitialRoutes: RouteGenerator.generateInitialRoutes,
+      onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
+//   final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return const WorkoutTemplateList();
-  }
-}
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const WorkoutTemplateList();
+//   }
+// }

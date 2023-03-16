@@ -2,9 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class SingleWorkout extends StatelessWidget {
+import '../routes.dart';
+import 'exercise.dart';
+
+class SingleWorkout extends StatefulWidget {
   const SingleWorkout({super.key});
 
+  @override
+  State<SingleWorkout> createState() => _SingleWorkoutState();
+}
+
+class _SingleWorkoutState extends State<SingleWorkout> {
+  var exerciseList = <ExerciseComplete>[
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        name: "Leg Extension (Mashine)",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,200 +69,121 @@ class SingleWorkout extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Column(
             children: [
-              Column(
+              Expanded(
+                child: ListView.builder(
+                  itemCount: exerciseList.length,
+                  itemBuilder: (context, index) {
+                    return ExerciseSingle(
+                      exercise: exerciseList[index],
+                      onSelectParam: () {
+                        setState(() {});
+                      },
+                    );
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: const [
-                      CircleAvatar(
-                        maxRadius: 20,
-                        minRadius: 10,
-                        backgroundImage: AssetImage("assets/a.jpg"),
-                        backgroundColor: Colors.transparent,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteGenerator.exerciseList);
+                    },
+                    child: const Text(
+                      "Add Exercise",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Leg Extension (Mashine)",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-              IconButton(
-                icon: Icon(Icons.more_vert),
-                color: Colors.blue,
-                onPressed: () {},
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text(
+                      "Cancel Workout",
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
               )
             ],
           ),
-          FittedBox(
-            child: Theme(
-              data:
-                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
-              child: DataTable(
-                columnSpacing: 30,
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'Set',
-                        style: TextStyle(fontStyle: FontStyle.normal),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        'Previous',
-                        style: TextStyle(fontStyle: FontStyle.normal),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'kg',
-                        style: TextStyle(fontStyle: FontStyle.normal),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'Reps',
-                        style: TextStyle(fontStyle: FontStyle.normal),
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Text(''),
-                    ),
-                  ),
-                ],
-                rows: <DataRow>[
-                  DataRow(
-                    cells: <DataCell>[
-                      const DataCell(Text('1')),
-                      const DataCell(Text('-')),
-                      DataCell(
-                        Container(
-                          width: 90,
-                          height: 30,
-                          child: const TextField(
-                            textAlign: TextAlign.center,
-                            maxLength: 5,
-                            decoration: InputDecoration(
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide.none,
-                              ),
-                              counterText: "",
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          width: 90,
-                          height: 30,
-                          child: const TextField(
-                            textAlign: TextAlign.center,
-                            maxLength: 5,
-                            decoration: InputDecoration(
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide.none,
-                              ),
-                              counterText: "",
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(Checkbox(
-                          value: true, onChanged: (bool? onChanged) {})),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 9.0, bottom: 9),
-                child: Text(
-                  "Add Set",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 9.0, bottom: 9),
-                child: Text(
-                  "Add Exercise",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 9.0, bottom: 9),
-                child: Text(
-                  "Cancel Workout",
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          )
-        ]),
+        ),
       ),
     );
   }
+}
+
+class Workout {
+  String? id;
+  String? name;
+  String? note;
+  DateTime? createDate;
+  DateTime? updateDate;
+  List<Exercise>? exercises;
+  int? totalTile;
+  int? totalVolume;
+}
+
+class Exercise {
+  String? id;
+  final String name;
+  String exerciseGroup;
+  late final MediaItem mediaItem;
+
+  Exercise({
+    required this.name,
+    required this.exerciseGroup, //mallon na ginei diko tou object: id, name, (media item?)
+    MediaItem? mediaItem,
+  }) {
+    this.mediaItem = mediaItem ?? MediaItem();
+  }
+}
+
+class MediaItem {
+  //String? id;
+  String? name;
+  late String url;
+  MediaItem({String? url}) {
+    this.url = url ?? "assets/no_media.png";
+  }
+}
+
+class Set {
+  // final int setNumber;
+  String? weight;
+  String? reps;
+  bool? isComplete;
+  Set({this.weight, this.reps, this.isComplete});
+}
+
+class ExerciseComplete extends Exercise {
+  String? note;
+  final List<Set> sets;
+  ExerciseComplete(
+      {required super.name, required this.sets, required super.exerciseGroup});
 }

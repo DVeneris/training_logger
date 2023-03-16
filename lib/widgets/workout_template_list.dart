@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../routes.dart';
+
 class WorkoutTemplateList extends StatelessWidget {
   const WorkoutTemplateList({super.key});
 

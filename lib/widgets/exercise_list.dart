@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/widgets/simpleExerciseTile.dart';
+import 'package:training_tracker/widgets/workout.dart';
 
-class ExcerciseList extends StatelessWidget {
+class ExcerciseList extends StatefulWidget {
   const ExcerciseList({super.key});
+
+  @override
+  State<ExcerciseList> createState() => _ExcerciseListState();
+}
+
+class _ExcerciseListState extends State<ExcerciseList> {
+  var exerciseList = <Exercise>[
+    Exercise(
+      exerciseGroup: "legs",
+      name: "Leg Extension (Mashine)",
+      mediaItem: MediaItem(),
+    ),
+    Exercise(
+      exerciseGroup: "legs",
+      name: "Leg Extension (Mashine)",
+      mediaItem: MediaItem(),
+    ),
+    Exercise(
+      exerciseGroup: "legs",
+      name: "Leg Extension (Mashine)",
+      mediaItem: MediaItem(),
+    ),
+    Exercise(
+      exerciseGroup: "legs",
+      name: "Leg Extension (Mashine)",
+      mediaItem: MediaItem(),
+    ),
+    Exercise(
+      exerciseGroup: "legs",
+      name: "Leg Extension (Mashine)",
+      mediaItem: MediaItem(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +46,10 @@ class ExcerciseList extends StatelessWidget {
         elevation: 0,
         leadingWidth: 60,
         leading: TextButton(
-          child: Text("Cancel"),
+          child: const Text("Cancel"),
           onPressed: () {},
         ),
-        title: Center(
+        title: const Center(
           child: Text("Add Exercise",
               style: TextStyle(
                 color: Colors.black,
@@ -24,7 +59,7 @@ class ExcerciseList extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            child: Text("Create"),
+            child: const Text("Create"),
             onPressed: () {},
           )
         ],
@@ -40,7 +75,7 @@ class ExcerciseList extends StatelessWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       filled: true,
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(10.0),
@@ -55,7 +90,7 @@ class ExcerciseList extends StatelessWidget {
           Row(
             children: const [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   "Recent Exercises",
                   style: TextStyle(
@@ -66,42 +101,20 @@ class ExcerciseList extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 15),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  maxRadius: 20,
-                  minRadius: 10,
-                  backgroundImage: AssetImage("assets/a.jpg"),
-                  backgroundColor: Colors.transparent,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Leg Extension (Mashine)",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                      Text(
-                        "Legs",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  child: SimpleExerciseTile(exercise: exerciseList[index]),
+                  onDoubleTap: () {},
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemCount: exerciseList.length,
             ),
-          ),
+          )
         ]),
       ),
     );
