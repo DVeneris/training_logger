@@ -1,50 +1,29 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-import '../routes.dart';
+import '../../routes.dart';
 import 'exercise.dart';
 
 class SingleWorkout extends StatefulWidget {
-  const SingleWorkout({super.key});
+  final Workout workout;
+  const SingleWorkout({super.key, required this.workout});
 
   @override
   State<SingleWorkout> createState() => _SingleWorkoutState();
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
-  var exerciseList = <ExerciseComplete>[
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
-        name: "Leg Extension (Mashine)",
-        sets: [Set(isComplete: false)],
-        exerciseGroup: 'Legs'),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
+        title: Center(
+            child: Text(widget.workout.name,
+                style: TextStyle(color: Colors.black))),
         leading: IconButton(
           onPressed: () {},
           icon: const Icon(
@@ -80,10 +59,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: exerciseList.length,
+                  itemCount: widget.workout.exercises.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
-                      exercise: exerciseList[index],
+                      exercise: widget.workout.exercises[index],
                       onSelectParam: () {
                         setState(() {});
                       },
@@ -95,9 +74,15 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(RouteGenerator.exerciseList);
+                    onPressed: () async {
+                      var lele = await Navigator.of(context)
+                              .pushNamed(RouteGenerator.exerciseList)
+                          as ExerciseComplete?;
+                      if (lele != null) {
+                        setState(() {
+                          widget.workout.exercises.add(lele);
+                        });
+                      }
                     },
                     child: const Text(
                       "Add Exercise",
@@ -139,29 +124,44 @@ class _SingleWorkoutState extends State<SingleWorkout> {
 }
 
 class Workout {
-  String? id;
-  String? name;
-  String? note;
-  DateTime? createDate;
-  DateTime? updateDate;
-  List<Exercise>? exercises;
-  int? totalTile;
-  int? totalVolume;
+  final String id;
+  final String name;
+  final String? note;
+  final DateTime createDate;
+  DateTime updateDate;
+  List<ExerciseComplete> exercises;
+  final String totalTime;
+  final int totalVolume;
+
+  Workout({
+    required this.id,
+    required this.name,
+    this.note,
+    required this.createDate,
+    required this.updateDate,
+    required this.exercises,
+    required this.totalTime,
+    required this.totalVolume,
+  });
+  //  : assert(exercises.isNotEmpty),
+  //      assert(totalTile >= 0),
+  //      assert(totalVolume >= 0) {
+  //        updateDate = updateDate.toUtc();
+  //      }
 }
 
 class Exercise {
-  String? id;
-  final String name;
+  final String id;
+  String name;
   String exerciseGroup;
-  late final MediaItem mediaItem;
+  MediaItem mediaItem;
 
   Exercise({
+    required this.id,
     required this.name,
-    required this.exerciseGroup, //mallon na ginei diko tou object: id, name, (media item?)
+    required this.exerciseGroup,
     MediaItem? mediaItem,
-  }) {
-    this.mediaItem = mediaItem ?? MediaItem();
-  }
+  }) : mediaItem = mediaItem ?? MediaItem();
 }
 
 class MediaItem {
@@ -177,13 +177,19 @@ class Set {
   // final int setNumber;
   String? weight;
   String? reps;
-  bool? isComplete;
-  Set({this.weight, this.reps, this.isComplete});
+  late bool isComplete;
+  Set({this.weight, this.reps, bool? isComplete}) {
+    this.isComplete = isComplete ?? false;
+  }
 }
 
 class ExerciseComplete extends Exercise {
   String? note;
   final List<Set> sets;
+
   ExerciseComplete(
-      {required super.name, required this.sets, required super.exerciseGroup});
+      {required super.id,
+      required super.name,
+      required this.sets,
+      required super.exerciseGroup});
 }

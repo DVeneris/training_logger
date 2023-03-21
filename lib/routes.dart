@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/widgets/exercise_list.dart';
-import 'package:training_tracker/widgets/history_page.dart';
-import 'package:training_tracker/widgets/workout.dart';
-import 'package:training_tracker/widgets/workout_template_list.dart';
+import 'package:training_tracker/widgets/workout/exercise_list.dart';
+import 'package:training_tracker/widgets/workout/history_page.dart';
+import 'package:training_tracker/widgets/workout/workout.dart';
+import 'package:training_tracker/widgets/workout/workoutCreator.dart';
+import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 
 class RouteGenerator {
 // 2.
@@ -15,23 +16,26 @@ class RouteGenerator {
   static List<Route> generateInitialRoutes(String name) {
     return <Route>[
       MaterialPageRoute(
-        builder: (_) => const SingleWorkout(),
-        //builder: (_) => const WorkoutHistory(),
+        //builder: (_) => const SingleWorkout(),
+        builder: (_) => const SingleWorkoutCreator(),
       )
     ];
   }
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route<dynamic> generateRoute<T>(RouteSettings settings) {
+    final args = settings.arguments as Map<String, T>?;
 //4.
     switch (settings.name) {
       case homePage: //5
         return MaterialPageRoute(
-          builder: (_) => const SingleWorkout(),
-          //builder: (_) => const WorkoutHistory(),
+          // builder: (_) => const SingleWorkout(),
+          builder: (_) => const WorkoutHistory(),
         );
       case singleWorkout:
         return MaterialPageRoute(
-          builder: (_) => const SingleWorkout(),
+          builder: (_) => SingleWorkout(
+            workout: args!['workout'] as Workout,
+          ),
         );
       case exerciseList:
         return MaterialPageRoute(
@@ -41,6 +45,12 @@ class RouteGenerator {
         throw FormatException("Route not found");
     }
   }
+}
+
+class ScreenArguments<T> {
+  final T args;
+
+  ScreenArguments({required this.args});
 }
 /*
 There must be a route named '/' which has to map to the first page that’s being shown when

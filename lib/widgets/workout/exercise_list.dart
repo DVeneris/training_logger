@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/widgets/simpleExerciseTile.dart';
-import 'package:training_tracker/widgets/workout.dart';
+import 'package:training_tracker/widgets/workout/utils/simpleExerciseTile.dart';
+import 'package:training_tracker/widgets/workout/workout.dart';
 
 class ExcerciseList extends StatefulWidget {
   const ExcerciseList({super.key});
@@ -10,30 +10,68 @@ class ExcerciseList extends StatefulWidget {
 }
 
 class _ExcerciseListState extends State<ExcerciseList> {
+  var exerciseCompleteList = <ExerciseComplete>[
+    ExerciseComplete(
+        id: "0001",
+        name: "Leg Extension (Mashine)1",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        id: "0002",
+        name: "Leg Extension (Mashine)2",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        id: "0003",
+        name: "Leg Extension (Mashine)3",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        id: "0004",
+        name: "Leg Extension (Mashine)4",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        id: "0005",
+        name: "Leg Extension (Mashine)5",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+    ExerciseComplete(
+        id: "0006",
+        name: "Leg Extension (Mashine)6",
+        sets: [Set(isComplete: false)],
+        exerciseGroup: 'Legs'),
+  ];
+
   var exerciseList = <Exercise>[
     Exercise(
+      id: "0001",
       exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)",
+      name: "Leg Extension (Mashine)1",
       mediaItem: MediaItem(),
     ),
     Exercise(
+      id: "0002",
       exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)",
+      name: "Leg Extension (Mashine)2",
       mediaItem: MediaItem(),
     ),
     Exercise(
+      id: "0003",
       exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)",
+      name: "Leg Extension (Mashine)3",
       mediaItem: MediaItem(),
     ),
     Exercise(
+      id: "0004",
       exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)",
+      name: "Leg Extension (Mashine)4",
       mediaItem: MediaItem(),
     ),
     Exercise(
+      id: "0005",
       exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)",
+      name: "Leg Extension (Mashine)5",
       mediaItem: MediaItem(),
     ),
   ];
@@ -47,7 +85,9 @@ class _ExcerciseListState extends State<ExcerciseList> {
         leadingWidth: 60,
         leading: TextButton(
           child: const Text("Cancel"),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         title: const Center(
           child: Text("Add Exercise",
@@ -105,9 +145,13 @@ class _ExcerciseListState extends State<ExcerciseList> {
             child: ListView.separated(
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  child: SimpleExerciseTile(exercise: exerciseList[index]),
-                  onDoubleTap: () {},
-                );
+                    onTap: () {
+                      // print(exerciseList[index].id);
+                      var exerciseComplete = exerciseCompleteList.where(
+                          (element) => element.id == exerciseList[index].id);
+                      Navigator.of(context).pop(exerciseComplete.first);
+                    },
+                    child: SimpleExerciseTile(exercise: exerciseList[index]));
               },
               separatorBuilder: (context, index) {
                 return const Divider();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/routes.dart';
-import 'package:training_tracker/widgets/exercise_list.dart';
-import 'package:training_tracker/widgets/history_page.dart';
-import 'package:training_tracker/widgets/workout.dart';
-import 'package:training_tracker/widgets/workout_history_card.dart';
-import 'package:training_tracker/widgets/workout_template_list.dart';
+import 'package:training_tracker/widgets/workout/exercise_list.dart';
+import 'package:training_tracker/widgets/workout/history_page.dart';
+import 'package:training_tracker/widgets/workout/workout.dart';
+import 'package:training_tracker/widgets/workout/utils/workout_history_card.dart';
+import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 
 void main() {
   runApp(const MyApp());
