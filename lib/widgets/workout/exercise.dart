@@ -47,84 +47,6 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
     super.dispose();
   }
 
-  List<TableRow> _setList() {
-    var list = <TableRow>[];
-    var title = const TableRow(children: [
-      Text(
-        'Set',
-        style: TextStyle(fontStyle: FontStyle.normal),
-      ),
-      Text(
-        'Previous',
-        style: TextStyle(fontStyle: FontStyle.normal),
-      ),
-      Center(
-        child: Text(
-          'Weight',
-          style: TextStyle(fontStyle: FontStyle.normal),
-        ),
-      ),
-      Center(
-        child: Text(
-          'Reps',
-          style: TextStyle(fontStyle: FontStyle.normal),
-        ),
-      ),
-      Center(
-        child: Text(
-          '',
-          style: TextStyle(fontStyle: FontStyle.normal),
-        ),
-      ),
-    ]);
-    var sets = widget.exercise.sets.map((set) {
-      return TableRow(children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("${widget.exercise.sets.indexOf(set) + 1}"),
-        ),
-        const Text('-'),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: WorkoutSetTextield(
-            onChange: (data) {
-              set.weight = data;
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: WorkoutSetTextield(
-            onChange: (data) {
-              set.reps = data;
-            },
-          ),
-        ),
-        widget.canTrain
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Checkbox(
-                    value: set.isComplete,
-                    onChanged: (bool? onChanged) {
-                      setState(() {
-                        set.isComplete = onChanged ?? false;
-                      });
-                    }),
-              )
-            : const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.lock,
-                  color: Colors.grey,
-                ),
-              ),
-      ]);
-    }).toList();
-    list.add(title);
-    list.addAll(sets);
-    return list;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -165,7 +87,87 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
             )
           ],
         ),
-        Table(children: _setList()), //edw
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Expanded(flex: 1, child: Text("Set")),
+            Expanded(flex: 1, child: Text("Previous")),
+            Expanded(flex: 2, child: Center(child: Text("Weight"))),
+            Expanded(flex: 2, child: Center(child: Text("Reps"))),
+            Expanded(flex: 1, child: Text("")),
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.exercise.sets.length,
+          itemBuilder: (context, index) {
+            var set = widget.exercise.sets[index];
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Dismissible(
+                key: Key("${widget.exercise.id}-index-$index"),
+                onDismissed: (direction) {
+                  // Remove the item from the data source.
+                  setState(() {
+                    widget.exercise.sets.removeAt(index);
+                  });
+                  // Then show a snackbar.
+                  // ScaffoldMessenger.of(context)
+                  //     .showSnackBar(SnackBar(content: Text('item dismissed')));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child:
+                            Text("${widget.exercise.sets.indexOf(set) + 1}")),
+                    const Expanded(flex: 1, child: Center(child: Text('-'))),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: WorkoutSetTextield(
+                          onChange: (data) {
+                            set.weight = data;
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: WorkoutSetTextield(
+                          onChange: (data) {
+                            set.reps = data;
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: widget.canTrain
+                          ? Checkbox(
+                              value: set.isComplete,
+                              onChanged: (bool? onChanged) {
+                                setState(() {
+                                  set.isComplete = onChanged ?? false;
+                                });
+                              })
+                          : const Icon(
+                              Icons.lock,
+                              color: Colors.grey,
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
