@@ -8,13 +8,28 @@ import 'exercise.dart';
 
 class SingleWorkout extends StatefulWidget {
   final Workout workout;
-  const SingleWorkout({super.key, required this.workout});
+  late bool startUnset;
+  SingleWorkout({super.key, required this.workout, bool? startUnset}) {
+    this.startUnset = startUnset ?? true;
+  }
 
   @override
   State<SingleWorkout> createState() => _SingleWorkoutState();
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.startUnset) {
+      //var workout = widget.workout;
+      for (var exercise in widget.workout.exercises) {
+        exercise.sets = [];
+        exercise.sets.add(Set(isComplete: false));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +200,7 @@ class Set {
 
 class ExerciseComplete extends Exercise {
   String? note;
-  final List<Set> sets;
+  List<Set> sets;
 
   ExerciseComplete(
       {required super.id,

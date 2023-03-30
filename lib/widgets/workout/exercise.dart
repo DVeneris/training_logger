@@ -142,6 +142,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: WorkoutSetTextield(
+                          text: set.weight ?? '',
                           onChange: (data) {
                             set.weight = data;
                           },
@@ -153,6 +154,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: WorkoutSetTextield(
+                          text: set.reps ?? '',
                           onChange: (data) {
                             set.reps = data;
                           },

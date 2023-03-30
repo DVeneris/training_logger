@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workout_history_card.dart';
+import 'package:training_tracker/widgets/workout/workout_overview.dart';
 
 import '../../routes.dart';
 
@@ -12,6 +13,7 @@ class WorkoutHistory extends StatefulWidget {
 }
 
 class _WorkoutHistoryState extends State<WorkoutHistory> {
+  int _selectedIndex = 0;
   var workoutList = <Workout>[
     Workout(
         id: "00001",
@@ -77,6 +79,11 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
               exerciseGroup: 'Legs'),
         ])
   ];
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +163,16 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
           ),
         ],
         backgroundColor: Colors.blue[100],
+        selectedIconTheme: IconThemeData(color: Colors.blue, size: 30),
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

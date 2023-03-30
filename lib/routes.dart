@@ -6,6 +6,7 @@ import 'package:training_tracker/widgets/workout/history_page.dart';
 import 'package:training_tracker/widgets/user/login.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/widgets/workout/workoutCreator.dart';
+import 'package:training_tracker/widgets/workout/workout_overview.dart';
 import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 
 class RouteGenerator {
@@ -13,6 +14,7 @@ class RouteGenerator {
   static const String homePage = '/';
   static const String singleWorkout = '/singleWorkout';
   static const String exerciseList = '/exerciseList';
+  static const String workoutOverview = '/workoutOverview';
 // 3.
   RouteGenerator._();
 // 3.
@@ -43,6 +45,12 @@ class RouteGenerator {
       case exerciseList:
         return MaterialPageRoute(
           builder: (_) => const ExcerciseList(),
+        );
+      case workoutOverview:
+        return MaterialPageRoute(
+          builder: (_) => WorkoutOverView(
+            workout: args!['workout'] as Workout,
+          ),
         );
       default:
         throw FormatException("Route not found");

@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 
 class WorkoutSetTextield extends StatefulWidget {
   Function(String) onChange;
-  WorkoutSetTextield({required this.onChange, super.key});
+  final String text;
+
+  WorkoutSetTextield({required this.onChange, required this.text, super.key});
 
   @override
   State<WorkoutSetTextield> createState() => _WorkoutSetTextieldState();
@@ -14,7 +16,9 @@ class _WorkoutSetTextieldState extends State<WorkoutSetTextield> {
   @override
   void initState() {
     super.initState();
+
     numberController.addListener(_passLatestValue);
+    numberController.text = widget.text;
   }
 
   void _passLatestValue() {
