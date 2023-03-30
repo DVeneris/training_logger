@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
-import '../../../routes.dart';
+import '../routes.dart';
 
 class HomeCard extends StatelessWidget {
   final Workout workout;

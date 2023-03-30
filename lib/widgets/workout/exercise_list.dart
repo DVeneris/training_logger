@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/widgets/workout/utils/simpleExerciseTile.dart';
+import 'package:training_tracker/utils/simpleExerciseTile.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 class ExcerciseList extends StatefulWidget {

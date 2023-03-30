@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/widgets/user/register.dart';
+import 'package:training_tracker/widgets/user/user_screen.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
 import 'package:training_tracker/widgets/workout/history_page.dart';
+import 'package:training_tracker/widgets/user/login.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/widgets/workout/workoutCreator.dart';
 import 'package:training_tracker/widgets/workout/workout_template_list.dart';
@@ -17,7 +20,7 @@ class RouteGenerator {
     return <Route>[
       MaterialPageRoute(
         //builder: (_) => const SingleWorkout(),
-        builder: (_) => const SingleWorkoutCreator(),
+        builder: (_) => const WorkoutHistory(),
       )
     ];
   }

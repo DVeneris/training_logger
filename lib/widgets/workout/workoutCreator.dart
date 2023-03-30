@@ -75,6 +75,9 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   itemCount: workout.exercises.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
+                      onExerciseDeletion: () {
+                        workout.exercises.removeAt(index);
+                      },
                       exercise: workout.exercises[index],
                       canTrain: false,
                       onSelectParam: () {

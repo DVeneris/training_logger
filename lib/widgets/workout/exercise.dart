@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:training_tracker/utils/popupMenuButton.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
-import 'package:training_tracker/widgets/workout/utils/workoutSetTextField.dart';
+import 'package:training_tracker/utils/workoutSetTextField.dart';
 
 class ExerciseSingle extends StatefulWidget {
   //Exercise exercise = Exercise(name: "Leg Extension (Mashine)", sets: [Set()]);
   final ExerciseComplete exercise;
   late final bool canTrain;
   final Function() onSelectParam;
+  final Function()? onExerciseDeletion;
   ExerciseSingle(
       {super.key,
       required this.exercise,
       required this.onSelectParam,
+      this.onExerciseDeletion,
       bool? canTrain}) {
     this.canTrain = canTrain ?? true;
   }
@@ -80,11 +83,20 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                 ),
               ],
             ),
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              color: Colors.blue,
-              onPressed: () {},
+            CustomPopupMenuButton(
+              onItemSelection: ((option) {
+                if (option == Options.delete) {
+                  if (widget.onExerciseDeletion != null) {
+                    widget.onExerciseDeletion!();
+                  }
+                }
+              }),
             )
+            //   IconButton(
+            //     icon: const Icon(Icons.more_vert),
+            //     color: Colors.blue,
+            //     onPressed: () {},
+            //   )
           ],
         ),
         Row(

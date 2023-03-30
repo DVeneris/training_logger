@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
-import 'package:training_tracker/widgets/workout/utils/workout_history_card.dart';
+import 'package:training_tracker/utils/workout_history_card.dart';
 
 import '../../routes.dart';
 

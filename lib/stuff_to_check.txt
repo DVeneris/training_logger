@@ -1,0 +1,2 @@
+https://www.youtube.com/watch?v=alp45Szg7Vk -> good video for dialogs
+https://stackoverflow.com/questions/57131978/how-to-animate-alert-dialog-position-in-flutter -> cool article for dialog
