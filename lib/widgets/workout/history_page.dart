@@ -13,7 +13,6 @@ class WorkoutHistory extends StatefulWidget {
 }
 
 class _WorkoutHistoryState extends State<WorkoutHistory> {
-  int _selectedIndex = 0;
   var workoutList = <Workout>[
     Workout(
         id: "00001",
@@ -79,11 +78,6 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
               exerciseGroup: 'Legs'),
         ])
   ];
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +131,7 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                       child: GestureDetector(
                         onTap: () async {
                           await Navigator.of(context).pushNamed(
-                            RouteGenerator.singleWorkout,
+                            RouteGenerator.workoutOverview,
                             arguments: {'workout': workoutList[index]},
                           ) as Workout?;
                         },
@@ -151,28 +145,6 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '',
-          ),
-        ],
-        backgroundColor: Colors.blue[100],
-        selectedIconTheme: IconThemeData(color: Colors.blue, size: 30),
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }

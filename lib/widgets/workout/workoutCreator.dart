@@ -112,26 +112,26 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: const Text(
-                      "Cancel Workout",
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ],
-              )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     TextButton(
+              //       onPressed: () {
+              //         if (Navigator.of(context).canPop()) {
+              //           Navigator.of(context).pop();
+              //         }
+              //       },
+              //       child: const Text(
+              //         "Cancel Workout",
+              //         style: TextStyle(
+              //           color: Colors.redAccent,
+              //           fontWeight: FontWeight.normal,
+              //           fontSize: 15,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // )
             ],
           ),
         ),

@@ -9,6 +9,8 @@ import 'package:training_tracker/widgets/workout/workoutCreator.dart';
 import 'package:training_tracker/widgets/workout/workout_overview.dart';
 import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 
+import 'main.dart';
+
 class RouteGenerator {
 // 2.
   static const String homePage = '/';
@@ -22,7 +24,7 @@ class RouteGenerator {
     return <Route>[
       MaterialPageRoute(
         //builder: (_) => const SingleWorkout(),
-        builder: (_) => const WorkoutHistory(),
+        builder: (_) => const MyHomePage(),
       )
     ];
   }
@@ -34,7 +36,7 @@ class RouteGenerator {
       case homePage: //5
         return MaterialPageRoute(
           // builder: (_) => const SingleWorkout(),
-          builder: (_) => const WorkoutHistory(),
+          builder: (_) => const MyHomePage(),
         );
       case singleWorkout:
         return MaterialPageRoute(
