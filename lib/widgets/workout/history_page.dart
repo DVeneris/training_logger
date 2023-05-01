@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workout_history_card.dart';
 import 'package:training_tracker/widgets/workout/workout_overview.dart';
@@ -26,54 +29,54 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
               id: "0001",
               name: "Leg Extension (Mashine)1",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
           ExerciseComplete(
               id: "0002",
               name: "Leg Extension (Mashine)2",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
           ExerciseComplete(
               id: "0003",
               name: "Leg Extension (Mashine)3",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
           ExerciseComplete(
               id: "0004",
               name: "Leg Extension (Mashine)4",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
           ExerciseComplete(
               id: "0005",
               name: "Leg Extension (Mashine)5",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
           ExerciseComplete(
               id: "0006",
               name: "Leg Extension (Mashine)6",
               sets: [
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true),
-                Set(reps: "15", weight: "25", isComplete: true)
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true),
+                ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
               exerciseGroup: 'Legs'),
         ])

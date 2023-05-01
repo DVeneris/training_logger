@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/exercise.dart';
+import 'package:training_tracker/models/media-item.dart';
 import 'package:training_tracker/utils/simpleExerciseTile.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -14,32 +18,32 @@ class _ExcerciseListState extends State<ExcerciseList> {
     ExerciseComplete(
         id: "0001",
         name: "Leg Extension (Mashine)1",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
     ExerciseComplete(
         id: "0002",
         name: "Leg Extension (Mashine)2",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
     ExerciseComplete(
         id: "0003",
         name: "Leg Extension (Mashine)3",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
     ExerciseComplete(
         id: "0004",
         name: "Leg Extension (Mashine)4",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
     ExerciseComplete(
         id: "0005",
         name: "Leg Extension (Mashine)5",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
     ExerciseComplete(
         id: "0006",
         name: "Leg Extension (Mashine)6",
-        sets: [Set(isComplete: false)],
+        sets: [ExerciseSet(isComplete: false)],
         exerciseGroup: 'Legs'),
   ];
 

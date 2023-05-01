@@ -2,6 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/workout.dart';
 
 import '../../routes.dart';
 import 'exercise.dart';
@@ -25,7 +28,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
       //var workout = widget.workout;
       for (var exercise in widget.workout.exercises) {
         exercise.sets = [];
-        exercise.sets.add(Set(isComplete: false));
+        exercise.sets.add(ExerciseSet(isComplete: false));
       }
     }
   }
@@ -136,75 +139,4 @@ class _SingleWorkoutState extends State<SingleWorkout> {
       ),
     );
   }
-}
-
-class Workout {
-  final String id;
-  final String name;
-  final String? note;
-  final DateTime createDate;
-  DateTime updateDate;
-  List<ExerciseComplete> exercises;
-  final String totalTime;
-  final int totalVolume;
-
-  Workout({
-    required this.id,
-    required this.name,
-    this.note,
-    required this.createDate,
-    required this.updateDate,
-    required this.exercises,
-    required this.totalTime,
-    required this.totalVolume,
-  });
-  //  : assert(exercises.isNotEmpty),
-  //      assert(totalTile >= 0),
-  //      assert(totalVolume >= 0) {
-  //        updateDate = updateDate.toUtc();
-  //      }
-}
-
-class Exercise {
-  final String id;
-  String name;
-  String exerciseGroup;
-  MediaItem mediaItem;
-
-  Exercise({
-    required this.id,
-    required this.name,
-    required this.exerciseGroup,
-    MediaItem? mediaItem,
-  }) : mediaItem = mediaItem ?? MediaItem();
-}
-
-class MediaItem {
-  //String? id;
-  String? name;
-  late String url;
-  MediaItem({String? url}) {
-    this.url = url ?? "assets/no_media.png";
-  }
-}
-
-class Set {
-  // final int setNumber;
-  String? weight;
-  String? reps;
-  late bool isComplete;
-  Set({this.weight, this.reps, bool? isComplete}) {
-    this.isComplete = isComplete ?? false;
-  }
-}
-
-class ExerciseComplete extends Exercise {
-  String? note;
-  List<Set> sets;
-
-  ExerciseComplete(
-      {required super.id,
-      required super.name,
-      required this.sets,
-      required super.exerciseGroup});
 }

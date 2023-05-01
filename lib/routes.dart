@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/user/register.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
@@ -17,6 +18,7 @@ class RouteGenerator {
   static const String singleWorkout = '/singleWorkout';
   static const String exerciseList = '/exerciseList';
   static const String workoutOverview = '/workoutOverview';
+  static const String workoutCreator = '/workoutCreator';
 // 3.
   RouteGenerator._();
 // 3.
@@ -53,6 +55,10 @@ class RouteGenerator {
           builder: (_) => WorkoutOverView(
             workout: args!['workout'] as Workout,
           ),
+        );
+      case workoutCreator:
+        return MaterialPageRoute(
+          builder: (_) => const SingleWorkoutCreator(),
         );
       default:
         throw FormatException("Route not found");

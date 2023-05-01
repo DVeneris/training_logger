@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/exercise-set.dart';
 import 'package:training_tracker/utils/popupMenuButton.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workoutSetTextField.dart';
@@ -198,7 +200,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                   ),
                   onPressed: () {
                     setState(() {
-                      widget.exercise.sets.add(new Set());
+                      widget.exercise.sets.add(new ExerciseSet());
                       widget.onSelectParam();
                     });
                     print(widget.exercise.sets.length);

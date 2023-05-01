@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../../routes.dart';

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/main.dart';
+import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../../routes.dart';
@@ -23,32 +26,32 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
         ExerciseComplete(
             id: "0001",
             name: "Leg Extension (Mashine)1",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
         ExerciseComplete(
             id: "0002",
             name: "Leg Extension (Mashine)2",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
         ExerciseComplete(
             id: "0003",
             name: "Leg Extension (Mashine)3",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
         ExerciseComplete(
             id: "0004",
             name: "Leg Extension (Mashine)4",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
         ExerciseComplete(
             id: "0005",
             name: "Leg Extension (Mashine)5",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
         ExerciseComplete(
             id: "0006",
             name: "Leg Extension (Mashine)6",
-            sets: [Set(isComplete: false)],
+            sets: [ExerciseSet(isComplete: false)],
             exerciseGroup: 'Legs'),
       ]);
   @override
@@ -72,14 +75,21 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
         child: Column(children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 "My Templates",
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              Icon(Icons.add)
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: (() {
+                  Navigator.of(context).pushNamed(
+                    RouteGenerator.workoutCreator,
+                  );
+                }),
+              )
             ],
           ),
           ConstrainedBox(
@@ -101,10 +111,10 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                                 const EdgeInsets.only(top: 10.0, bottom: 10.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children: [
                                 Text(
-                                  "New Workout Template",
-                                  style: TextStyle(
+                                  workout.name,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
