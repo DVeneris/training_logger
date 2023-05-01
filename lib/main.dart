@@ -7,8 +7,17 @@ import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workout_history_card.dart';
 import 'package:training_tracker/widgets/workout/workoutCreator.dart';
 import 'package:training_tracker/widgets/workout/workout_template_list.dart';
+import 'dart:async';
 
-void main() {
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final database = openDatabase(
+    join(await getDatabasesPath(), 'workout_logger.db'),
+  );
   runApp(const MyApp());
 }
 
