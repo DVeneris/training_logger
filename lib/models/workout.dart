@@ -2,6 +2,7 @@ import 'package:training_tracker/models/exercise-complete.dart';
 
 class Workout {
   late final String id;
+  final String? userId;
   final String name;
   final String? note;
   final DateTime createDate;
@@ -12,6 +13,7 @@ class Workout {
 
   Workout({
     required this.id,
+    this.userId,
     required this.name,
     this.note,
     required this.createDate,
@@ -30,6 +32,7 @@ class Workout {
     }
     return Workout(
       id: json['id'],
+      userId: json['userId'],
       name: json['name'],
       note: json['note'],
       createDate: DateTime.parse(json['createDate']),
@@ -47,6 +50,7 @@ class Workout {
     });
     return {
       'id': id,
+      'userId': userId,
       'name': name,
       'note': note,
       'createDate': createDate.toIso8601String(),
