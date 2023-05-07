@@ -80,10 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _pages = <Widget>[
     WorkoutHistory(),
     WorkoutTemplateList(),
-    LoginScreen()
-    //UserView()
+    UserView()
   ];
   int _selectedIndex = 0;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             textDirection: TextDirection.ltr,
           );
         } else if (snapshot.hasData) {
-          _selectedIndex = 0;
+          // _selectedIndex = 0;
           return Scaffold(
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(

@@ -20,6 +20,9 @@ class RouteGenerator {
   static const String exerciseList = '/exerciseList';
   static const String workoutOverview = '/workoutOverview';
   static const String workoutCreator = '/workoutCreator';
+  static const String register = '/register';
+  static const String login = '/login';
+
 // 3.
   RouteGenerator._();
 // 3.
@@ -60,6 +63,14 @@ class RouteGenerator {
       case workoutCreator:
         return MaterialPageRoute(
           builder: (_) => const SingleWorkoutCreator(),
+        );
+      case register:
+        return MaterialPageRoute(
+          builder: (_) => const RegistersScreen(),
+        );
+      case login:
+        return MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
         );
       default:
         throw FormatException("Route not found");

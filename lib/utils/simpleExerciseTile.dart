@@ -4,7 +4,7 @@ import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 class SimpleExerciseTile extends StatelessWidget {
-  final ExerciseDTO exercise;
+  final Exercise exercise;
   const SimpleExerciseTile({super.key, required this.exercise});
 
   @override
@@ -16,7 +16,7 @@ class SimpleExerciseTile extends StatelessWidget {
           CircleAvatar(
             maxRadius: 20,
             minRadius: 10,
-            backgroundImage: AssetImage(exercise.mediaItem.url),
+            // backgroundImage: AssetImage(exercise.mediaItem.url),
             //AssetImage("assets/a.jpg"),
             backgroundColor: Colors.transparent,
           ),

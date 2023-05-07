@@ -8,6 +8,7 @@ class Exercise {
   final String name;
   final ExerciseGroup exerciseGroup;
   List<ExerciseSet> sets;
+  final WeightUnit unit;
   final String mediaItemId;
 
   Exercise({
@@ -15,41 +16,34 @@ class Exercise {
     required this.userId,
     required this.name,
     required this.exerciseGroup,
+    required this.unit,
     required this.sets,
     required this.mediaItemId,
   });
 
-  // factory Exercise.fromJson(Map<String, dynamic> json) {
-  //   var sets = <ExerciseSet>[];
-  //   if (json['sets'] != null) {
-  //     json['sets'].forEach((setJson) {
-  //       sets.add(ExerciseSet.fromJson(setJson));
-  //     });
-  //   }
-  //   return Exercise(
-  //     id: json['id'],
-  //     userId: json['userId'],
-  //     sets: sets,
-  //     name: json['name'],
-  //     exerciseGroup: json['exerciseGroup'],
-  //     mediaItem: json['mediaItem'] != null
-  //         ? MediaItem.fromJson(json['mediaItem'])
-  //         : null,
-  //   );
-  // }
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'name': name,
+      'exerciseGroup': exerciseGroup.name,
+      'unit': unit.name,
+      'sets': sets.map((set) => set.toMap()).toList(),
+      'mediaItemId': mediaItemId,
+    };
+  }
 
-  // Map<String, dynamic> toMap() {
-  //   var setsJson = <Map<String, dynamic>>[];
-  //   sets.forEach((set) {
-  //     setsJson.add(set.toMap());
-  //   });
-  //   return {
-  //     'id': id,
-  //     'userId': userId,
-  //     'name': name,
-  //     'sets': setsJson,
-  //     'exerciseGroup': exerciseGroup,
-  //     'mediaItem': mediaItem.toMap(),
-  //   };
-  // }
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      id: json['id'],
+      userId: json['userId'],
+      name: json['name'],
+      exerciseGroup: ExerciseGroup.values[json['exerciseGroup']],
+      unit: WeightUnit.values[json['unit']],
+      sets: List<Map<String, dynamic>>.from(json['sets'])
+          .map((setJson) => ExerciseSet.fromJson(setJson))
+          .toList(),
+      mediaItemId: json['mediaItemId'],
+    );
+  }
 }

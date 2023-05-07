@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/routes.dart';
 
 import '../../utils/kawaii_textbox.dart';
 
@@ -97,6 +98,11 @@ class _RegistersScreenState extends State<RegistersScreen> {
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        RouteGenerator.login,
+                      );
+                    },
                   ),
                 ],
               ),

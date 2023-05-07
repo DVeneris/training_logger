@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:training_tracker/routes.dart';
+import 'package:training_tracker/services/auth.dart';
 
 import '../../utils/kawaii_textbox.dart';
 import '../../utils/social_tile.dart';
@@ -77,6 +81,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(12)),
                   child: const Center(
                       child: Text(
+                    "login",
+                    style: TextStyle(color: Colors.white),
+                  )),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: TextButton(
+                onPressed: () => AuthService().anonLogin(),
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: const Center(
+                      child: Text(
                     "Continue as guest",
                     style: TextStyle(color: Colors.white),
                   )),
@@ -91,7 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Text("Not a member? "),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      RouteGenerator.register,
+                    );
+                  },
                   child: const Text(
                     "Register now!",
                     style: TextStyle(
@@ -120,10 +145,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: 30,
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               // SocialTile(
               //   assetUrl: "assets/facebook-logo.png",
               // ),
@@ -131,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
               //   width: 20,
               // ),
               SocialTile(
+                onClickFunction: AuthService().googleLogin,
                 assetUrl: "assets/google_logo.png",
               ),
             ]),

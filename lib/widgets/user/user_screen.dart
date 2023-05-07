@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/services/auth.dart';
 
 class UserView extends StatelessWidget {
   const UserView({super.key});
@@ -72,22 +73,28 @@ class UserView extends StatelessWidget {
             //   ),
             // ),
             ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.blue[100]),
-                child: const Icon(
-                  Icons.logout_outlined,
-                  color: Colors.blue,
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.blue[100]),
+                  child: const Icon(
+                    Icons.logout_outlined,
+                    color: Colors.blue,
+                  ),
                 ),
-              ),
-              title: const Text(
-                "Logout",
-                style: TextStyle(color: Colors.red),
-              ),
-            )
+                title: GestureDetector(
+                  onTap: () async {
+                    await AuthService().signOut();
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/', (route) => false);
+                  },
+                  child: const Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ))
           ]),
         ),
       ),
