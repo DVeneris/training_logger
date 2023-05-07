@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise.dart';
 
 import '../widgets/workout/workout.dart';
 
 class ExerciseOverviewSingle extends StatefulWidget {
-  final ExerciseComplete exercise;
+  final ExerciseDTO exercise;
 
   const ExerciseOverviewSingle({
     super.key,

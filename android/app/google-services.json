@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "584746387874",
+    "project_id": "workout-logger-dveneris",
+    "storage_bucket": "workout-logger-dveneris.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584746387874:android:482dade4eed21ef01c4afb",
+        "android_client_info": {
+          "package_name": "com.example.training_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584746387874-q9kc5a47kbku8dt9qgfvf6edeiolbhba.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.training_tracker",
+            "certificate_hash": "a41bef9cae517c443955666efde47ab030210ceb"
+          }
+        },
+        {
+          "client_id": "584746387874-ieagusatcotdriqd0pvosa32stphug9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqom1ETja4qOlWtcymuZd_qaJQj-uoNWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584746387874-ieagusatcotdriqd0pvosa32stphug9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,15 +2,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise_set.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 
 import '../../routes.dart';
 import 'exercise.dart';
 
 class SingleWorkout extends StatefulWidget {
-  final Workout workout;
+  final WorkoutDTO workout;
   late bool startUnset;
   SingleWorkout({super.key, required this.workout, bool? startUnset}) {
     this.startUnset = startUnset ?? true;
@@ -26,7 +29,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
     super.initState();
     if (widget.startUnset) {
       //var workout = widget.workout;
-      for (var exercise in widget.workout.exercises) {
+      for (var exercise in widget.workout.exerciseList) {
         exercise.sets = [];
         exercise.sets.add(ExerciseSet(isComplete: false));
       }
@@ -77,10 +80,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: widget.workout.exercises.length,
+                  itemCount: widget.workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
-                      exercise: widget.workout.exercises[index],
+                      exercise: widget.workout.exerciseList[index],
                       onSelectParam: () {
                         setState(() {});
                       },
@@ -95,10 +98,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                     onPressed: () async {
                       var lele = await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
-                          as ExerciseComplete?;
+                          as ExerciseDTO?;
                       if (lele != null) {
                         setState(() {
-                          widget.workout.exercises.add(lele);
+                          widget.workout.exerciseList.add(lele);
                         });
                       }
                     },

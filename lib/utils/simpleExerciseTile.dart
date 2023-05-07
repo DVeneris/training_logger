@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 class SimpleExerciseTile extends StatelessWidget {
-  final Exercise exercise;
+  final ExerciseDTO exercise;
   const SimpleExerciseTile({super.key, required this.exercise});
 
   @override
@@ -32,7 +33,7 @@ class SimpleExerciseTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  exercise.exerciseGroup,
+                  exercise.exerciseGroup.name,
                   style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.normal,

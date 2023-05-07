@@ -1,4 +1,4 @@
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 //den xreiazetai
 

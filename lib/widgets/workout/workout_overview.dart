@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -8,7 +11,7 @@ import '../../utils/exercise_overview.dart';
 import 'exercise.dart';
 
 class WorkoutOverView extends StatefulWidget {
-  final Workout workout;
+  final WorkoutDTO workout;
   const WorkoutOverView({super.key, required this.workout});
 
   @override
@@ -129,10 +132,10 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: widget.workout.exercises.length,
+                  itemCount: widget.workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseOverviewSingle(
-                      exercise: widget.workout.exercises[index],
+                      exercise: widget.workout.exerciseList[index],
                     );
                   },
                 ),
@@ -144,10 +147,10 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
                     onPressed: () async {
                       var lele = await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
-                          as ExerciseComplete?;
+                          as ExerciseDTO?;
                       if (lele != null) {
                         setState(() {
-                          widget.workout.exercises.add(lele);
+                          widget.workout.exerciseList.add(lele);
                         });
                       }
                     },

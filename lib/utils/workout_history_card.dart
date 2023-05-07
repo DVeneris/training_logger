@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../routes.dart';
 
 class HomeCard extends StatelessWidget {
-  final Workout workout;
+  final WorkoutDTO workout;
   HomeCard({super.key, required this.workout}) {
     int totalSets = 0;
 
-    for (var exercise in workout.exercises) {
+    for (var exercise in workout.exerciseList) {
       totalSets += exercise.sets.length;
     }
     print('Total sets: $totalSets');
@@ -113,7 +116,7 @@ class HomeCard extends StatelessWidget {
                           DataCell(Text(workout.totalTime)),
                           DataCell(Text('${workout.totalVolume} kg')),
                           DataCell(
-                              Text(_calculateTotalSets(workout.exercises))),
+                              Text(_calculateTotalSets(workout.exerciseList))),
                         ],
                       ),
                     ],
@@ -143,24 +146,25 @@ class HomeCard extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: workout.exercises.length.clamp(0, 3),
+                  itemCount: workout.exerciseList.length.clamp(0, 3),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Text("${workout.exercises[index].sets.length} x  "),
+                          Text(
+                              "${workout.exerciseList[index].sets.length} x  "),
                           CircleAvatar(
                             maxRadius: 20,
                             minRadius: 10,
                             backgroundImage: AssetImage(
-                                workout.exercises[index].mediaItem.url),
+                                workout.exerciseList[index].mediaItem.url),
                             backgroundColor: Colors.transparent,
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(workout.exercises[index].name),
+                              child: Text(workout.exerciseList[index].name),
                             ),
                           )
                         ],
@@ -168,7 +172,7 @@ class HomeCard extends StatelessWidget {
                     );
                   }),
             ),
-            if (workout.exercises.length >= 3) ...[
+            if (workout.exerciseList.length >= 3) ...[
               Row(
                 children: [
                   Expanded(
@@ -176,7 +180,7 @@ class HomeCard extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Center(
                         child: Text(
-                          "And ${workout.exercises.length - 3} more excersises",
+                          "And ${workout.exerciseList.length - 3} more excersises",
                           style: TextStyle(
                             color: Colors.grey.shade600,
                           ),
@@ -193,7 +197,7 @@ class HomeCard extends StatelessWidget {
     );
   }
 
-  String _calculateTotalSets(List<ExerciseComplete>? exercises) {
+  String _calculateTotalSets(List<ExerciseDTO>? exercises) {
     int totalSets = 0;
 
     for (var exercise in exercises!) {

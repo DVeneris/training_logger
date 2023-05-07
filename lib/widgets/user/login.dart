@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(12)),
                   child: const Center(
                       child: Text(
-                    "sign in",
+                    "Continue as guest",
                     style: TextStyle(color: Colors.white),
                   )),
                 ),
@@ -124,12 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 30,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-              SocialTile(
-                assetUrl: "assets/facebook-logo.png",
-              ),
-              SizedBox(
-                width: 20,
-              ),
+              // SocialTile(
+              //   assetUrl: "assets/facebook-logo.png",
+              // ),
+              // SizedBox(
+              //   width: 20,
+              // ),
               SocialTile(
                 assetUrl: "assets/google_logo.png",
               ),

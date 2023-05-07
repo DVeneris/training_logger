@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/user/register.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
@@ -43,7 +44,7 @@ class RouteGenerator {
       case singleWorkout:
         return MaterialPageRoute(
           builder: (_) => SingleWorkout(
-            workout: args!['workout'] as Workout,
+            workout: args!['workout'] as WorkoutDTO,
           ),
         );
       case exerciseList:
@@ -53,7 +54,7 @@ class RouteGenerator {
       case workoutOverview:
         return MaterialPageRoute(
           builder: (_) => WorkoutOverView(
-            workout: args!['workout'] as Workout,
+            workout: args!['workout'] as WorkoutDTO,
           ),
         );
       case workoutCreator:

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise_set.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workout_history_card.dart';
@@ -16,69 +20,76 @@ class WorkoutHistory extends StatefulWidget {
 }
 
 class _WorkoutHistoryState extends State<WorkoutHistory> {
-  var workoutList = <Workout>[
-    Workout(
+  var workoutList = <WorkoutDTO>[
+    WorkoutDTO(
         id: "00001",
+        userId: "00000",
         createDate: DateTime.now(),
         updateDate: DateTime.now(),
         name: "Mitsos",
         totalTime: "45 min",
         totalVolume: 5000,
-        exercises: [
-          ExerciseComplete(
+        exerciseList: [
+          ExerciseDTO(
               id: "0001",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)1",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
-          ExerciseComplete(
+              exerciseGroup: ExerciseGroup.quadriceps),
+          ExerciseDTO(
               id: "0002",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)2",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
-          ExerciseComplete(
+              exerciseGroup: ExerciseGroup.quadriceps),
+          ExerciseDTO(
               id: "0003",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)3",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
-          ExerciseComplete(
+              exerciseGroup: ExerciseGroup.quadriceps),
+          ExerciseDTO(
               id: "0004",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)4",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
-          ExerciseComplete(
+              exerciseGroup: ExerciseGroup.quadriceps),
+          ExerciseDTO(
               id: "0005",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)5",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
-          ExerciseComplete(
+              exerciseGroup: ExerciseGroup.quadriceps),
+          ExerciseDTO(
               id: "0006",
+              userId: "00000", //default
               name: "Leg Extension (Mashine)6",
               sets: [
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true),
                 ExerciseSet(reps: "15", weight: "25", isComplete: true)
               ],
-              exerciseGroup: 'Legs'),
+              exerciseGroup: ExerciseGroup.quadriceps),
         ])
   ];
 

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise_set.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/utils/popupMenuButton.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workoutSetTextField.dart';
 
 class ExerciseSingle extends StatefulWidget {
   //Exercise exercise = Exercise(name: "Leg Extension (Mashine)", sets: [Set()]);
-  final ExerciseComplete exercise;
+  final ExerciseDTO exercise;
   late final bool canTrain;
   final Function() onSelectParam;
   final Function()? onExerciseDeletion;

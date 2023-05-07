@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/main.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise_set.dart';
+import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -15,44 +19,51 @@ class WorkoutTemplateList extends StatefulWidget {
 }
 
 class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
-  var workout = Workout(
+  var workout = WorkoutDTO(
       id: "00001",
+      userId: "00000",
       createDate: DateTime.now(),
       updateDate: DateTime.now(),
       name: "Mitsos",
       totalTime: "45 min",
       totalVolume: 5000,
-      exercises: <ExerciseComplete>[
-        ExerciseComplete(
+      exerciseList: <ExerciseDTO>[
+        ExerciseDTO(
             id: "0001",
+            userId: "00000", //default
             name: "Leg Extension (Mashine)1",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
-        ExerciseComplete(
+            exerciseGroup: ExerciseGroup.quadriceps),
+        ExerciseDTO(
             id: "0002",
+            userId: "00000",
             name: "Leg Extension (Mashine)2",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
-        ExerciseComplete(
+            exerciseGroup: ExerciseGroup.quadriceps),
+        ExerciseDTO(
             id: "0003",
+            userId: "00000",
             name: "Leg Extension (Mashine)3",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
-        ExerciseComplete(
+            exerciseGroup: ExerciseGroup.quadriceps),
+        ExerciseDTO(
             id: "0004",
+            userId: "00000",
             name: "Leg Extension (Mashine)4",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
-        ExerciseComplete(
+            exerciseGroup: ExerciseGroup.quadriceps),
+        ExerciseDTO(
             id: "0005",
+            userId: "00000",
             name: "Leg Extension (Mashine)5",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
-        ExerciseComplete(
+            exerciseGroup: ExerciseGroup.quadriceps),
+        ExerciseDTO(
             id: "0006",
+            userId: "00000",
             name: "Leg Extension (Mashine)6",
             sets: [ExerciseSet(isComplete: false)],
-            exerciseGroup: 'Legs'),
+            exerciseGroup: ExerciseGroup.quadriceps),
       ]);
   @override
   Widget build(BuildContext context) {
@@ -129,9 +140,9 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                                 SizedBox(
                                   height: 45,
                                   child: ListView.builder(
-                                    itemCount: workout.exercises.length >= 3
+                                    itemCount: workout.exerciseList.length >= 3
                                         ? 3
-                                        : workout.exercises.length,
+                                        : workout.exerciseList.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
                                         padding:
@@ -139,7 +150,7 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              workout.exercises[index].name,
+                                              workout.exerciseList[index].name,
                                               style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.grey),
@@ -150,7 +161,7 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                                     },
                                   ),
                                 ),
-                                if (workout.exercises.length >= 3) ...[
+                                if (workout.exerciseList.length >= 3) ...[
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5.0),
                                     child: Row(
@@ -158,7 +169,7 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                                         Text(
                                           style: const TextStyle(
                                               fontSize: 12, color: Colors.grey),
-                                          "And ${workout.exercises.length - 3} more excersises",
+                                          "And ${workout.exerciseList.length - 3} more excersises",
                                         ),
                                       ],
                                     ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:training_tracker/models/exercise-complete.dart';
-import 'package:training_tracker/models/exercise-set.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/media-item-dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/models/exercise_complete.dart';
+import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
-import 'package:training_tracker/models/media-item.dart';
+import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/utils/simpleExerciseTile.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -14,70 +17,81 @@ class ExcerciseList extends StatefulWidget {
 }
 
 class _ExcerciseListState extends State<ExcerciseList> {
-  var exerciseCompleteList = <ExerciseComplete>[
-    ExerciseComplete(
+  var exerciseCompleteList = <ExerciseDTO>[
+    ExerciseDTO(
         id: "0001",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)1",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
+        exerciseGroup: ExerciseGroup.quadriceps),
+    ExerciseDTO(
         id: "0002",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)2",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
+        exerciseGroup: ExerciseGroup.quadriceps),
+    ExerciseDTO(
         id: "0003",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)3",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
+        exerciseGroup: ExerciseGroup.quadriceps),
+    ExerciseDTO(
         id: "0004",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)4",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
+        exerciseGroup: ExerciseGroup.quadriceps),
+    ExerciseDTO(
         id: "0005",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)5",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
-    ExerciseComplete(
+        exerciseGroup: ExerciseGroup.quadriceps),
+    ExerciseDTO(
         id: "0006",
+        userId: "00000", //default
         name: "Leg Extension (Mashine)6",
         sets: [ExerciseSet(isComplete: false)],
-        exerciseGroup: 'Legs'),
+        exerciseGroup: ExerciseGroup.quadriceps),
   ];
 
-  var exerciseList = <Exercise>[
-    Exercise(
-      id: "0001",
-      exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)1",
-      mediaItem: MediaItem(),
-    ),
-    Exercise(
-      id: "0002",
-      exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)2",
-      mediaItem: MediaItem(),
-    ),
-    Exercise(
-      id: "0003",
-      exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)3",
-      mediaItem: MediaItem(),
-    ),
-    Exercise(
-      id: "0004",
-      exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)4",
-      mediaItem: MediaItem(),
-    ),
-    Exercise(
-      id: "0005",
-      exerciseGroup: "legs",
-      name: "Leg Extension (Mashine)5",
-      mediaItem: MediaItem(),
-    ),
+  var exerciseList = <ExerciseDTO>[
+    ExerciseDTO(
+        id: "0001",
+        userId: "00000", //default
+        exerciseGroup: ExerciseGroup.quadriceps,
+        name: "Leg Extension (Mashine)1",
+        mediaItem: MediaItemDTO(),
+        sets: []),
+    ExerciseDTO(
+        id: "0002",
+        userId: "00000", //default
+        exerciseGroup: ExerciseGroup.quadriceps,
+        name: "Leg Extension (Mashine)2",
+        mediaItem: MediaItemDTO(),
+        sets: []),
+    ExerciseDTO(
+        id: "0003",
+        userId: "00000", //default
+        exerciseGroup: ExerciseGroup.quadriceps,
+        name: "Leg Extension (Mashine)3",
+        mediaItem: MediaItemDTO(),
+        sets: []),
+    ExerciseDTO(
+        id: "0004",
+        userId: "00000", //default
+        exerciseGroup: ExerciseGroup.quadriceps,
+        name: "Leg Extension (Mashine)4",
+        mediaItem: MediaItemDTO(),
+        sets: []),
+    ExerciseDTO(
+        id: "0005",
+        userId: "00000", //default
+        exerciseGroup: ExerciseGroup.quadriceps,
+        name: "Leg Extension (Mashine)5",
+        mediaItem: MediaItemDTO(),
+        sets: []),
   ];
 
   @override
