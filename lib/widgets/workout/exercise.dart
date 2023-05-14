@@ -28,8 +28,6 @@ class ExerciseSingle extends StatefulWidget {
 }
 
 class _ExerciseSingleState extends State<ExerciseSingle> {
-  // late Exercise exercise;
-
   final weightController = TextEditingController();
   final repsController = TextEditingController();
   @override

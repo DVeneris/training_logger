@@ -145,12 +145,12 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var lele = await Navigator.of(context)
+                      var exerciseToAdd = await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
                           as ExerciseDTO?;
-                      if (lele != null) {
+                      if (exerciseToAdd != null) {
                         setState(() {
-                          widget.workout.exerciseList.add(lele);
+                          widget.workout.exerciseList.add(exerciseToAdd);
                         });
                       }
                     },

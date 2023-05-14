@@ -6,7 +6,9 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/media_item.dart';
-import 'package:training_tracker/services/firestore.dart';
+import 'package:training_tracker/routes.dart';
+import 'package:training_tracker/services/auth.dart';
+import 'package:training_tracker/services/exercise_service.dart';
 import 'package:training_tracker/utils/simpleExerciseTile.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -97,8 +99,9 @@ class _ExcerciseListState extends State<ExcerciseList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Exercise>>(
-      future: FirestoreService().getExerciseList('0000-0000-0000-0000-0000'),
+    return FutureBuilder<List<ExerciseDTO>>(
+      // future: FirestoreService().getExerciseList('0000-0000-0000-0000-0000'),
+      future: ExerciseService().getExerciseList(AuthService().user!.uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           //loading icon
@@ -136,7 +139,11 @@ class _ExcerciseListState extends State<ExcerciseList> {
               actions: [
                 TextButton(
                   child: const Text("Create"),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await Navigator.of(context)
+                        .pushNamed(RouteGenerator.exerciseCreator);
+                    setState(() {});
+                  },
                 )
               ],
             ),
@@ -182,7 +189,6 @@ class _ExcerciseListState extends State<ExcerciseList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                           onTap: () {
-                            // print(exerciseList[index].id);
                             var exerciseComplete = exerciseList.where(
                                 (element) =>
                                     element.id == exerciseList[index].id);

@@ -6,7 +6,15 @@ enum ExerciseGroup {
   triceps,
   lats,
   traps,
-  chest
+  chest,
+  none
+}
+
+enum Equipment {
+  none,
+  barbell,
+  dumbell,
+  ketbell,
 }
 
 enum WeightUnit { kg, lbs }

@@ -98,12 +98,12 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var lele = await Navigator.of(context)
+                      var exerciseToAdd = await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
                           as ExerciseDTO?;
-                      if (lele != null) {
+                      if (exerciseToAdd != null) {
                         setState(() {
-                          workout.exerciseList.add(lele);
+                          workout.exerciseList.add(exerciseToAdd);
                         });
                       }
                     },

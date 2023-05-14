@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -24,6 +25,33 @@ class SingleWorkout extends StatefulWidget {
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
+  late Timer _timer;
+  int _start = 10;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +106,13 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           },
           child: Column(
             children: [
+              TextButton(
+                onPressed: () {
+                  startTimer();
+                },
+                child: Text("start"),
+              ),
+              Text("$_start"),
               Expanded(
                 child: ListView.builder(
                   itemCount: widget.workout.exerciseList.length,
@@ -96,12 +131,12 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var lele = await Navigator.of(context)
+                      var exerciseToAdd = await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
                           as ExerciseDTO?;
-                      if (lele != null) {
+                      if (exerciseToAdd != null) {
                         setState(() {
-                          widget.workout.exerciseList.add(lele);
+                          widget.workout.exerciseList.add(exerciseToAdd);
                         });
                       }
                     },

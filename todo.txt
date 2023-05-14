@@ -1,0 +1,6 @@
+-workoutDTO
+	->ExerciseOptions(time, note++)
+	->constructor
+-workoutService
+	->CRUD
+-Workout single pages to do

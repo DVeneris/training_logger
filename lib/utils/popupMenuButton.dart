@@ -55,7 +55,7 @@ class CustomPopupMenuButtonState extends State<CustomPopupMenuButton> {
         ),
       ),
       itemBuilder: (ctx) => [
-        _buildPopupMenuItem('Delete Workout', Icons.delete, 0),
+        _buildPopupMenuItem('Delete', Icons.delete, 0),
       ],
     );
   }

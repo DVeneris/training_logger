@@ -1,15 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
-import 'package:training_tracker/DTOS/user-dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise.dart';
-import 'package:training_tracker/models/user.dart';
 import 'package:training_tracker/services/auth.dart';
+import 'package:training_tracker/services/snapshot_object.dart';
 
-class FirestoreService {
+class ExerciseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Future<void> createExercise(Exercise exercise) async {
-    var user = AuthService().user!;
+  Future<void> createExercise(ExerciseDTO exerciseDTO) async {
+    var user = AuthService().user;
+    var exercise = Exercise(
+        userId: user!.uid,
+        name: exerciseDTO.name,
+        exerciseGroup: exerciseDTO.exerciseGroup,
+        unit: WeightUnit.kg,
+        sets: [],
+        mediaItemId: 'nPQc2Iur2xnqo405UnhZ',
+        equipment: Equipment.none);
+
     var ref = _db.collection('exercise');
     var snapshot = await _db.collection("exercise").add(exercise.toMap());
     //return Exercise.fromJson(snapshot. ?? {});
@@ -22,18 +30,21 @@ class FirestoreService {
     //return Exercise.fromJson(snapshot. ?? {});
   }
 
-  Future<List<Exercise>> getExerciseList(String userId) async {
+  Future<List<ExerciseDTO>> getExerciseList(String userId) async {
     var ref = _db.collection('exercise').where('userId', isEqualTo: userId);
     var snapshot = await ref.get(); //read collection once
-    var data = snapshot.docs.map((s) => s.data());
-    var exercises = data.map((e) => Exercise.fromJson(e));
-    return exercises.toList();
+    Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
+    snapshotList = snapshot.docs.map((s) {
+      return SnapshotObject(id: s.id, data: s.data());
+    });
+    var exercises = snapshotList.map((e) => Exercise.fromJson(e.data, e.id));
+    return exercises.toDTOList();
   }
 
-  Future<Exercise> getExercise(String exerciseId) async {
+  Future<ExerciseDTO> getExercise(String exerciseId) async {
     var ref = _db.collection('exercise').doc(exerciseId);
     var snapshot = await ref.get(); //read collection once
-    return Exercise.fromJson(snapshot.data() ?? {});
+    return Exercise.fromJson(snapshot.data() ?? {}, snapshot.id).toDTO();
   }
 
   // Stream<Exercise> streamReport(){//kai kala otan dimiourgithei mia nea Exrcise na tin kalesei pisw

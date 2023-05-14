@@ -4,7 +4,7 @@ import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 class SimpleExerciseTile extends StatelessWidget {
-  final Exercise exercise;
+  final ExerciseDTO exercise;
   const SimpleExerciseTile({super.key, required this.exercise});
 
   @override
