@@ -14,7 +14,7 @@ class HomeCard extends StatelessWidget {
     int totalSets = 0;
 
     for (var exercise in workout.exerciseList) {
-      totalSets += exercise.sets.length;
+      totalSets += exercise.exercise.sets.length;
     }
     print('Total sets: $totalSets');
   }
@@ -153,18 +153,19 @@ class HomeCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                              "${workout.exerciseList[index].sets.length} x  "),
+                              "${workout.exerciseList[index].exercise.sets.length} x  "),
                           CircleAvatar(
                             maxRadius: 20,
                             minRadius: 10,
-                            backgroundImage: AssetImage(
-                                workout.exerciseList[index].mediaItem.url),
+                            backgroundImage: AssetImage(workout
+                                .exerciseList[index].exercise.mediaItem.url),
                             backgroundColor: Colors.transparent,
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(workout.exerciseList[index].name),
+                              child: Text(
+                                  workout.exerciseList[index].exercise.name),
                             ),
                           )
                         ],
@@ -197,11 +198,11 @@ class HomeCard extends StatelessWidget {
     );
   }
 
-  String _calculateTotalSets(List<ExerciseDTO>? exercises) {
+  String _calculateTotalSets(List<ExerciseOptionsDTO> exerciseOptions) {
     int totalSets = 0;
 
-    for (var exercise in exercises!) {
-      totalSets += exercise.sets.length;
+    for (var exercise in exerciseOptions) {
+      totalSets += exercise.exercise.sets.length;
     }
     return totalSets.toString();
   }

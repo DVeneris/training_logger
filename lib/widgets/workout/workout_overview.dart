@@ -135,7 +135,7 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
                   itemCount: widget.workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseOverviewSingle(
-                      exercise: widget.workout.exerciseList[index],
+                      exercise: widget.workout.exerciseList[index].exercise,
                     );
                   },
                 ),
@@ -150,7 +150,8 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
                           as ExerciseDTO?;
                       if (exerciseToAdd != null) {
                         setState(() {
-                          widget.workout.exerciseList.add(exerciseToAdd);
+                          widget.workout.exerciseList
+                              .add(ExerciseOptionsDTO(exercise: exerciseToAdd));
                         });
                       }
                     },

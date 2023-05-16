@@ -9,6 +9,7 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/services/workout_service.dart';
 
 import '../../routes.dart';
 import 'exercise.dart';
@@ -58,8 +59,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
     if (widget.startUnset) {
       //var workout = widget.workout;
       for (var exercise in widget.workout.exerciseList) {
-        exercise.sets = [];
-        exercise.sets.add(ExerciseSet(isComplete: false));
+        exercise.exercise.sets = [];
+        exercise.exercise.sets.add(ExerciseSet(isComplete: false));
       }
     }
   }
@@ -89,7 +90,9 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                     fontSize: 15,
                   ),
                   foregroundColor: Colors.blue),
-              onPressed: () {},
+              onPressed: () {
+                WorkoutService().createWorkout(widget.workout);
+              },
               child: const Text("Finish"),
             ),
           ),
@@ -118,7 +121,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   itemCount: widget.workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
-                      exercise: widget.workout.exerciseList[index],
+                      exercise: widget.workout.exerciseList[index].exercise,
                       onSelectParam: () {
                         setState(() {});
                       },
@@ -136,7 +139,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                           as ExerciseDTO?;
                       if (exerciseToAdd != null) {
                         setState(() {
-                          widget.workout.exerciseList.add(exerciseToAdd);
+                          widget.workout.exerciseList
+                              .add(ExerciseOptionsDTO(exercise: exerciseToAdd));
                         });
                       }
                     },

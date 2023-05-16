@@ -7,6 +7,7 @@ import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../../routes.dart';
@@ -29,6 +30,49 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
       exerciseList: [],
       totalTime: "55 min",
       totalVolume: 5);
+  final TextEditingController _workoutNameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _workoutNameController.addListener(() => _onWorkoutNameChange());
+  }
+
+  _onWorkoutNameChange() {
+    workout.name = _workoutNameController.text;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _workoutNameController.dispose();
+  }
+
+  Future<void> _handleRoutineSave() async {
+    if (workout.name.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Empty Workout Name'),
+            content: Text('Please enter a name for the workout.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    await WorkoutService().createWorkout(workout);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +80,8 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
         backgroundColor: Colors.white,
         elevation: 2,
         title: const Center(
-            child: Text("Create new workout",
-                style: TextStyle(color: Colors.black))),
+            child:
+                Text("Create workout", style: TextStyle(color: Colors.black))),
         leading: TextButton(
           style: TextButton.styleFrom(
               textStyle: const TextStyle(
@@ -56,8 +100,8 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                     fontSize: 15,
                   ),
                   foregroundColor: Colors.blue),
-              onPressed: () {
-                print(workout);
+              onPressed: () async {
+                await _handleRoutineSave();
               },
               child: const Text("Save"),
             ),
@@ -76,6 +120,16 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
           },
           child: Column(
             children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Text("Exercise Name"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _workoutNameController,
+                ),
+              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: workout.exerciseList.length,
@@ -84,7 +138,7 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                       onExerciseDeletion: () {
                         workout.exerciseList.removeAt(index);
                       },
-                      exercise: workout.exerciseList[index],
+                      exercise: workout.exerciseList[index].exercise,
                       canTrain: false,
                       onSelectParam: () {
                         setState(() {});
@@ -103,7 +157,8 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                           as ExerciseDTO?;
                       if (exerciseToAdd != null) {
                         setState(() {
-                          workout.exerciseList.add(exerciseToAdd);
+                          workout.exerciseList
+                              .add(ExerciseOptionsDTO(exercise: exerciseToAdd));
                         });
                       }
                     },
