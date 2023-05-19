@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/mappers/exercise_mapper.dart';
 import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/services/auth.dart';
@@ -30,8 +31,12 @@ class ExerciseService {
     //return Exercise.fromJson(snapshot. ?? {});
   }
 
-  Future<List<ExerciseDTO>> getExerciseList(String userId) async {
-    var ref = _db.collection('exercise').where('userId', isEqualTo: userId);
+  Future<List<ExerciseDTO>> getExerciseList(
+      String? userId, List<String>? exerciseIds) async {
+    var ref = _db
+        .collection('exercise')
+        .where('userId', isEqualTo: userId)
+        .where(FieldPath.documentId, whereIn: exerciseIds);
     var snapshot = await ref.get(); //read collection once
     Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
     snapshotList = snapshot.docs.map((s) {

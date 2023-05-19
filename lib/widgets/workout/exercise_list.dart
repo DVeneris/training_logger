@@ -101,7 +101,7 @@ class _ExcerciseListState extends State<ExcerciseList> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<ExerciseDTO>>(
       // future: FirestoreService().getExerciseList('0000-0000-0000-0000-0000'),
-      future: ExerciseService().getExerciseList(AuthService().user!.uid),
+      future: ExerciseService().getExerciseList(AuthService().user!.uid, null),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           //loading icon

@@ -10,6 +10,7 @@ class ExerciseDTO {
   String name;
   ExerciseGroup exerciseGroup;
   List<ExerciseSet> sets;
+  WeightUnit unit;
   Equipment equipment;
   late MediaItemDTO mediaItem;
 
@@ -20,28 +21,9 @@ class ExerciseDTO {
     this.exerciseGroup = ExerciseGroup.none,
     this.sets = const [],
     MediaItemDTO? mediaItem,
+    this.unit = WeightUnit.kg,
     this.equipment = Equipment.none,
   }) {
     this.mediaItem = mediaItem ?? MediaItemDTO();
-  }
-}
-
-extension ExerciseMapping on Exercise {
-  ExerciseDTO toDTO() {
-    return ExerciseDTO(
-      id: id,
-      userId: userId,
-      name: name,
-      exerciseGroup: exerciseGroup,
-      sets: sets,
-      equipment: equipment,
-      //mediaItem: MediaItemDTO(mediaItemId),
-    );
-  }
-}
-
-extension ExerciseDTOIterableMapping on Iterable<Exercise> {
-  List<ExerciseDTO> toDTOList() {
-    return map((exercise) => exercise.toDTO()).toList();
   }
 }

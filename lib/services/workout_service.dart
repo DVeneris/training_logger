@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/mappers/workout-mapper.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/services/auth.dart';
+import 'package:training_tracker/services/exercise_service.dart';
+import 'package:training_tracker/services/extensions/helper_extensions.dart';
 import 'package:training_tracker/services/snapshot_object.dart';
 
 import '../widgets/workout/workout.dart';
@@ -31,6 +34,7 @@ class WorkoutService {
       list.add(ExerciseOptions(
           time: option.time,
           note: option.note,
+          unit: option.exercise.unit,
           exerciseId: option.exercise.id ?? "",
           sets: option.exercise.sets));
     }
@@ -51,11 +55,19 @@ class WorkoutService {
     snapshotList = snapshot.docs.map((s) {
       return SnapshotObject(id: s.id, data: s.data());
     });
-    var exercises = snapshotList.map((e) => Workout.fromJson(e.data, e.id));
-    return exercises.toDTOList();
+    var workoutList = snapshotList.map((e) => Workout.fromJson(e.data, e.id));
+    var exerciseIds = <String>[];
+    for (var workout in workoutList) {
+      exerciseIds.addAll(workout.exerciseList.map((e) => e.exerciseId));
+    }
+    exerciseIds = exerciseIds.removeDuplicates();
+    var exerciseList =
+        await ExerciseService().getExerciseList(null, exerciseIds);
+    var workoutDTOList = workoutList.toDtoList(exerciseList.toList());
+    return workoutDTOList;
   }
 
-  // Future<ExerciseDTO> getExercise(String exerciseId) async {
+  // Future<ExerciseDTO> getWorkout(String exerciseId) async {
   //   var ref = _db.collection('exercise').doc(exerciseId);
   //   var snapshot = await ref.get(); //read collection once
   //   return Exercise.fromJson(snapshot.data() ?? {}, snapshot.id).toDTO();

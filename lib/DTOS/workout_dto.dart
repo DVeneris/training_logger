@@ -32,7 +32,13 @@ class ExerciseOptionsDTO {
   int time = 0;
   String note = "";
   ExerciseDTO exercise = ExerciseDTO();
-  ExerciseOptionsDTO({required this.exercise});
+  ExerciseOptionsDTO({this.time = 0, this.note = "", required this.exercise});
 }
 
-class WorkoutHistoryDTO {}
+// extension ExerciseOptionsDTOMapping on ExerciseOptions {
+//   ExerciseOptionsDTO toExerciseOptionsDTO() {
+//     return ExerciseOptionsDTO(
+//       exercise: ExerciseDTO(id: exerciseId),
+//     );
+//   }
+// }

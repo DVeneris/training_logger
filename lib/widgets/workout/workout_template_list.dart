@@ -7,6 +7,8 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/services/auth.dart';
+import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../../routes.dart';
@@ -19,15 +21,184 @@ class WorkoutTemplateList extends StatefulWidget {
 }
 
 class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
-  var workout = WorkoutDTO(
-      id: "00001",
-      userId: "00000",
-      createDate: DateTime.now(),
-      updateDate: DateTime.now(),
-      name: "Mitsos",
-      totalTime: "45 min",
-      totalVolume: 5000,
-      exerciseList: <ExerciseOptionsDTO>[
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<WorkoutDTO>>(
+        future: WorkoutService().getWorkoutList(AuthService().user!.uid),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            //loading icon
+            return const Text(
+              'loading',
+              textDirection: TextDirection.ltr,
+            );
+          } else if (snapshot.hasError) {
+            return const Text(
+              'error',
+              textDirection: TextDirection.ltr,
+            );
+            //show error
+          } else if (snapshot.hasData) {
+            var workout = snapshot.data![0];
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leadingWidth: 60,
+                title: const Center(
+                  child: Text("Workout",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center),
+                ),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "My Templates",
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: (() {
+                          Navigator.of(context).pushNamed(
+                            RouteGenerator.workoutCreator,
+                          );
+                        }),
+                      )
+                    ],
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minHeight: 120,
+                      maxHeight: 180,
+                    ),
+                    child: Card(
+                      color: Color.fromARGB(255, 235, 240, 249),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10.0, bottom: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          workout.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        Icon(Icons.more_horiz)
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          child: ListView.builder(
+                                            itemCount:
+                                                workout.exerciseList.length >= 3
+                                                    ? 3
+                                                    : workout
+                                                        .exerciseList.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      workout
+                                                          .exerciseList[index]
+                                                          .exercise
+                                                          .name,
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.grey),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        if (workout.exerciseList.length >=
+                                            3) ...[
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
+                                                  "And ${workout.exerciseList.length - 3} more excersises",
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ]
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await Navigator.of(context).pushNamed(
+                                    RouteGenerator.singleWorkout,
+                                    arguments: {'workout': workout},
+                                  ) as Workout?;
+                                },
+                                child: Text("Start"),
+                              )
+                            ]),
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+            );
+          } else {
+            //no data found
+            return const Text(
+              'no data',
+              textDirection: TextDirection.ltr,
+            );
+          }
+        });
+  }
+}
+
+  // var workout = WorkoutDTO(
+  //     id: "00001",
+  //     userId: "00000",
+  //     createDate: DateTime.now(),
+  //     updateDate: DateTime.now(),
+  //     name: "Mitsos",
+  //     totalTime: "45 min",
+  //     totalVolume: 5000,
+  //     exerciseList: <ExerciseOptionsDTO>[
         // ExerciseDTO(
         //     id: "0001",
         //     userId: "00000", //default
@@ -64,138 +235,4 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
         //     name: "Leg Extension (Mashine)6",
         //     sets: [ExerciseSet(isComplete: false)],
         //     exerciseGroup: ExerciseGroup.quadriceps),
-      ]);
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leadingWidth: 60,
-        title: const Center(
-          child: Text("Workout",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "My Templates",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: (() {
-                  Navigator.of(context).pushNamed(
-                    RouteGenerator.workoutCreator,
-                  );
-                }),
-              )
-            ],
-          ),
-          ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: 120,
-              maxHeight: 180,
-            ),
-            child: Card(
-              color: Color.fromARGB(255, 235, 240, 249),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  workout.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                Icon(Icons.more_horiz)
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 45,
-                                  child: ListView.builder(
-                                    itemCount: workout.exerciseList.length >= 3
-                                        ? 3
-                                        : workout.exerciseList.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 3.0),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              workout.exerciseList[index]
-                                                  .exercise.name,
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                if (workout.exerciseList.length >= 3) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          style: const TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                          "And ${workout.exerciseList.length - 3} more excersises",
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ]
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await Navigator.of(context).pushNamed(
-                            RouteGenerator.singleWorkout,
-                            arguments: {'workout': workout},
-                          ) as Workout?;
-                        },
-                        child: Text("Start"),
-                      )
-                    ]),
-              ),
-            ),
-          )
-        ]),
-      ),
-    );
-  }
-}
+     // ]);

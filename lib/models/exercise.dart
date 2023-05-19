@@ -50,24 +50,3 @@ class Exercise {
         equipment: Equipment.values[json['equipment']]);
   }
 }
-
-extension ExerciseDTOMapping on ExerciseDTO {
-  Exercise toModel() {
-    return Exercise(
-      id: id,
-      userId: userId ?? "",
-      name: name,
-      exerciseGroup: exerciseGroup,
-      sets: sets,
-      unit: WeightUnit.lbs,
-      mediaItemId: mediaItem.id ?? "",
-      equipment: equipment,
-    );
-  }
-}
-
-extension ExerciseIterableMapping on Iterable<ExerciseDTO> {
-  List<Exercise> toDtoList() {
-    return map((exerciseDTO) => exerciseDTO.toModel()).toList();
-  }
-}

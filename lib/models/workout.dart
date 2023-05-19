@@ -1,4 +1,5 @@
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/exercise_set.dart';
@@ -61,11 +62,13 @@ class ExerciseOptions {
   final int time;
   final String note;
   final String exerciseId;
+  final WeightUnit unit;
   List<ExerciseSet> sets;
 
   ExerciseOptions({
     required this.time,
     required this.note,
+    required this.unit,
     required this.exerciseId,
     required this.sets,
   });
@@ -75,6 +78,7 @@ class ExerciseOptions {
       'time': time,
       'note': note,
       'exerciseId': exerciseId,
+      'unit': unit,
       'sets': sets.map((set) => set.toMap()).toList(),
     };
   }
@@ -83,6 +87,7 @@ class ExerciseOptions {
     return ExerciseOptions(
       time: json['time'],
       note: json['note'],
+      unit: json['unit'] ?? WeightUnit.kg,
       exerciseId: json['exerciseId'],
       sets: List<Map<String, dynamic>>.from(json['sets'])
           .map((setJson) => ExerciseSet.fromJson(setJson))
