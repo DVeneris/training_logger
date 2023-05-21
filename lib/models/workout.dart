@@ -78,16 +78,17 @@ class ExerciseOptions {
       'time': time,
       'note': note,
       'exerciseId': exerciseId,
-      'unit': unit,
+      'unit': unit.index,
       'sets': sets.map((set) => set.toMap()).toList(),
     };
   }
 
   factory ExerciseOptions.fromJson(Map<String, dynamic> json) {
+    var unit1 = WeightUnit.values[json['unit']];
     return ExerciseOptions(
       time: json['time'],
       note: json['note'],
-      unit: json['unit'] ?? WeightUnit.kg,
+      unit: WeightUnit.values[json['unit']],
       exerciseId: json['exerciseId'],
       sets: List<Map<String, dynamic>>.from(json['sets'])
           .map((setJson) => ExerciseSet.fromJson(setJson))

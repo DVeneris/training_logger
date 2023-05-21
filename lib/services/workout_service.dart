@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/mappers/workout-mapper.dart';
+import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/exercise_service.dart';
@@ -23,7 +25,8 @@ class WorkoutService {
         totalVolume: 0);
 
     var ref = _db.collection('workout');
-    var snapshot = await ref.add(workout.toMap());
+    var workoutMap = workout.toMap();
+    var snapshot = await ref.add(workoutMap);
     //return Exercise.fromJson(snapshot. ?? {});
   }
 
@@ -41,12 +44,21 @@ class WorkoutService {
     return list;
   }
 
-  // Future<void> updateExercise(Exercise exercise) async {
-  //   var user = AuthService().user!;
-  //   var ref = _db.collection('exercise').doc(exercise.userId);
+  Future<void> updateWorkout(WorkoutDTO workoutDTO) async {
+    var user = AuthService().user;
+    var workout = Workout(
+        userId: user!.uid,
+        name: workoutDTO.name,
+        createDate: workoutDTO.createDate ?? DateTime.now(),
+        updateDate: DateTime.now(),
+        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
+        totalTime: "0",
+        totalVolume: 0);
 
-  //   //return Exercise.fromJson(snapshot. ?? {});
-  // }
+    var ref = _db.collection('workout').doc(workoutDTO.id);
+    var workoutMap = workout.toMap();
+    var snapshot = await ref.update(workoutMap);
+  }
 
   Future<List<WorkoutDTO>> getWorkoutList(String userId) async {
     var ref = _db.collection('workout').where('userId', isEqualTo: userId);
@@ -57,6 +69,9 @@ class WorkoutService {
     });
     var workoutList = snapshotList.map((e) => Workout.fromJson(e.data, e.id));
     var exerciseIds = <String>[];
+    if (workoutList.isEmpty) {
+      return [];
+    }
     for (var workout in workoutList) {
       exerciseIds.addAll(workout.exerciseList.map((e) => e.exerciseId));
     }

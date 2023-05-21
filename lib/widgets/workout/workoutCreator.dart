@@ -7,6 +7,7 @@ import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
@@ -22,13 +23,12 @@ class SingleWorkoutCreator extends StatefulWidget {
 
 class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
   var workout = WorkoutDTO(
-      id: "0055",
-      userId: "00000",
+      userId: AuthService().user!.uid,
       name: "",
       createDate: DateTime.now(),
       updateDate: DateTime.now(),
       exerciseList: [],
-      totalTime: "55 min",
+      totalTime: "0",
       totalVolume: 5);
   final TextEditingController _workoutNameController = TextEditingController();
 
@@ -122,7 +122,7 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text("Exercise Name"),
+                child: Text("Routune Name"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

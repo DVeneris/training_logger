@@ -29,24 +29,6 @@ class _SingleWorkoutState extends State<SingleWorkout> {
   late Timer _timer;
   int _start = 10;
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
-  }
-
   @override
   void dispose() {
     _timer.cancel();
@@ -90,8 +72,9 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                     fontSize: 15,
                   ),
                   foregroundColor: Colors.blue),
-              onPressed: () {
-                WorkoutService().createWorkout(widget.workout);
+              onPressed: () async {
+                await WorkoutService().updateWorkout(widget.workout);
+                Navigator.of(context).pop();
               },
               child: const Text("Finish"),
             ),
@@ -107,76 +90,109 @@ class _SingleWorkoutState extends State<SingleWorkout> {
               currentFocus.unfocus();
             }
           },
-          child: Column(
-            children: [
-              TextButton(
-                onPressed: () {
-                  startTimer();
-                },
-                child: Text("start"),
-              ),
-              Text("$_start"),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: widget.workout.exerciseList.length,
-                  itemBuilder: (context, index) {
-                    return ExerciseSingle(
-                      exercise: widget.workout.exerciseList[index].exercise,
-                      onSelectParam: () {
-                        setState(() {});
-                      },
-                    );
+          child: Stack(children: [
+            Column(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    // startTimer();
                   },
+                  child: Text("start"),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      var exerciseToAdd = await Navigator.of(context)
-                              .pushNamed(RouteGenerator.exerciseList)
-                          as ExerciseDTO?;
-                      if (exerciseToAdd != null) {
-                        setState(() {
-                          widget.workout.exerciseList
-                              .add(ExerciseOptionsDTO(exercise: exerciseToAdd));
-                        });
-                      }
+                Text("$_start"),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.workout.exerciseList.length,
+                    itemBuilder: (context, index) {
+                      return ExerciseSingle(
+                        exercise: widget.workout.exerciseList[index].exercise,
+                        onSelectParam: () {
+                          setState(() {});
+                        },
+                      );
                     },
-                    child: const Text(
-                      "Add Exercise",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        var exerciseToAdd = await Navigator.of(context)
+                                .pushNamed(RouteGenerator.exerciseList)
+                            as ExerciseDTO?;
+                        if (exerciseToAdd != null) {
+                          setState(() {
+                            widget.workout.exerciseList.add(
+                                ExerciseOptionsDTO(exercise: exerciseToAdd));
+                          });
+                        }
+                      },
+                      child: const Text(
+                        "Add Exercise",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: const Text(
-                      "Cancel Workout",
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: const Text(
+                        "Cancel Workout",
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                  ],
+                )
+              ],
+            ),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(bottom: 60.0),
+            //     child: Container(
+            //       color: Colors.white,
+            //       height: 100,
+            //       child: Row(
+            //         children: [
+            //           Column(
+            //             children: [
+            //               Row(
+            //                 children: [
+            //                   TextButton(
+            //                     child: const Text("- 15"),
+            //                     onPressed: () {},
+            //                   ),
+            //                   Text("40"),
+            //                   TextButton(
+            //                     child: const Text("+ 15"),
+            //                     onPressed: () {},
+            //                   ),
+            //                 ],
+            //               )
+            //             ],
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // )
+          ]),
         ),
       ),
     );
