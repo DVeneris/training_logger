@@ -84,7 +84,7 @@ class ExerciseOptions {
   }
 
   factory ExerciseOptions.fromJson(Map<String, dynamic> json) {
-    var unit1 = WeightUnit.values[json['unit']];
+    //var unit1 = WeightUnit.values[json['unit']];
     return ExerciseOptions(
       time: json['time'],
       note: json['note'],

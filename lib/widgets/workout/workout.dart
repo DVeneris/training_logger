@@ -26,8 +26,41 @@ class SingleWorkout extends StatefulWidget {
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
+  int _remainingTime = 10; //initial time in seconds
   late Timer _timer;
-  int _start = 10;
+  bool _isRunning = false;
+
+  void _startTimer() {
+    setState(() {
+      _remainingTime = 10;
+      _isRunning = true;
+    });
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingTime > 0) {
+          _remainingTime--;
+        } else {
+          _timer.cancel();
+          _isRunning = false;
+        }
+      });
+    });
+  }
+
+  void _stopTimer() {
+    setState(() {
+      _isRunning = false;
+    });
+    _timer.cancel();
+  }
+
+  void _cancelTimer() {
+    setState(() {
+      _isRunning = false;
+      _remainingTime = 10;
+    });
+    _timer.cancel();
+  }
 
   @override
   void dispose() {
@@ -93,13 +126,16 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           child: Stack(children: [
             Column(
               children: [
-                TextButton(
-                  onPressed: () {
-                    // startTimer();
-                  },
-                  child: Text("start"),
+                ElevatedButton(
+                  child: Text(_isRunning ? "Stop" : "Start"),
+                  onPressed: _isRunning ? _stopTimer : _startTimer,
                 ),
-                Text("$_start"),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  child: Text("Cancel"),
+                  onPressed: _cancelTimer,
+                ),
+                Text("$_remainingTime "),
                 Expanded(
                   child: ListView.builder(
                     itemCount: widget.workout.exerciseList.length,
