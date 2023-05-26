@@ -2,5 +2,4 @@
 	->CRUD
 -Workout single pages to do
 -workoutHistory implementation
-
- timer
+-ti therides kaiw
