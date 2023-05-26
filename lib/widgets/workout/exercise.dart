@@ -14,12 +14,14 @@ class ExerciseSingle extends StatefulWidget {
   late final bool canTrain;
   final Function() onSelectParam;
   final Function()? onExerciseDeletion;
+  final Function(bool?) onSetChecked;
   ExerciseSingle(
       {super.key,
       required this.exercise,
       required this.onSelectParam,
       this.onExerciseDeletion,
-      bool? canTrain}) {
+      bool? canTrain,
+      required this.onSetChecked}) {
     this.canTrain = canTrain ?? true;
   }
 
@@ -168,10 +170,11 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                       child: widget.canTrain
                           ? Checkbox(
                               value: set.isComplete,
-                              onChanged: (bool? onChanged) {
+                              onChanged: (bool? change) {
                                 setState(() {
-                                  set.isComplete = onChanged ?? false;
+                                  set.isComplete = change ?? false;
                                 });
+                                widget.onSetChecked(change);
                               })
                           : const Icon(
                               Icons.lock,

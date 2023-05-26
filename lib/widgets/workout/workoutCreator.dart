@@ -135,6 +135,7 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   itemCount: workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
+                      onSetChecked: (result) {},
                       onExerciseDeletion: () {
                         workout.exerciseList.removeAt(index);
                       },

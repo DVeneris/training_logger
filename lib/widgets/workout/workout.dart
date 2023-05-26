@@ -47,6 +47,13 @@ class _SingleWorkoutState extends State<SingleWorkout> {
     });
   }
 
+  void _startCountdown() {
+    if (_isRunning) {
+      _cancelTimer();
+    }
+    _startTimer();
+  }
+
   void _stopTimer() {
     setState(() {
       _isRunning = false;
@@ -140,61 +147,86 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   child: ListView.builder(
                     itemCount: widget.workout.exerciseList.length,
                     itemBuilder: (context, index) {
-                      return ExerciseSingle(
-                        exercise: widget.workout.exerciseList[index].exercise,
-                        onSelectParam: () {
-                          setState(() {});
-                        },
-                      );
+                      Widget result;
+                      if (index == widget.workout.exerciseList.length - 1) {
+                        result = Column(children: [
+                          ExerciseSingle(
+                            exercise:
+                                widget.workout.exerciseList[index].exercise,
+                            onSetChecked: (result) {
+                              _startCountdown();
+                            },
+                            onSelectParam: () {
+                              setState(() {});
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () async {
+                                  var exerciseToAdd =
+                                      await Navigator.of(context).pushNamed(
+                                              RouteGenerator.exerciseList)
+                                          as ExerciseDTO?;
+                                  if (exerciseToAdd != null) {
+                                    setState(() {
+                                      widget.workout.exerciseList.add(
+                                          ExerciseOptionsDTO(
+                                              exercise: exerciseToAdd));
+                                    });
+                                  }
+                                },
+                                child: const Text(
+                                  "Add Exercise",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  if (Navigator.of(context).canPop()) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: const Text(
+                                  "Cancel Workout",
+                                  style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 100,
+                          )
+                        ]);
+                      } else {
+                        result = ExerciseSingle(
+                          onSetChecked: (result) {
+                            // _startCountdown();
+                          },
+                          exercise: widget.workout.exerciseList[index].exercise,
+                          onSelectParam: () {
+                            setState(() {});
+                          },
+                        );
+                      }
+                      return result;
                     },
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        var exerciseToAdd = await Navigator.of(context)
-                                .pushNamed(RouteGenerator.exerciseList)
-                            as ExerciseDTO?;
-                        if (exerciseToAdd != null) {
-                          setState(() {
-                            widget.workout.exerciseList.add(
-                                ExerciseOptionsDTO(exercise: exerciseToAdd));
-                          });
-                        }
-                      },
-                      child: const Text(
-                        "Add Exercise",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: const Text(
-                        "Cancel Workout",
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
             // Align(
