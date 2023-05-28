@@ -26,9 +26,38 @@ class SingleWorkout extends StatefulWidget {
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
+  int _workoutTime = 0;
+  int _totalWeight = 0;
   int _remainingTime = 10; //initial time in seconds
   late Timer _timer;
+  late Timer _workoutDurationTimer;
   bool _isRunning = false;
+
+  int _calculateTotalSetsAndWeight() {
+    var totalWeight = 0;
+    widget.workout.exerciseList.forEach((e) {
+      e.exercise.sets.forEach((s) {
+        if (s.isComplete && s.weight != null) {
+          var weight = int.tryParse(s.weight!);
+          weight = weight ?? 0;
+          totalWeight = totalWeight + weight;
+        }
+      });
+    });
+
+    return totalWeight;
+  }
+
+  void _startWorkoutTimer() {
+    setState(() {
+      _workoutTime = 0;
+    });
+    _workoutDurationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _workoutTime++;
+      });
+    });
+  }
 
   void _startTimer() {
     setState(() {
@@ -72,12 +101,15 @@ class _SingleWorkoutState extends State<SingleWorkout> {
   @override
   void dispose() {
     _timer.cancel();
+    _workoutDurationTimer.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _totalWeight = _calculateTotalSetsAndWeight();
+    _startWorkoutTimer();
     if (widget.startUnset) {
       //var workout = widget.workout;
       for (var exercise in widget.workout.exerciseList) {
@@ -133,33 +165,78 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           child: Stack(children: [
             Column(
               children: [
-                ElevatedButton(
-                  child: Text(_isRunning ? "Stop" : "Start"),
-                  onPressed: _isRunning ? _stopTimer : _startTimer,
-                ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  child: Text("Cancel"),
-                  onPressed: _cancelTimer,
-                ),
-                Text("$_remainingTime "),
+                // ElevatedButton(
+                //   child: Text(_isRunning ? "Stop" : "Start"),
+                //   onPressed: _isRunning ? _stopTimer : _startTimer,
+                // ),
+                // SizedBox(width: 8),
+                // ElevatedButton(
+                //   child: Text("Cancel"),
+                //   onPressed: _cancelTimer,
+                // ),
+                // Text("$_remainingTime "),
                 Expanded(
                   child: ListView.builder(
                     itemCount: widget.workout.exerciseList.length,
                     itemBuilder: (context, index) {
-                      Widget result;
-                      if (index == widget.workout.exerciseList.length - 1) {
-                        result = Column(children: [
-                          ExerciseSingle(
-                            exercise:
-                                widget.workout.exerciseList[index].exercise,
-                            onSetChecked: (result) {
-                              _startCountdown();
-                            },
-                            onSelectParam: () {
-                              setState(() {});
-                            },
+                      List<Widget> result = [];
+                      if (index == 0) {
+                        var _result = [
+                          Row(
+                            children: [
+                              Text(_workoutTime.toString()),
+                              Text("----------------"),
+                              Text(_totalWeight.toString()),
+
+                              // Text('data'),
+                            ],
                           ),
+                          // ExerciseSingle(
+                          //   exercise:
+                          //       widget.workout.exerciseList[index].exercise,
+                          //   onSetChecked: (result) {
+                          //     _startCountdown();
+                          //     setState(() {
+                          //       _totalWeight = _calculateTotalSetsAndWeight();
+                          //     });
+                          //   },
+                          //   onSelectParam: () {
+                          //     setState(() {});
+                          //   },
+                          // ),
+                        ];
+                        result.addAll(_result);
+                      }
+                      var _result = [
+                        ExerciseSingle(
+                          onSetChecked: (result) {
+                            _startCountdown();
+                            setState(() {
+                              _totalWeight = _calculateTotalSetsAndWeight();
+                            });
+                          },
+                          exercise: widget.workout.exerciseList[index].exercise,
+                          onSelectParam: () {
+                            setState(() {});
+                          },
+                        )
+                      ];
+                      result.addAll(_result);
+                      if (index == widget.workout.exerciseList.length - 1) {
+                        var _result = [
+                          // ExerciseSingle(
+                          //   exercise:
+                          //       widget.workout.exerciseList[index].exercise,
+                          //   onSetChecked: (result) {
+                          //     _startCountdown();
+                          //     setState(() {
+                          //       _totalWeight = _calculateTotalSetsAndWeight();
+                          //     });
+                          //   },
+                          //   onSelectParam: () {
+                          //     setState(() {});
+                          //   },
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -211,55 +288,64 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                           const SizedBox(
                             height: 100,
                           )
-                        ]);
-                      } else {
-                        result = ExerciseSingle(
-                          onSetChecked: (result) {
-                            // _startCountdown();
-                          },
-                          exercise: widget.workout.exerciseList[index].exercise,
-                          onSelectParam: () {
-                            setState(() {});
-                          },
-                        );
+                        ];
+                        result.addAll(_result);
                       }
-                      return result;
+
+                      return Column(
+                        children: result,
+                      );
                     },
                   ),
                 ),
               ],
             ),
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(bottom: 60.0),
-            //     child: Container(
-            //       color: Colors.white,
-            //       height: 100,
-            //       child: Row(
-            //         children: [
-            //           Column(
-            //             children: [
-            //               Row(
-            //                 children: [
-            //                   TextButton(
-            //                     child: const Text("- 15"),
-            //                     onPressed: () {},
-            //                   ),
-            //                   Text("40"),
-            //                   TextButton(
-            //                     child: const Text("+ 15"),
-            //                     onPressed: () {},
-            //                   ),
-            //                 ],
-            //               )
-            //             ],
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // )
+            if (_isRunning)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 60.0),
+                  child: Container(
+                    color: Color.fromARGB(255, 182, 182, 182),
+                    height: 100,
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  child: const Text("- 15"),
+                                  onPressed: () {
+                                    var time = _remainingTime - 15;
+                                    if (time <= 0) {
+                                      setState(() {
+                                        _isRunning = false;
+                                      });
+                                      _timer.cancel();
+                                    } else {
+                                      _remainingTime = time;
+                                    }
+                                  },
+                                ),
+                                Text(_remainingTime.toString()),
+                                TextButton(
+                                  child: const Text("+ 15"),
+                                  onPressed: () {
+                                    setState(() {
+                                      _remainingTime += 15;
+                                    });
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
           ]),
         ),
       ),
