@@ -15,6 +15,7 @@ class ExerciseSingle extends StatefulWidget {
   final Function() onSelectParam;
   final Function()? onExerciseDeletion;
   final Function(bool?) onSetChecked;
+asdadas//den pairnei thn askisi pisw
   ExerciseSingle(
       {super.key,
       required this.exercise,
@@ -32,10 +33,23 @@ class ExerciseSingle extends StatefulWidget {
 class _ExerciseSingleState extends State<ExerciseSingle> {
   final weightController = TextEditingController();
   final repsController = TextEditingController();
+  var exercise = ExerciseDTO();
   @override
   void initState() {
     super.initState();
-    widget.exercise.mediaItem;
+    exercise = ExerciseDTO(
+        id: widget.exercise.id,
+        unit: widget.exercise.unit,
+        name: widget.exercise.name,
+        userId: widget.exercise.userId,
+        mediaItem: widget.exercise.mediaItem,
+        equipment: widget.exercise.equipment,
+        exerciseGroup: widget.exercise.exerciseGroup,
+        previousSets: widget.exercise.currentSets,
+        currentSets: widget.exercise.currentSets.map((e) {
+          return ExerciseSet();
+        }).toList());
+    // widget.exercise.mediaItem;
     repsController.addListener(_printLatestValue);
     weightController.addListener(_printLatestValue);
     //exercise.mediaItem?.url ??= "/assets/no_media.png";
@@ -68,14 +82,13 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                     CircleAvatar(
                       maxRadius: 20,
                       minRadius: 10,
-                      backgroundImage:
-                          AssetImage(widget.exercise.mediaItem.url),
+                      backgroundImage: AssetImage(exercise.mediaItem.url),
                       backgroundColor: Colors.transparent,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        widget.exercise.name,
+                        exercise.name,
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.normal,
@@ -103,9 +116,9 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
             //   )
           ],
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Expanded(flex: 1, child: Text("Set")),
             Expanded(flex: 1, child: Text("Previous")),
             Expanded(flex: 2, child: Center(child: Text("Weight"))),
@@ -117,17 +130,22 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: widget.exercise.sets.length,
+          itemCount: exercise.currentSets.length,
           itemBuilder: (context, index) {
-            var set = widget.exercise.sets[index];
+            var set = exercise.currentSets.isNotEmpty
+                ? exercise.currentSets[index]
+                : ExerciseSet();
+            var prevSet = exercise.previousSets.isNotEmpty
+                ? exercise.previousSets[index]
+                : ExerciseSet();
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Dismissible(
-                key: Key("${widget.exercise.id}-index-$index"),
+                key: Key("${exercise.id}-index-$index"),
                 onDismissed: (direction) {
                   // Remove the item from the data source.
                   setState(() {
-                    widget.exercise.sets.removeAt(index);
+                    exercise.currentSets.removeAt(index);
                   });
                   // Then show a snackbar.
                   // ScaffoldMessenger.of(context)
@@ -139,8 +157,15 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                     Expanded(
                         flex: 1,
                         child:
-                            Text("${widget.exercise.sets.indexOf(set) + 1}")),
-                    const Expanded(flex: 1, child: Center(child: Text('-'))),
+                            Text("${exercise.currentSets.indexOf(set) + 1}")),
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: prevSet.reps != null || prevSet.weight != null
+                            ? Text('${prevSet.weight} x ${prevSet.reps}')
+                            : const Text('-'),
+                      ),
+                    ),
                     Expanded(
                       flex: 2,
                       child: Padding(
@@ -172,6 +197,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                               value: set.isComplete,
                               onChanged: (bool? change) {
                                 setState(() {
+                                  widget.onChange(exercise);
                                   set.isComplete = change ?? false;
                                 });
                                 widget.onSetChecked(change);
@@ -203,10 +229,10 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                   ),
                   onPressed: () {
                     setState(() {
-                      widget.exercise.sets.add(new ExerciseSet());
+                      exercise.currentSets.add(ExerciseSet());
                       widget.onSelectParam();
                     });
-                    print(widget.exercise.sets.length);
+                    // print(widget.exercise.c.length);
                   },
                 )),
           ],

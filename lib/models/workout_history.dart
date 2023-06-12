@@ -2,20 +2,23 @@ import 'package:training_tracker/models/exercise_set.dart';
 
 class WorkoutHistory {
   String? id;
+  final String userId;
   final String workoutId;
   final String workoutName;
   final List<WorkoutHistoryExerciseOptions> exerciseOptions;
 
-  WorkoutHistory(
+  WorkoutHistory({
     this.id,
-    this.workoutId,
-    this.workoutName,
-    this.exerciseOptions,
-  );
+    required this.userId,
+    required this.workoutId,
+    required this.workoutName,
+    required this.exerciseOptions,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'userId': userId,
       'workoutId': workoutId,
       'workoutName': workoutName,
       'exerciseOptions': exerciseOptions
@@ -26,10 +29,11 @@ class WorkoutHistory {
 
   factory WorkoutHistory.fromJson(Map<String, dynamic> json, String id) {
     return WorkoutHistory(
-      id,
-      json['workoutId'],
-      json['workoutName'],
-      List<Map<String, dynamic>>.from(json['exerciseOptions'])
+      id: id,
+      userId: json['userId'],
+      workoutId: json['workoutId'],
+      workoutName: json['workoutName'],
+      exerciseOptions: List<Map<String, dynamic>>.from(json['exerciseOptions'])
           .map((exerciseOptionJson) =>
               WorkoutHistoryExerciseOptions.fromJson(exerciseOptionJson))
           .toList(),
@@ -43,12 +47,12 @@ class WorkoutHistoryExerciseOptions {
   final List<ExerciseSet> currentSets;
   final List<ExerciseSet> previousSets;
 
-  WorkoutHistoryExerciseOptions(
-    this.id,
-    this.name,
-    this.currentSets,
-    this.previousSets,
-  );
+  WorkoutHistoryExerciseOptions({
+    required this.id,
+    required this.name,
+    required this.currentSets,
+    required this.previousSets,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -61,12 +65,12 @@ class WorkoutHistoryExerciseOptions {
 
   factory WorkoutHistoryExerciseOptions.fromJson(Map<String, dynamic> json) {
     return WorkoutHistoryExerciseOptions(
-      json['id'],
-      json['name'],
-      List<Map<String, dynamic>>.from(json['currentSets'])
+      id: json['id'],
+      name: json['name'],
+      currentSets: List<Map<String, dynamic>>.from(json['currentSets'])
           .map((setJson) => ExerciseSet.fromJson(setJson))
           .toList(),
-      List<Map<String, dynamic>>.from(json['previousSets'])
+      previousSets: List<Map<String, dynamic>>.from(json['previousSets'])
           .map((setJson) => ExerciseSet.fromJson(setJson))
           .toList(),
     );

@@ -35,11 +35,13 @@ class WorkoutService {
     var list = <ExerciseOptions>[];
     for (var option in exerciseList) {
       list.add(ExerciseOptions(
-          time: option.time,
-          note: option.note,
-          unit: option.exercise.unit,
-          exerciseId: option.exercise.id ?? "",
-          sets: option.exercise.sets));
+        time: option.time,
+        note: option.note,
+        unit: option.exercise.unit,
+        exerciseId: option.exercise.id ?? "",
+        currentSets: option.exercise.currentSets,
+        previousSets: option.exercise.previousSets,
+      ));
     }
     return list;
   }

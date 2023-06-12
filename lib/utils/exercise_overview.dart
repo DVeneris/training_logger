@@ -76,11 +76,11 @@ class _ExerciseOverviewSingleState extends State<ExerciseOverviewSingle> {
                       ),
                     ),
                   ],
-                  rows: widget.exercise.sets.map((set) {
+                  rows: widget.exercise.currentSets.map((set) {
                     return DataRow(
                       cells: <DataCell>[
-                        DataCell(
-                            Text("${widget.exercise.sets.indexOf(set) + 1}")),
+                        DataCell(Text(
+                            "${widget.exercise.currentSets.indexOf(set) + 1}")),
                         DataCell(Text(set.weight ?? '')),
                         DataCell(Text(set.reps ?? '')),
                       ],

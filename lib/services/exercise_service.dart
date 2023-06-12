@@ -15,7 +15,8 @@ class ExerciseService {
         name: exerciseDTO.name,
         exerciseGroup: exerciseDTO.exerciseGroup,
         unit: WeightUnit.kg,
-        sets: [],
+        currentSets: exerciseDTO.currentSets,
+        previousSets: exerciseDTO.previousSets,
         mediaItemId: 'nPQc2Iur2xnqo405UnhZ',
         equipment: Equipment.none);
 

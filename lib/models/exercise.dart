@@ -8,7 +8,8 @@ class Exercise {
   final String userId;
   final String name;
   final ExerciseGroup exerciseGroup;
-  final List<ExerciseSet> sets;
+  final List<ExerciseSet> currentSets;
+  final List<ExerciseSet> previousSets;
   final WeightUnit unit;
   final String mediaItemId;
   final Equipment equipment;
@@ -19,7 +20,8 @@ class Exercise {
       required this.name,
       required this.exerciseGroup,
       required this.unit,
-      required this.sets,
+      required this.currentSets,
+      required this.previousSets,
       required this.mediaItemId,
       required this.equipment});
 
@@ -30,7 +32,8 @@ class Exercise {
       'name': name,
       'exerciseGroup': exerciseGroup.index,
       'unit': unit.index,
-      'sets': sets.map((set) => set.toMap()).toList(),
+      'previousSets': previousSets.map((set) => set.toMap()).toList(),
+      'currentSets': currentSets.map((set) => set.toMap()).toList(),
       'mediaItemId': mediaItemId,
       'equipment': equipment.index
     };
@@ -43,9 +46,16 @@ class Exercise {
         name: json['name'],
         exerciseGroup: ExerciseGroup.values[json['exerciseGroup']],
         unit: WeightUnit.values[json['unit']],
-        sets: List<Map<String, dynamic>>.from(json['sets'])
-            .map((setJson) => ExerciseSet.fromJson(setJson))
-            .toList(),
+        currentSets: json['currentSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['currentSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
+        previousSets: json['previousSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['previousSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
         mediaItemId: json['mediaItemId'],
         equipment: Equipment.values[json['equipment']]);
   }

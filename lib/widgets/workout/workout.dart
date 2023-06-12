@@ -36,7 +36,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
   int _calculateTotalSetsAndWeight() {
     var totalWeight = 0;
     widget.workout.exerciseList.forEach((e) {
-      e.exercise.sets.forEach((s) {
+      e.exercise.currentSets.forEach((s) {
         if (s.isComplete && s.weight != null) {
           var weight = int.tryParse(s.weight!);
           weight = weight ?? 0;
@@ -112,10 +112,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
     _startWorkoutTimer();
     if (widget.startUnset) {
       //var workout = widget.workout;
-      for (var exercise in widget.workout.exerciseList) {
-        exercise.exercise.sets = [];
-        exercise.exercise.sets.add(ExerciseSet(isComplete: false));
-      }
+      // for (var exercise in widget.workout.exerciseList) {
+      //   exercise.exercise.sets = [];
+      //   exercise.exercise.sets.add(ExerciseSet(isComplete: false));
+      // }
     }
   }
 

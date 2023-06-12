@@ -63,14 +63,16 @@ class ExerciseOptions {
   final String note;
   final String exerciseId;
   final WeightUnit unit;
-  List<ExerciseSet> sets;
+  List<ExerciseSet> currentSets;
+  List<ExerciseSet> previousSets;
 
   ExerciseOptions({
     required this.time,
     required this.note,
     required this.unit,
     required this.exerciseId,
-    required this.sets,
+    required this.currentSets,
+    required this.previousSets,
   });
 
   Map<String, dynamic> toMap() {
@@ -79,20 +81,30 @@ class ExerciseOptions {
       'note': note,
       'exerciseId': exerciseId,
       'unit': unit.index,
-      'sets': sets.map((set) => set.toMap()).toList(),
+      'currentSets': currentSets.map((set) => set.toMap()).toList(),
+      'previousSets': previousSets.map((set) => set.toMap()).toList(),
     };
   }
 
   factory ExerciseOptions.fromJson(Map<String, dynamic> json) {
     //var unit1 = WeightUnit.values[json['unit']];
+    var prevSet = json['previousSets'];
+    var currSet = json['currentSets'];
     return ExerciseOptions(
       time: json['time'],
       note: json['note'],
       unit: WeightUnit.values[json['unit']],
       exerciseId: json['exerciseId'],
-      sets: List<Map<String, dynamic>>.from(json['sets'])
-          .map((setJson) => ExerciseSet.fromJson(setJson))
-          .toList(),
+      previousSets: prevSet == null
+          ? []
+          : List<Map<String, dynamic>>.from(json['previousSets'])
+              .map((setJson) => ExerciseSet.fromJson(setJson))
+              .toList(),
+      currentSets: currSet == null
+          ? []
+          : List<Map<String, dynamic>>.from(json['currentSets'])
+              .map((setJson) => ExerciseSet.fromJson(setJson))
+              .toList(),
     );
   }
 }

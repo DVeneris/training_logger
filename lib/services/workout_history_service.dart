@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/models/workout_history.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/snapshot_object.dart';
@@ -23,4 +26,38 @@ class WorkoutHistoryService {
 
     return workoutHistoryList.toList();
   }
+
+  // Future<void> createWorkoutHistory(WorkoutDTO workoutDTO) async {
+  //   var user = AuthService().user;
+  //   // var workout = Workout(
+  //   //     userId: user!.uid,
+  //   //     name: workoutDTO.name,
+  //   //     createDate: workoutDTO.createDate ?? DateTime.now(),
+  //   //     updateDate: DateTime.now(),
+  //   //     exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
+  //   //     totalTime: "0",
+  //   //     totalVolume: 0);
+  //   var workoutHistory = WorkoutHistory(
+  //       userId: user!.uid,
+  //       workoutId: workoutDTO.id!,
+  //       workoutName: workoutDTO.name,
+  //       exerciseOptions: _getExerciseOptions(workoutDTO.exerciseList));
+
+  //   var ref = _db.collection('workout');
+  //   var workoutMap = workout.toMap();
+  //   var snapshot = await ref.add(workoutMap);
+  // }
+
+  // List<WorkoutHistoryExerciseOptions> _getExerciseOptions(
+  //     List<ExerciseOptionsDTO> exerciselist) {
+  //   var list = <WorkoutHistoryExerciseOptions>[];
+  //   exerciselist.forEach((element) {
+  //     var options = WorkoutHistoryExerciseOptions(
+  //         id: element.exercise.id!,
+  //         name: element.exercise.name,
+  //         currentSets: element.exercise.currentSets,
+  //         previousSets: element.exercise.previousSets); //
+  //   });
+  //   return list;
+  // }
 }

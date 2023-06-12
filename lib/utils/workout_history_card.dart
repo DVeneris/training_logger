@@ -14,7 +14,7 @@ class HomeCard extends StatelessWidget {
     int totalSets = 0;
 
     for (var exercise in workout.exerciseList) {
-      totalSets += exercise.exercise.sets.length;
+      totalSets += exercise.exercise.currentSets.length;
     }
     print('Total sets: $totalSets');
   }
@@ -153,7 +153,7 @@ class HomeCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                              "${workout.exerciseList[index].exercise.sets.length} x  "),
+                              "${workout.exerciseList[index].exercise.currentSets.length} x  "),
                           CircleAvatar(
                             maxRadius: 20,
                             minRadius: 10,
@@ -202,7 +202,7 @@ class HomeCard extends StatelessWidget {
     int totalSets = 0;
 
     for (var exercise in exerciseOptions) {
-      totalSets += exercise.exercise.sets.length;
+      totalSets += exercise.exercise.currentSets.length;
     }
     return totalSets.toString();
   }

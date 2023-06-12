@@ -9,7 +9,8 @@ extension ExerciseOptionsMapping on ExerciseOptionsDTO {
       note: note,
       unit: exercise.unit,
       exerciseId: exercise.id!,
-      sets: exercise.sets,
+      currentSets: exercise.currentSets,
+      previousSets: exercise.previousSets,
     );
   }
 }
@@ -17,7 +18,8 @@ extension ExerciseOptionsMapping on ExerciseOptionsDTO {
 extension ExerciseOptionsDTOMapping on ExerciseOptions {
   ExerciseOptionsDTO toExerciseOptionsDTO(List<ExerciseDTO> exercises) {
     var exercise = exercises.firstWhere((element) => element.id == exerciseId);
-    exercise.sets = sets;
+    exercise.previousSets = previousSets;
+    exercise.currentSets = currentSets;
     return ExerciseOptionsDTO(
       note: note,
       time: time,

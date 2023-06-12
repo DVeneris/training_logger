@@ -9,7 +9,8 @@ class ExerciseDTO {
   String? userId;
   String name;
   ExerciseGroup exerciseGroup;
-  List<ExerciseSet> sets;
+  List<ExerciseSet> currentSets;
+  List<ExerciseSet> previousSets;
   WeightUnit unit;
   Equipment equipment;
   late MediaItemDTO mediaItem;
@@ -19,7 +20,8 @@ class ExerciseDTO {
     this.userId,
     this.name = '',
     this.exerciseGroup = ExerciseGroup.none,
-    this.sets = const [],
+    this.currentSets = const [],
+    this.previousSets = const [],
     MediaItemDTO? mediaItem,
     this.unit = WeightUnit.kg,
     this.equipment = Equipment.none,
