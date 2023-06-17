@@ -26,6 +26,7 @@ class SingleWorkout extends StatefulWidget {
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
+  // List<ExerciseOptionsDTO> _workoutExerciseList = [];
   int _workoutTime = 0;
   int _totalWeight = 0;
   int _remainingTime = 10; //initial time in seconds
@@ -35,15 +36,18 @@ class _SingleWorkoutState extends State<SingleWorkout> {
 
   int _calculateTotalSetsAndWeight() {
     var totalWeight = 0;
-    widget.workout.exerciseList.forEach((e) {
-      e.exercise.currentSets.forEach((s) {
+    for (var e in widget.workout.exerciseList) {
+      for (var s in e.exercise.currentSets) {
         if (s.isComplete && s.weight != null) {
           var weight = int.tryParse(s.weight!);
           weight = weight ?? 0;
-          totalWeight = totalWeight + weight;
+          var reps = int.tryParse(s.reps!);
+          reps = reps ?? 0;
+          var volume = weight * reps;
+          totalWeight = totalWeight + volume;
         }
-      });
-    });
+      }
+    }
 
     return totalWeight;
   }
@@ -52,7 +56,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
     setState(() {
       _workoutTime = 0;
     });
-    _workoutDurationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _workoutDurationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _workoutTime++;
       });
@@ -64,7 +68,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
       _remainingTime = 10;
       _isRunning = true;
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_remainingTime > 0) {
           _remainingTime--;
@@ -108,15 +112,33 @@ class _SingleWorkoutState extends State<SingleWorkout> {
   @override
   void initState() {
     super.initState();
-    _totalWeight = _calculateTotalSetsAndWeight();
+
     _startWorkoutTimer();
     if (widget.startUnset) {
       //var workout = widget.workout;
-      // for (var exercise in widget.workout.exerciseList) {
       //   exercise.exercise.sets = [];
       //   exercise.exercise.sets.add(ExerciseSet(isComplete: false));
-      // }
+      // } // for (var exercise in widget.workout.exerciseList) {
     }
+    // for (var element in widget.workout.exerciseList) {
+    //   var exercise = ExerciseDTO(
+    //       id: element.exercise.id,
+    //       unit: element.exercise.unit,
+    //       name: element.exercise.name,
+    //       userId: element.exercise.userId,
+    //       mediaItem: element.exercise.mediaItem,
+    //       equipment: element.exercise.equipment,
+    //       exerciseGroup: element.exercise.exerciseGroup,
+    //       previousSets: element.exercise.currentSets,
+    //       currentSets: element.exercise.currentSets.map((e) {
+    //         return ExerciseSet();
+    //       }).toList());
+
+    //   var options = ExerciseOptionsDTO(
+    //       exercise: exercise, note: element.note, time: element.time);
+    //   widget.workout.exerciseList.add(options);
+    // }
+    _totalWeight = _calculateTotalSetsAndWeight();
   }
 
   @override
@@ -145,6 +167,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   ),
                   foregroundColor: Colors.blue),
               onPressed: () async {
+                widget.workout.totalTime = _workoutTime.toString();
+                widget.workout.totalVolume = _totalWeight;
                 await WorkoutService().updateWorkout(widget.workout);
                 Navigator.of(context).pop();
               },
@@ -165,138 +189,136 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           child: Stack(children: [
             Column(
               children: [
-                // ElevatedButton(
-                //   child: Text(_isRunning ? "Stop" : "Start"),
-                //   onPressed: _isRunning ? _stopTimer : _startTimer,
-                // ),
-                // SizedBox(width: 8),
-                // ElevatedButton(
-                //   child: Text("Cancel"),
-                //   onPressed: _cancelTimer,
-                // ),
-                // Text("$_remainingTime "),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: widget.workout.exerciseList.length,
-                    itemBuilder: (context, index) {
-                      List<Widget> result = [];
-                      if (index == 0) {
-                        var _result = [
-                          Row(
-                            children: [
-                              Text(_workoutTime.toString()),
-                              Text("----------------"),
-                              Text(_totalWeight.toString()),
+                  child: widget.workout.exerciseList.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: widget.workout.exerciseList.length,
+                          itemBuilder: (context, index) {
+                            List<Widget> result = [];
+                            if (index == 0) {
+                              var addToStart = [
+                                Row(
+                                  children: [
+                                    Text(_workoutTime.toString()),
+                                    const Text("----------------"),
+                                    Text(_totalWeight.toString()),
 
-                              // Text('data'),
-                            ],
-                          ),
-                          // ExerciseSingle(
-                          //   exercise:
-                          //       widget.workout.exerciseList[index].exercise,
-                          //   onSetChecked: (result) {
-                          //     _startCountdown();
-                          //     setState(() {
-                          //       _totalWeight = _calculateTotalSetsAndWeight();
-                          //     });
-                          //   },
-                          //   onSelectParam: () {
-                          //     setState(() {});
-                          //   },
-                          // ),
-                        ];
-                        result.addAll(_result);
-                      }
-                      var _result = [
-                        ExerciseSingle(
-                          onSetChecked: (result) {
-                            _startCountdown();
-                            setState(() {
-                              _totalWeight = _calculateTotalSetsAndWeight();
-                            });
-                          },
-                          exercise: widget.workout.exerciseList[index].exercise,
-                          onSelectParam: () {
-                            setState(() {});
+                                    // Text('data'),
+                                  ],
+                                ),
+                              ];
+                              result.addAll(addToStart);
+                            }
+                            var addToBody = [
+                              ExerciseSingle(
+                                onSetChecked: (result) {
+                                  _startCountdown();
+                                  setState(() {
+                                    _totalWeight =
+                                        _calculateTotalSetsAndWeight();
+                                  });
+                                },
+                                exercise:
+                                    widget.workout.exerciseList[index].exercise,
+                                onSelectParam: () {
+                                  setState(() {});
+                                },
+                              )
+                            ];
+                            result.addAll(addToBody);
+                            if (index ==
+                                    widget.workout.exerciseList.length - 1 ||
+                                widget.workout.exerciseList.length == 0) {
+                              var addToEnd = [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        var exerciseToAdd = await Navigator.of(
+                                                    context)
+                                                .pushNamed(
+                                                    RouteGenerator.exerciseList)
+                                            as ExerciseDTO?;
+                                        if (exerciseToAdd != null) {
+                                          var options = ExerciseOptionsDTO(
+                                              exercise: exerciseToAdd);
+                                          setState(() {
+                                            widget.workout.exerciseList
+                                                .add(options);
+                                          });
+                                        }
+                                      },
+                                      child: const Text(
+                                        "Add Exercise",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        if (Navigator.of(context).canPop()) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: const Text(
+                                        "Cancel Workout",
+                                        style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 100,
+                                )
+                              ];
+                              result.addAll(addToEnd);
+                            }
+                            return Column(
+                              children: result,
+                            );
                           },
                         )
-                      ];
-                      result.addAll(_result);
-                      if (index == widget.workout.exerciseList.length - 1) {
-                        var _result = [
-                          // ExerciseSingle(
-                          //   exercise:
-                          //       widget.workout.exerciseList[index].exercise,
-                          //   onSetChecked: (result) {
-                          //     _startCountdown();
-                          //     setState(() {
-                          //       _totalWeight = _calculateTotalSetsAndWeight();
-                          //     });
-                          //   },
-                          //   onSelectParam: () {
-                          //     setState(() {});
-                          //   },
-                          // ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () async {
-                                  var exerciseToAdd =
-                                      await Navigator.of(context).pushNamed(
-                                              RouteGenerator.exerciseList)
-                                          as ExerciseDTO?;
-                                  if (exerciseToAdd != null) {
-                                    setState(() {
-                                      widget.workout.exerciseList.add(
-                                          ExerciseOptionsDTO(
-                                              exercise: exerciseToAdd));
-                                    });
-                                  }
-                                },
-                                child: const Text(
-                                  "Add Exercise",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 15,
-                                  ),
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                var exerciseToAdd = await Navigator.of(context)
+                                        .pushNamed(RouteGenerator.exerciseList)
+                                    as ExerciseDTO?;
+                                if (exerciseToAdd != null) {
+                                  var options = ExerciseOptionsDTO(
+                                      exercise: exerciseToAdd);
+                                  setState(() {
+                                    widget.workout.exerciseList.add(options);
+                                  });
+                                }
+                              },
+                              child: const Text(
+                                "Add Exercise",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 15,
                                 ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  if (Navigator.of(context).canPop()) {
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                                child: const Text(
-                                  "Cancel Workout",
-                                  style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 100,
-                          )
-                        ];
-                        result.addAll(_result);
-                      }
-
-                      return Column(
-                        children: result,
-                      );
-                    },
-                  ),
+                            ),
+                          ],
+                        ),
                 ),
               ],
             ),

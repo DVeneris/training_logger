@@ -20,24 +20,25 @@ class ExerciseService {
         mediaItemId: 'nPQc2Iur2xnqo405UnhZ',
         equipment: Equipment.none);
 
-    var ref = _db.collection('exercise');
     var snapshot = await _db.collection("exercise").add(exercise.toMap());
-    //return Exercise.fromJson(snapshot. ?? {});
   }
 
   Future<void> updateExercise(Exercise exercise) async {
     var user = AuthService().user!;
     var ref = _db.collection('exercise').doc(exercise.userId);
-
-    //return Exercise.fromJson(snapshot. ?? {});
   }
 
   Future<List<ExerciseDTO>> getExerciseList(
       String? userId, List<String>? exerciseIds) async {
-    var ref = _db
-        .collection('exercise')
-        .where('userId', isEqualTo: userId)
-        .where(FieldPath.documentId, whereIn: exerciseIds);
+    Query<Map<String, dynamic>> ref;
+    if (exerciseIds != null && exerciseIds.isNotEmpty) {
+      ref = _db
+          .collection('exercise')
+          .where('userId', isEqualTo: userId)
+          .where(FieldPath.documentId, whereIn: exerciseIds);
+    } else {
+      ref = _db.collection('exercise').where('userId', isEqualTo: userId);
+    }
     var snapshot = await ref.get(); //read collection once
     Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
     snapshotList = snapshot.docs.map((s) {

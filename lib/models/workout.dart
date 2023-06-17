@@ -42,6 +42,10 @@ class Workout {
   }
 
   factory Workout.fromJson(Map<String, dynamic> json, String id) {
+    var exList = json['exerciseList'];
+    var tt = exList as List<dynamic>;
+    tt.map((e) => ExerciseOptions.fromJson(e));
+
     return Workout(
       id: id,
       userId: json['userId'],
@@ -49,7 +53,7 @@ class Workout {
       note: json['note'],
       createDate: DateTime.parse(json['createDate']),
       updateDate: DateTime.parse(json['updateDate']),
-      exerciseList: List<Map<String, dynamic>>.from(json['exerciseList'])
+      exerciseList: List<dynamic>.from(json['exerciseList'])
           .map((exerciseJson) => ExerciseOptions.fromJson(exerciseJson))
           .toList(),
       totalTime: json['totalTime'],

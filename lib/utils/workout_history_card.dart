@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/DTOS/workout_history_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
@@ -9,14 +10,13 @@ import 'package:training_tracker/widgets/workout/workout.dart';
 import '../routes.dart';
 
 class HomeCard extends StatelessWidget {
-  final WorkoutDTO workout;
-  HomeCard({super.key, required this.workout}) {
-    int totalSets = 0;
+  final WorkoutHistoryDTO workoutHistory;
+  HomeCard({super.key, required this.workoutHistory}) {
+    // int totalSets = 0;
 
-    for (var exercise in workout.exerciseList) {
-      totalSets += exercise.exercise.currentSets.length;
-    }
-    print('Total sets: $totalSets');
+    // for (var exercise in workoutHistory.workout.exerciseList) {
+    //   totalSets += exercise.exercise.currentSets.length;
+    // }
   }
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class HomeCard extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    workout.name,
+                    workoutHistory.workout.name,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )
@@ -78,7 +78,7 @@ class HomeCard extends StatelessWidget {
                 Expanded(
                   child: DataTable(
                     dividerThickness: 0,
-                    dataRowHeight: 25,
+                    // dataRowHeight: 25,
                     headingRowHeight: 25,
                     dataTextStyle: TextStyle(
                       fontStyle: FontStyle.italic,
@@ -113,10 +113,14 @@ class HomeCard extends StatelessWidget {
                     rows: <DataRow>[
                       DataRow(
                         cells: <DataCell>[
-                          DataCell(Text(workout.totalTime)),
-                          DataCell(Text('${workout.totalVolume} kg')),
+                          DataCell(Text(workoutHistory.totalTime)),
+                          DataCell(Text('${workoutHistory.totalVolume} kg')),
                           DataCell(
-                              Text(_calculateTotalSets(workout.exerciseList))),
+                            Text(
+                              _calculateTotalSets(
+                                  workoutHistory.workout.exerciseList),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -146,26 +150,27 @@ class HomeCard extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: workout.exerciseList.length.clamp(0, 3),
+                  itemCount:
+                      workoutHistory.workout.exerciseList.length.clamp(0, 3),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
                           Text(
-                              "${workout.exerciseList[index].exercise.currentSets.length} x  "),
+                              "${workoutHistory.workout.exerciseList[index].exercise.currentSets.length} x  "),
                           CircleAvatar(
                             maxRadius: 20,
                             minRadius: 10,
-                            backgroundImage: AssetImage(workout
+                            backgroundImage: AssetImage(workoutHistory.workout
                                 .exerciseList[index].exercise.mediaItem.url),
                             backgroundColor: Colors.transparent,
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  workout.exerciseList[index].exercise.name),
+                              child: Text(workoutHistory
+                                  .workout.exerciseList[index].exercise.name),
                             ),
                           )
                         ],
@@ -173,7 +178,7 @@ class HomeCard extends StatelessWidget {
                     );
                   }),
             ),
-            if (workout.exerciseList.length >= 3) ...[
+            if (workoutHistory.workout.exerciseList.length >= 3) ...[
               Row(
                 children: [
                   Expanded(
@@ -181,7 +186,7 @@ class HomeCard extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Center(
                         child: Text(
-                          "And ${workout.exerciseList.length - 3} more excersises",
+                          "And ${workoutHistory.workout.exerciseList.length - 3} more excersises",
                           style: TextStyle(
                             color: Colors.grey.shade600,
                           ),

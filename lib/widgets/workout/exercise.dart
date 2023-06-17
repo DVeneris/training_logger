@@ -15,7 +15,6 @@ class ExerciseSingle extends StatefulWidget {
   final Function() onSelectParam;
   final Function()? onExerciseDeletion;
   final Function(bool?) onSetChecked;
-asdadas//den pairnei thn askisi pisw
   ExerciseSingle(
       {super.key,
       required this.exercise,
@@ -33,22 +32,22 @@ asdadas//den pairnei thn askisi pisw
 class _ExerciseSingleState extends State<ExerciseSingle> {
   final weightController = TextEditingController();
   final repsController = TextEditingController();
-  var exercise = ExerciseDTO();
+  // var exercise = ExerciseDTO();
   @override
   void initState() {
     super.initState();
-    exercise = ExerciseDTO(
-        id: widget.exercise.id,
-        unit: widget.exercise.unit,
-        name: widget.exercise.name,
-        userId: widget.exercise.userId,
-        mediaItem: widget.exercise.mediaItem,
-        equipment: widget.exercise.equipment,
-        exerciseGroup: widget.exercise.exerciseGroup,
-        previousSets: widget.exercise.currentSets,
-        currentSets: widget.exercise.currentSets.map((e) {
-          return ExerciseSet();
-        }).toList());
+    // exercise = ExerciseDTO(
+    //     id: widget.exercise.id,
+    //     unit: widget.exercise.unit,
+    //     name: widget.exercise.name,
+    //     userId: widget.exercise.userId,
+    //     mediaItem: widget.exercise.mediaItem,
+    //     equipment: widget.exercise.equipment,
+    //     exerciseGroup: widget.exercise.exerciseGroup,
+    //     previousSets: widget.exercise.currentSets,
+    //     currentSets: widget.exercise.currentSets.map((e) {
+    //       return ExerciseSet();
+    //     }).toList());
     // widget.exercise.mediaItem;
     repsController.addListener(_printLatestValue);
     weightController.addListener(_printLatestValue);
@@ -82,13 +81,14 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                     CircleAvatar(
                       maxRadius: 20,
                       minRadius: 10,
-                      backgroundImage: AssetImage(exercise.mediaItem.url),
+                      backgroundImage:
+                          AssetImage(widget.exercise.mediaItem.url),
                       backgroundColor: Colors.transparent,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        exercise.name,
+                        widget.exercise.name,
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.normal,
@@ -130,22 +130,27 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: exercise.currentSets.length,
+          itemCount: widget.exercise.currentSets.length,
           itemBuilder: (context, index) {
-            var set = exercise.currentSets.isNotEmpty
-                ? exercise.currentSets[index]
+            var set = widget.exercise.currentSets.isNotEmpty
+                ? widget.exercise.currentSets[index]
                 : ExerciseSet();
-            var prevSet = exercise.previousSets.isNotEmpty
-                ? exercise.previousSets[index]
-                : ExerciseSet();
+
+            var prevSet = ExerciseSet();
+            if (index < widget.exercise.previousSets.length) {
+              prevSet = widget.exercise.previousSets.isNotEmpty
+                  ? widget.exercise.previousSets[index]
+                  : ExerciseSet();
+            }
+
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Dismissible(
-                key: Key("${exercise.id}-index-$index"),
+                key: Key("${widget.exercise.id}-index-$index"),
                 onDismissed: (direction) {
                   // Remove the item from the data source.
                   setState(() {
-                    exercise.currentSets.removeAt(index);
+                    widget.exercise.currentSets.removeAt(index);
                   });
                   // Then show a snackbar.
                   // ScaffoldMessenger.of(context)
@@ -156,8 +161,8 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                   children: [
                     Expanded(
                         flex: 1,
-                        child:
-                            Text("${exercise.currentSets.indexOf(set) + 1}")),
+                        child: Text(
+                            "${widget.exercise.currentSets.indexOf(set) + 1}")),
                     Expanded(
                       flex: 1,
                       child: Center(
@@ -171,6 +176,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: WorkoutSetTextield(
+                          hint: prevSet.weight ?? '',
                           text: set.weight ?? '',
                           onChange: (data) {
                             set.weight = data;
@@ -183,6 +189,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: WorkoutSetTextield(
+                          hint: prevSet.reps ?? '',
                           text: set.reps ?? '',
                           onChange: (data) {
                             set.reps = data;
@@ -197,7 +204,6 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                               value: set.isComplete,
                               onChanged: (bool? change) {
                                 setState(() {
-                                  widget.onChange(exercise);
                                   set.isComplete = change ?? false;
                                 });
                                 widget.onSetChecked(change);
@@ -229,7 +235,7 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                   ),
                   onPressed: () {
                     setState(() {
-                      exercise.currentSets.add(ExerciseSet());
+                      widget.exercise.currentSets.add(ExerciseSet());
                       widget.onSelectParam();
                     });
                     // print(widget.exercise.c.length);

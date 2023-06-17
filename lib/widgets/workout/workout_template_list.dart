@@ -25,7 +25,8 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<WorkoutDTO>>(
-        future: WorkoutService().getWorkoutList(AuthService().user!.uid),
+        future:
+            WorkoutService().getWorkoutList(userId: AuthService().user!.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             //loading icon
@@ -109,50 +110,3 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
         });
   }
 }
-
-  // var workout = WorkoutDTO(
-  //     id: "00001",
-  //     userId: "00000",
-  //     createDate: DateTime.now(),
-  //     updateDate: DateTime.now(),
-  //     name: "Mitsos",
-  //     totalTime: "45 min",
-  //     totalVolume: 5000,
-  //     exerciseList: <ExerciseOptionsDTO>[
-        // ExerciseDTO(
-        //     id: "0001",
-        //     userId: "00000", //default
-        //     name: "Leg Extension (Mashine)1",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-        // ExerciseDTO(
-        //     id: "0002",
-        //     userId: "00000",
-        //     name: "Leg Extension (Mashine)2",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-        // ExerciseDTO(
-        //     id: "0003",
-        //     userId: "00000",
-        //     name: "Leg Extension (Mashine)3",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-        // ExerciseDTO(
-        //     id: "0004",
-        //     userId: "00000",
-        //     name: "Leg Extension (Mashine)4",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-        // ExerciseDTO(
-        //     id: "0005",
-        //     userId: "00000",
-        //     name: "Leg Extension (Mashine)5",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-        // ExerciseDTO(
-        //     id: "0006",
-        //     userId: "00000",
-        //     name: "Leg Extension (Mashine)6",
-        //     sets: [ExerciseSet(isComplete: false)],
-        //     exerciseGroup: ExerciseGroup.quadriceps),
-     // ]);

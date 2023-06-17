@@ -3,12 +3,13 @@ import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/mappers/workout-mapper.dart';
 import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/models/user.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/exercise_service.dart';
 import 'package:training_tracker/services/extensions/helper_extensions.dart';
 import 'package:training_tracker/services/snapshot_object.dart';
-
+import 'package:training_tracker/services/workout_history_service.dart';
 import '../widgets/workout/workout.dart';
 
 class WorkoutService {
@@ -18,7 +19,7 @@ class WorkoutService {
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,
-        createDate: workoutDTO.createDate ?? DateTime.now(),
+        createDate: DateTime.now(),
         updateDate: DateTime.now(),
         exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
         totalTime: "0",
@@ -54,16 +55,27 @@ class WorkoutService {
         createDate: workoutDTO.createDate ?? DateTime.now(),
         updateDate: DateTime.now(),
         exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
-        totalTime: "0",
-        totalVolume: 0);
+        totalTime: workoutDTO.totalTime,
+        totalVolume: workoutDTO.totalVolume);
 
     var ref = _db.collection('workout').doc(workoutDTO.id);
     var workoutMap = workout.toMap();
     var snapshot = await ref.update(workoutMap);
+    await WorkoutHistoryService().createWorkoutHistory(workoutDTO);
   }
 
-  Future<List<WorkoutDTO>> getWorkoutList(String userId) async {
-    var ref = _db.collection('workout').where('userId', isEqualTo: userId);
+  Future<List<WorkoutDTO>> getWorkoutList(
+      {required String userId, List<String>? workoutIds}) async {
+    Query<Map<String, dynamic>> ref;
+    if (workoutIds != null && workoutIds.isNotEmpty) {
+      ref = _db
+          .collection('workout')
+          .where('userId', isEqualTo: userId)
+          .where(FieldPath.documentId, whereIn: workoutIds);
+    } else {
+      ref = _db.collection('workout').where('userId', isEqualTo: userId);
+    }
+
     var snapshot = await ref.get(); //read collection once
     Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
     snapshotList = snapshot.docs.map((s) {
@@ -82,6 +94,10 @@ class WorkoutService {
         await ExerciseService().getExerciseList(null, exerciseIds);
     var workoutDTOList = workoutList.toDtoList(exerciseList.toList());
     return workoutDTOList;
+  }
+
+  Future<void> deleteWorkout(String workoutId) async {
+    await _db.collection("workout").doc("workoutId").delete();
   }
 
   // Future<ExerciseDTO> getWorkout(String exerciseId) async {

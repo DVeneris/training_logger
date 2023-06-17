@@ -4,8 +4,13 @@ import 'package:flutter/services.dart';
 class WorkoutSetTextield extends StatefulWidget {
   Function(String) onChange;
   final String text;
+  final String hint;
 
-  WorkoutSetTextield({required this.onChange, required this.text, super.key});
+  WorkoutSetTextield(
+      {required this.onChange,
+      required this.text,
+      required this.hint,
+      super.key});
 
   @override
   State<WorkoutSetTextield> createState() => _WorkoutSetTextieldState();
@@ -44,16 +49,18 @@ class _WorkoutSetTextieldState extends State<WorkoutSetTextield> {
         controller: numberController,
         textAlign: TextAlign.center,
         maxLength: 5,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
+          hintText: widget.hint,
           filled: true,
-          border: OutlineInputBorder(
+          contentPadding: const EdgeInsets.all(5.0),
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide.none,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide.none,
-          ),
+          // focusedBorder: const OutlineInputBorder(
+          //   borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          //   borderSide: BorderSide.none,
+          // ),
           counterText: "",
         ),
       ),
