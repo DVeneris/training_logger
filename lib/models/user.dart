@@ -1,43 +1,43 @@
-class User {
-  final String id;
-  final String userName;
-  final String? firstName;
-  final String? lastName;
+class AppUser {
+  final String uid;
   final String? email;
-  final String createdDate;
-  final String? mediaItemId;
+  final String userName;
+  final String? identifier;
+  final String? provider;
+  final DateTime? createdDate;
+  final DateTime? signinDate;
+  // final String? mediaItemId;
 
-  User({
-    required this.id,
+  AppUser({
+    required this.uid,
     required this.userName,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.createdDate,
-    this.mediaItemId,
+    this.email,
+    this.identifier,
+    this.provider,
+    this.createdDate,
+    this.signinDate,
   });
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
+  factory AppUser.fromJson(Map<String, dynamic> json) {
+    return AppUser(
+      uid: json['uid'],
       userName: json['userName'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
       email: json['email'],
+      identifier: json['identifier'],
+      provider: json['provider'],
       createdDate: json['createdDate'],
-      mediaItemId: json['mediaItemId'],
+      signinDate: json['signinDate'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'uid': uid,
       'userName': userName,
-      'firstName': firstName,
-      'lastName': lastName,
       'email': email,
+      'identifier': identifier,
+      'provider': provider,
       'createdDate': createdDate,
-      'mediaItemId': mediaItemId,
+      'signinDate': signinDate,
     };
   }
 }

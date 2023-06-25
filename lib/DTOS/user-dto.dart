@@ -1,18 +1,21 @@
 import 'package:training_tracker/models/media_item.dart';
 
 class UserDTO {
-  final String? id;
-  final String? firstName;
-  final String? lastName;
-  final String email;
+  final String uid;
+  final String? email;
+  final String userName;
+  final String? identifier;
+  final String? provider;
   final DateTime? createdDate;
-  final MediaItem? mediaItemId;
-
-  UserDTO(
-      {this.id,
-      this.firstName,
-      this.lastName,
-      required this.email,
-      this.createdDate,
-      this.mediaItemId});
+  final DateTime? signinDate;
+  // final MediaItem? mediaItemId;
+  UserDTO({
+    required this.uid,
+    required this.userName,
+    this.email,
+    this.identifier,
+    this.provider,
+    this.createdDate,
+    this.signinDate,
+  });
 }

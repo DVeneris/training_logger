@@ -45,12 +45,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyD-IcIWz_j_3as-uTyI7USLMoa55et0sW8',
-    appId: '1:584746387874:web:bdd949d419ae65b51c4afb',
+    appId: '1:584746387874:web:2b72f1dec82272a41c4afb',
     messagingSenderId: '584746387874',
     projectId: 'workout-logger-dveneris',
     authDomain: 'workout-logger-dveneris.firebaseapp.com',
     storageBucket: 'workout-logger-dveneris.appspot.com',
-    measurementId: 'G-37Z8W3HNWQ',
+    measurementId: 'G-14KHM1GB40',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAWDINZs6YZ-CbP95m-8s-1F-mNS1FTyo4',
-    appId: '1:584746387874:ios:f3e687e15410f4ef1c4afb',
+    appId: '1:584746387874:ios:5488e4b32567fd971c4afb',
     messagingSenderId: '584746387874',
     projectId: 'workout-logger-dveneris',
     storageBucket: 'workout-logger-dveneris.appspot.com',
@@ -74,7 +74,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAWDINZs6YZ-CbP95m-8s-1F-mNS1FTyo4',
-    appId: '1:584746387874:ios:f3e687e15410f4ef1c4afb',
+    appId: '1:584746387874:ios:5488e4b32567fd971c4afb',
     messagingSenderId: '584746387874',
     projectId: 'workout-logger-dveneris',
     storageBucket: 'workout-logger-dveneris.appspot.com',

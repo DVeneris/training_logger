@@ -1,5 +1,3 @@
--workoutService
-	->CRUD
 -Workout single pages to do
--workoutHistory implementation
 -ti therides kaiw
+-bug sto exercise cretion

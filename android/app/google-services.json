@@ -14,15 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "584746387874-q9kc5a47kbku8dt9qgfvf6edeiolbhba.apps.googleusercontent.com",
+          "client_id": "584746387874-ua8f520c2qq38pmb24kdiki3gdsuu6ih.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.training_tracker",
-            "certificate_hash": "a41bef9cae517c443955666efde47ab030210ceb"
+            "certificate_hash": "b6d718bc7265383ea88c3fe9047365491e25623b"
           }
         },
         {
-          "client_id": "584746387874-ieagusatcotdriqd0pvosa32stphug9r.apps.googleusercontent.com",
+          "client_id": "584746387874-9n4buutqfsse0hmvsbet6nps12ob02us.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "584746387874-ieagusatcotdriqd0pvosa32stphug9r.apps.googleusercontent.com",
+              "client_id": "584746387874-9n4buutqfsse0hmvsbet6nps12ob02us.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "584746387874-5752o29jchmlsv8fkokjbgbpq2tvk6k9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.trainingTracker"
+              }
             }
           ]
         }

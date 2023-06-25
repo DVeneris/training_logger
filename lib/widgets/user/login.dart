@@ -39,58 +39,63 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 30,
             ),
             //email textfield
-            const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: KawaiiTextbox(hint: "Username")),
-            const SizedBox(
-              height: 20,
-            ),
+            // const Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 25),
+            //     child: KawaiiTextbox(hint: "Username")),
+            // const SizedBox(
+            //   height: 20,
+            // ),
             //password textfield
-            const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: KawaiiTextbox(
-                  hint: "Password",
-                  canHideData: true,
-                )),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.grey[700]),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            // const Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 25),
+            //     child: KawaiiTextbox(
+            //       hint: "Password",
+            //       canHideData: true,
+            //     )),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 25),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       Text(
+            //         'Forgot Password?',
+            //         style: TextStyle(color: Colors.grey[700]),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 25),
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: Container(
+            //       padding: const EdgeInsets.all(15),
+            //       decoration: BoxDecoration(
+            //           color: Colors.blue,
+            //           borderRadius: BorderRadius.circular(12)),
+            //       child: const Center(
+            //           child: Text(
+            //         "login",
+            //         style: TextStyle(color: Colors.white),
+            //       )),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextButton(
-                onPressed: () {},
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(12)),
-                  child: const Center(
-                      child: Text(
-                    "login",
-                    style: TextStyle(color: Colors.white),
-                  )),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: TextButton(
-                onPressed: () => AuthService().anonLogin(),
+                onPressed: () async {
+                  //
+                  await Navigator.of(context)
+                      .pushNamed(RouteGenerator.usernameGetter);
+                  await AuthService().anonLogin();
+                },
                 child: Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
@@ -107,24 +112,24 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Not a member? "),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(
-                      RouteGenerator.register,
-                    );
-                  },
-                  child: const Text(
-                    "Register now!",
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     const Text("Not a member? "),
+            //     TextButton(
+            //       onPressed: () {
+            //         Navigator.of(context).pushNamed(
+            //           RouteGenerator.register,
+            //         );
+            //       },
+            //       child: const Text(
+            //         "Register now!",
+            //         style: TextStyle(
+            //             color: Colors.blue, fontWeight: FontWeight.bold),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Row(
               children: const [
                 Expanded(

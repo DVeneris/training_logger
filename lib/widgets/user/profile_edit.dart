@@ -16,15 +16,15 @@ class ProfileEdit extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        const KawaiiTextbox(hint: "Username"),
-        const SizedBox(
-          height: 10,
-        ),
-        const KawaiiTextbox(hint: "Email"),
-        const SizedBox(
-          height: 10,
-        ),
-        const KawaiiTextbox(hint: "Password"),
+        // const KawaiiTextbox(hint: "Username"),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // const KawaiiTextbox(hint: "Email"),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // const KawaiiTextbox(hint: "Password"),
         const SizedBox(
           height: 10,
         ),
