@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:training_tracker/services/auth.dart';
+
 class AppUser {
   final String uid;
   final String? email;
@@ -6,26 +9,45 @@ class AppUser {
   final String? provider;
   final DateTime? createdDate;
   final DateTime? signinDate;
+  final String? name;
+  final String? description;
+  final String? link;
   // final String? mediaItemId;
 
-  AppUser({
-    required this.uid,
-    required this.userName,
-    this.email,
-    this.identifier,
-    this.provider,
-    this.createdDate,
-    this.signinDate,
-  });
+  AppUser(
+      {required this.uid,
+      required this.userName,
+      this.email,
+      this.identifier,
+      this.provider,
+      this.createdDate,
+      this.signinDate,
+      this.description,
+      this.link,
+      this.name});
   factory AppUser.fromJson(Map<String, dynamic> json) {
+    var uid = json['uid'];
+    if (uid == null) {
+      AuthService().signOut();
+      throw Exception();
+    }
+    var dateTime = null;
+    var date = json['createdDate'];
+    if (date != null) {
+      var timestamp = date as Timestamp;
+      dateTime = timestamp.toDate();
+    }
     return AppUser(
       uid: json['uid'],
       userName: json['userName'],
       email: json['email'],
       identifier: json['identifier'],
       provider: json['provider'],
-      createdDate: json['createdDate'],
+      createdDate: dateTime,
       signinDate: json['signinDate'],
+      name: json['name'],
+      link: json['link'],
+      description: json['description'],
     );
   }
 
@@ -38,6 +60,9 @@ class AppUser {
       'provider': provider,
       'createdDate': createdDate,
       'signinDate': signinDate,
+      'name': name,
+      'link': link,
+      'description': description,
     };
   }
 }

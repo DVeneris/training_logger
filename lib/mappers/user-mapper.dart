@@ -10,6 +10,9 @@ extension ExerciseMapping on AppUser {
         createdDate: createdDate,
         identifier: identifier,
         provider: provider,
-        signinDate: signinDate);
+        signinDate: signinDate,
+        description: description,
+        link: description,
+        name: name);
   }
 }

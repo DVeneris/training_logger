@@ -30,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 60,
             ),
-            //em
             const Text(
               "Hello Again!",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
@@ -91,10 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextButton(
                 onPressed: () async {
-                  //
+                  await AuthService().anonLogin();
                   await Navigator.of(context)
                       .pushNamed(RouteGenerator.usernameGetter);
-                  await AuthService().anonLogin();
                 },
                 child: Container(
                   padding: const EdgeInsets.all(15),

@@ -5,10 +5,20 @@ import 'package:flutter/src/widgets/framework.dart';
 class KawaiiTextbox extends StatefulWidget {
   final String? hint;
   final bool? canHideData;
+  final bool? hasError;
+  final String? errorMessage;
+  final String? initialValue;
+
   final Function(String) onChange;
 
   const KawaiiTextbox(
-      {super.key, this.hint, this.canHideData, required this.onChange});
+      {super.key,
+      this.hint,
+      this.canHideData,
+      this.initialValue,
+      required this.onChange,
+      this.hasError,
+      this.errorMessage});
 
   @override
   State<KawaiiTextbox> createState() => _KawaiiTextboxState();
@@ -22,6 +32,7 @@ class _KawaiiTextboxState extends State<KawaiiTextbox> {
   void initState() {
     super.initState();
     _kawaiiEditingController.addListener(() => _onControllerChange());
+    _kawaiiEditingController.text = widget.initialValue ?? "";
   }
 
   _onControllerChange() {
@@ -47,6 +58,9 @@ class _KawaiiTextboxState extends State<KawaiiTextbox> {
           controller: _kawaiiEditingController,
           obscureText: widget.canHideData ?? false,
           decoration: InputDecoration(
+            errorText: widget.hasError != null && widget.hasError == true
+                ? widget.errorMessage
+                : null,
             border: InputBorder.none,
             hintText: widget.hint,
           ),

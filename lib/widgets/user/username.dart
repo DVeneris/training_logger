@@ -11,6 +11,13 @@ class UserNameGetter extends StatefulWidget {
 
 class _UserNameGetterState extends State<UserNameGetter> {
   String username = "";
+  bool _usernameExists = false;
+  @override
+  void initState() {
+    _usernameExists = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +27,8 @@ class _UserNameGetterState extends State<UserNameGetter> {
             padding: const EdgeInsets.symmetric(vertical: 50.0),
             child: KawaiiTextbox(
               hint: "User Name",
+              hasError: _usernameExists,
+              errorMessage: "This username already exists",
               onChange: ((data) => setState(() {
                     username = data;
                   })),
@@ -28,15 +37,22 @@ class _UserNameGetterState extends State<UserNameGetter> {
           Row(
             children: [
               TextButton(
-                  onPressed: () async {
-                    var user = await UserService().getUserByUsername(username);
-                    if (user == null) {
-                      await UserService().createUser(username);
-                    }
-                    //close all routes
-                    //---todo///
-                  },
-                  child: const Text("Save"))
+                onPressed: () async {
+                  var users = await UserService().getUsersByUsername(username);
+                  if (users.isEmpty) {
+                    _usernameExists = false;
+                    await UserService().createUser(username);
+                    Navigator.of(context).pop(username);
+                  } else {
+                    setState(() {
+                      _usernameExists = true;
+                    });
+                  }
+                  //close all routes
+                  //---todo///
+                },
+                child: const Text("Save"),
+              ),
             ],
           )
         ],
