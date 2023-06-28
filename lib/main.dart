@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/database-repository.dart';
+import 'package:training_tracker/widgets/image/image.dart';
 import 'package:training_tracker/widgets/user/login.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
@@ -78,7 +79,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _pages = <Widget>[
-    WorkoutHistory(),
+    // WorkoutHistory(),
+    ImageTest(),
     WorkoutTemplateList(),
     UserView()
   ];
