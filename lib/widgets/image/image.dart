@@ -32,9 +32,7 @@ class _ImageTestState extends State<ImageTest> {
                 final fileName = results?.files.single.name;
                 print(path);
                 print(fileName);
-                storage
-                    .uploadFile(path!, fileName!)
-                    .then((val) => print('Donew'));
+                storage.uploadFile(path!).then((val) => print('Donew'));
               },
               child: const Text("upload file")),
           FutureBuilder(
