@@ -52,6 +52,33 @@ class _ProfileEditState extends State<ProfileEdit> {
                   link: user.link,
                   name: user.name);
               return Column(children: [
+                SizedBox(
+                  height: 115,
+                  width: 115,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    fit: StackFit.expand,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage("assets/no_media.png"),
+                      ),
+                      Positioned(
+                          bottom: 0,
+                          right: -25,
+                          child: RawMaterialButton(
+                            onPressed: () {},
+                            elevation: 2.0,
+                            fillColor: Color(0xFFF5F6F9),
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.blue,
+                            ),
+                            padding: EdgeInsets.all(1.0),
+                            shape: CircleBorder(),
+                          )),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),

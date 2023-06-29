@@ -13,22 +13,23 @@ class FileStorage {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final User? _user = AuthService().user;
 
-  Future<void> uploadFile(String filePath) async {
+  Future<MediaItem?> uploadFile(String filePath) async {
     if (_user == null) {
-      return;
+      return null;
     }
     File file = File(filePath);
     const uuid = Uuid();
     var filename = uuid.v4();
-    var url = await downloadURL(filename);
-    if (url == null) return; //+throw error
+    // var url = await downloadURL(filename);
+    // if (url == null) return null; //+throw error
 
     try {
       await _storage.ref('${_user?.uid}/$filename').putFile(file);
       var fileurl = await downloadURL(filename);
 
-      MediaItem media =
-          MediaItem(id: filename, userId: _user!.uid, name: filename, url: "");
+      MediaItem mediaItem = MediaItem(
+          id: filename, userId: _user!.uid, name: filename, url: fileurl);
+      return mediaItem;
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
