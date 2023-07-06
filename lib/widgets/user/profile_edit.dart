@@ -1,7 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/user-dto.dart';
 import 'package:training_tracker/DTOS/user_profile_dto.dart';
 import 'package:training_tracker/services/auth.dart';
+import 'package:training_tracker/services/file_storage_service.dart';
 import 'package:training_tracker/services/user-service.dart';
 
 import '../../utils/kawaii_textbox.dart';
@@ -14,6 +16,7 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
+  final FileStorage storage = FileStorage();
   bool isSaving = false;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,8 @@ class _ProfileEditState extends State<ProfileEdit> {
               var userprofiledata = UserProfileDTO(
                   description: user!.description,
                   link: user.link,
-                  name: user.name);
+                  name: user.name,
+                  mediaItem: user.mediaItem);
               return Column(children: [
                 SizedBox(
                   height: 115,
@@ -59,14 +63,40 @@ class _ProfileEditState extends State<ProfileEdit> {
                     clipBehavior: Clip.none,
                     fit: StackFit.expand,
                     children: [
+                      Text("${userprofiledata.mediaItem}"),
                       CircleAvatar(
-                        backgroundImage: AssetImage("assets/no_media.png"),
-                      ),
+                          backgroundImage: (() {
+                        userprofiledata.mediaItem != null
+                            ? NetworkImage(userprofiledata.mediaItem!.url!)
+                            : const AssetImage("assets/no_media.png");
+                      }())
+
+                          //userprofiledata.mediaItem!=null? NetworkImage(userprofiledata.mediaItem!.url!):AssetImage("assets/no_media.png")
+                          ),
                       Positioned(
                           bottom: 0,
                           right: -25,
                           child: RawMaterialButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var results = await FilePicker.platform.pickFiles(
+                                  allowMultiple: false,
+                                  type: FileType.custom,
+                                  allowedExtensions: ['png', 'jpg']);
+                              if (results == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("No file selected")));
+                              }
+                              final path = results?.files.single.path;
+                              final fileName = results?.files.single.name;
+                              print(path);
+                              print(fileName);
+                              if (path == null) return;
+                              var mediaItem = await storage.uploadFile(path);
+                              setState(() {
+                                userprofiledata.mediaItem = mediaItem;
+                              });
+                            },
                             elevation: 2.0,
                             fillColor: Color(0xFFF5F6F9),
                             child: Icon(

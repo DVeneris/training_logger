@@ -11,7 +11,7 @@ class UserDTO {
   String? link;
   final DateTime? createdDate;
   final DateTime? signinDate;
-  // final MediaItem? mediaItemId;
+  final MediaItem? mediaItem;
   UserDTO(
       {required this.uid,
       required this.userName,
@@ -22,5 +22,6 @@ class UserDTO {
       this.signinDate,
       this.description,
       this.link,
-      this.name});
+      this.name,
+      this.mediaItem});
 }

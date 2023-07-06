@@ -20,9 +20,6 @@ class FileStorage {
     File file = File(filePath);
     const uuid = Uuid();
     var filename = uuid.v4();
-    // var url = await downloadURL(filename);
-    // if (url == null) return null; //+throw error
-
     try {
       await _storage.ref('${_user?.uid}/$filename').putFile(file);
       var fileurl = await downloadURL(filename);

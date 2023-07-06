@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 
 class AppUser {
@@ -12,7 +13,7 @@ class AppUser {
   final String? name;
   final String? description;
   final String? link;
-  // final String? mediaItemId;
+  final MediaItem? mediaItem;
 
   AppUser(
       {required this.uid,
@@ -24,7 +25,8 @@ class AppUser {
       this.signinDate,
       this.description,
       this.link,
-      this.name});
+      this.name,
+      this.mediaItem});
   factory AppUser.fromJson(Map<String, dynamic> json) {
     var uid = json['uid'];
     if (uid == null) {
@@ -48,6 +50,9 @@ class AppUser {
       name: json['name'],
       link: json['link'],
       description: json['description'],
+      mediaItem: json['mediaItem'] != null
+          ? MediaItem.fromJson(json['mediaItem'])
+          : null,
     );
   }
 
@@ -63,6 +68,7 @@ class AppUser {
       'name': name,
       'link': link,
       'description': description,
+      'mediaItem': mediaItem?.toMap(),
     };
   }
 }
