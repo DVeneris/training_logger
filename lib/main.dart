@@ -79,10 +79,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _pages = <Widget>[
-    UserView(),
     WorkoutHistory(),
-    // ImageTest(),
     WorkoutTemplateList(),
+    UserView(),
   ];
   int _selectedIndex = 0;
 

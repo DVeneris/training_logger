@@ -65,14 +65,16 @@ class _ProfileEditState extends State<ProfileEdit> {
                     children: [
                       Text("${userprofiledata.mediaItem}"),
                       CircleAvatar(
-                          backgroundImage: (() {
-                        userprofiledata.mediaItem != null
-                            ? NetworkImage(userprofiledata.mediaItem!.url!)
-                            : const AssetImage("assets/no_media.png");
-                      }())
+                        backgroundImage: (() {
+                          if (userprofiledata.mediaItem != null) {
+                            NetworkImage(userprofiledata.mediaItem!.url!);
+                          } else {
+                            const AssetImage("assets/no_media.png");
+                          }
+                        }()),
 
-                          //userprofiledata.mediaItem!=null? NetworkImage(userprofiledata.mediaItem!.url!):AssetImage("assets/no_media.png")
-                          ),
+                        //userprofiledata.mediaItem!=null? NetworkImage(userprofiledata.mediaItem!.url!):AssetImage("assets/no_media.png")
+                      ),
                       Positioned(
                           bottom: 0,
                           right: -25,

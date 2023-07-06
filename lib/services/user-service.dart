@@ -55,10 +55,9 @@ class UserService {
   }
 
   Future<List<UserDTO>> getUsersByUsername(String username) async {
-    var snapshot = await _db
-        .collection('user')
-        .where('userName', isEqualTo: username.toLowerCase())
-        .get();
+    var ref = _db.collection('user');
+    var snapshot =
+        await ref.where('userName', isEqualTo: username.toLowerCase()).get();
 
     Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
     snapshotList = snapshot.docs.map((s) {

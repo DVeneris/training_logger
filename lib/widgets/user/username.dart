@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/user-service.dart';
 import 'package:training_tracker/utils/kawaii_textbox.dart';
 
@@ -38,16 +39,18 @@ class _UserNameGetterState extends State<UserNameGetter> {
             children: [
               TextButton(
                 onPressed: () async {
-                  var users = await UserService().getUsersByUsername(username);
-                  if (users.isEmpty) {
-                    _usernameExists = false;
-                    await UserService().createUser(username);
-                    Navigator.of(context).pop(username);
-                  } else {
-                    setState(() {
-                      _usernameExists = true;
-                    });
-                  }
+                  //   var user = AuthService().user;
+                  await UserService().createUser("testUser");
+                  // var users = await UserService().getUsersByUsername(username);
+                  // if (users.isEmpty) {
+                  //   _usernameExists = false;
+
+                  Navigator.of(context).pop(username);
+                  // } else {
+                  //   setState(() {
+                  //     _usernameExists = true;
+                  //   });
+                  //}
                   //close all routes
                   //---todo///
                 },
