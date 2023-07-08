@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_tracker/DTOS/user-dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/user/profile_edit.dart';
@@ -88,7 +89,7 @@ class RouteGenerator {
         );
       case profileEdit:
         return MaterialPageRoute(
-          builder: (_) => const ProfileEdit(),
+          builder: (_) => ProfileEdit(user: args!['user'] as UserDTO),
         );
       default:
         throw FormatException("Route not found");

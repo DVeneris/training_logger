@@ -13,13 +13,19 @@ class SimpleExerciseTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8.0, left: 15),
       child: Row(
         children: [
-          CircleAvatar(
-            maxRadius: 20,
-            minRadius: 10,
-            // backgroundImage: AssetImage(exercise.mediaItem.url),
-            //AssetImage("assets/a.jpg"),
-            backgroundColor: Colors.transparent,
+          const SizedBox(
+            height: 50,
           ),
+          exercise.mediaItem != null
+              ? CircleAvatar(
+                  maxRadius: 20,
+                  minRadius: 10,
+                  backgroundImage: NetworkImage(exercise.mediaItem!.url!))
+              : const CircleAvatar(
+                  maxRadius: 20,
+                  minRadius: 10,
+                  backgroundImage: AssetImage("assets/no_media.png"),
+                ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(

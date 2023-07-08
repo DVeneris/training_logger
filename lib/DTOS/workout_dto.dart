@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
@@ -34,11 +32,3 @@ class ExerciseOptionsDTO {
   ExerciseDTO exercise = ExerciseDTO();
   ExerciseOptionsDTO({this.time = 0, this.note = "", required this.exercise});
 }
-
-// extension ExerciseOptionsDTOMapping on ExerciseOptions {
-//   ExerciseOptionsDTO toExerciseOptionsDTO() {
-//     return ExerciseOptionsDTO(
-//       exercise: ExerciseDTO(id: exerciseId),
-//     );
-//   }
-// }

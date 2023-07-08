@@ -159,13 +159,27 @@ class HomeCard extends StatelessWidget {
                         children: [
                           Text(
                               "${workoutHistory.workout.exerciseList[index].exercise.currentSets.length} x  "),
-                          CircleAvatar(
-                            maxRadius: 20,
-                            minRadius: 10,
-                            backgroundImage: AssetImage(workoutHistory.workout
-                                .exerciseList[index].exercise.mediaItem.url),
-                            backgroundColor: Colors.transparent,
+                          const SizedBox(
+                            height: 50,
                           ),
+                          workoutHistory.workout.exerciseList[index].exercise
+                                      .mediaItem !=
+                                  null
+                              ? CircleAvatar(
+                                  maxRadius: 20,
+                                  minRadius: 10,
+                                  backgroundImage: NetworkImage(workoutHistory
+                                      .workout
+                                      .exerciseList[index]
+                                      .exercise
+                                      .mediaItem!
+                                      .url!))
+                              : const CircleAvatar(
+                                  maxRadius: 20,
+                                  minRadius: 10,
+                                  backgroundImage:
+                                      AssetImage("assets/no_media.png"),
+                                ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

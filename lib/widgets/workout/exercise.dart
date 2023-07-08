@@ -78,13 +78,20 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      maxRadius: 20,
-                      minRadius: 10,
-                      backgroundImage:
-                          AssetImage(widget.exercise.mediaItem.url),
-                      backgroundColor: Colors.transparent,
+                    const SizedBox(
+                      height: 50,
                     ),
+                    widget.exercise.mediaItem != null
+                        ? CircleAvatar(
+                            maxRadius: 20,
+                            minRadius: 10,
+                            backgroundImage:
+                                NetworkImage(widget.exercise.mediaItem!.url!))
+                        : const CircleAvatar(
+                            maxRadius: 20,
+                            minRadius: 10,
+                            backgroundImage: AssetImage("assets/no_media.png"),
+                          ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(

@@ -17,7 +17,7 @@ class ExerciseService {
         unit: WeightUnit.kg,
         currentSets: exerciseDTO.currentSets,
         previousSets: exerciseDTO.previousSets,
-        mediaItemId: 'nPQc2Iur2xnqo405UnhZ',
+        mediaItem: exerciseDTO.mediaItem,
         equipment: Equipment.none);
 
     var snapshot = await _db.collection("exercise").add(exercise.toMap());

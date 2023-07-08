@@ -12,7 +12,7 @@ extension ExerciseMapping on Exercise {
       currentSets: currentSets,
       previousSets: previousSets,
       equipment: equipment,
-      //mediaItem: MediaItemDTO(mediaItemId),
+      mediaItem: mediaItem,
     );
   }
 }
@@ -27,7 +27,7 @@ extension ExerciseDTOMapping on ExerciseDTO {
       currentSets: currentSets,
       previousSets: previousSets,
       unit: unit,
-      mediaItemId: mediaItem.id ?? "",
+      mediaItem: mediaItem,
       equipment: equipment,
     );
   }

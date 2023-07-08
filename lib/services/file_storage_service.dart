@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:uuid/uuid.dart';
@@ -21,6 +22,9 @@ class FileStorage {
     const uuid = Uuid();
     var filename = uuid.v4();
     try {
+      // await testCompressAndGetFile(file, filename, _user!.uid);
+      // File compressedFile = File("assets/${_user!.uid}/$filename");
+      // if (compressedFile == null) return null;
       await _storage.ref('${_user?.uid}/$filename').putFile(file);
       var fileurl = await downloadURL(filename);
 
@@ -30,6 +34,25 @@ class FileStorage {
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
+  }
+
+  Future<void> testCompressAndGetFile(
+      File file, String fileName, String userId) async {
+    var filesplit = file.absolute.path.split('/');
+    var _fileName = filesplit.last.split('.');
+    // var result = await FlutterImageCompress.compressAssetImage(
+    //   fileName,
+    //   minHeight: 640,
+    //   minWidth: 480,
+    //   quality: 25,
+    // );
+    final filePath = file.absolute.path;
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      "assets/$userId/$fileName.${_fileName.last}",
+      quality: 25,
+    );
+    if (result == null) return null;
   }
 
   Future<ListResult> listFiles() async {

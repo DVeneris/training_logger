@@ -12,7 +12,8 @@ extension ExerciseMapping on AppUser {
         provider: provider,
         signinDate: signinDate,
         description: description,
-        link: description,
-        name: name);
+        link: link,
+        name: name,
+        mediaItem: mediaItem);
   }
 }

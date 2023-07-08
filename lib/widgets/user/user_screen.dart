@@ -37,12 +37,16 @@ class UserView extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    const CircleAvatar(
-                      backgroundImage: AssetImage("assets/a.jpg"),
-                      radius: 50,
-                    ),
+                    user!.mediaItem != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(user.mediaItem!.url!))
+                        : const CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage("assets/no_media.png"),
+                          ),
                     Text(
-                      user!.userName,
+                      user.userName,
                       style: TextStyle(fontSize: 20),
                     ),
                     const SizedBox(
@@ -58,9 +62,11 @@ class UserView extends StatelessWidget {
                               color: Colors.blue,
                               borderRadius: BorderRadius.circular(20)),
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(RouteGenerator.profileEdit);
+                            onTap: () async {
+                              await Navigator.of(context).pushNamed(
+                                RouteGenerator.profileEdit,
+                                arguments: {'user': user},
+                              );
                             },
                             child: const Center(
                                 child: Text(

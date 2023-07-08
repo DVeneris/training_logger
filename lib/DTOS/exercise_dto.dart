@@ -13,19 +13,16 @@ class ExerciseDTO {
   List<ExerciseSet> previousSets;
   WeightUnit unit;
   Equipment equipment;
-  late MediaItemDTO mediaItem;
+  MediaItem? mediaItem;
 
-  ExerciseDTO({
-    this.id,
-    this.userId,
-    this.name = '',
-    this.exerciseGroup = ExerciseGroup.none,
-    this.currentSets = const [],
-    this.previousSets = const [],
-    MediaItemDTO? mediaItem,
-    this.unit = WeightUnit.kg,
-    this.equipment = Equipment.none,
-  }) {
-    this.mediaItem = mediaItem ?? MediaItemDTO();
-  }
+  ExerciseDTO(
+      {this.id,
+      this.userId,
+      this.name = '',
+      this.exerciseGroup = ExerciseGroup.none,
+      this.currentSets = const [],
+      this.previousSets = const [],
+      this.unit = WeightUnit.kg,
+      this.equipment = Equipment.none,
+      this.mediaItem});
 }

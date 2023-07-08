@@ -1,15 +1,17 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:training_tracker/DTOS/user-dto.dart';
 import 'package:training_tracker/DTOS/user_profile_dto.dart';
-import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/file_storage_service.dart';
 import 'package:training_tracker/services/user-service.dart';
+import 'package:training_tracker/utils/media_selector.dart';
 
 import '../../utils/kawaii_textbox.dart';
 
 class ProfileEdit extends StatefulWidget {
-  const ProfileEdit({super.key});
+  final UserDTO user;
+  const ProfileEdit({required this.user, super.key});
 
   @override
   State<ProfileEdit> createState() => _ProfileEditState();
@@ -17,99 +19,70 @@ class ProfileEdit extends StatefulWidget {
 
 class _ProfileEditState extends State<ProfileEdit> {
   final FileStorage storage = FileStorage();
+  late UserProfileDTO userprofiledata;
+  @override
+  void initState() {
+    userprofiledata = UserProfileDTO(
+        description: widget.user.description,
+        link: widget.user.link,
+        name: widget.user.name,
+        mediaItem: widget.user.mediaItem);
+    super.initState();
+  }
+
   bool isSaving = false;
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(Icons.chevron_left_rounded),
-          onTap: () {
-            Navigator.of(context).pop();
-          },
+        appBar: AppBar(
+          leading: GestureDetector(
+            child: const Icon(Icons.chevron_left_rounded),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: const Text("Edit Profile"),
         ),
-        title: const Text("Edit Profile"),
-      ),
-      body: FutureBuilder<UserDTO>(
-          future: UserService().getCurrentUser(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              //loading icon
-              return const Text(
-                'loading',
-                textDirection: TextDirection.ltr,
-              );
-            } else if (snapshot.hasError) {
-              return const Text(
-                'error in snapshot',
-                textDirection: TextDirection.ltr,
-              );
-              //show error
-            } else if (snapshot.hasData) {
-              var user = snapshot.data;
-              if (user == null) {
-                AuthService().signOut(); //test this
-              }
-              var userprofiledata = UserProfileDTO(
-                  description: user!.description,
-                  link: user.link,
-                  name: user.name,
-                  mediaItem: user.mediaItem);
-              return Column(children: [
-                SizedBox(
-                  height: 115,
-                  width: 115,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    fit: StackFit.expand,
-                    children: [
-                      Text("${userprofiledata.mediaItem}"),
-                      CircleAvatar(
-                        backgroundImage: (() {
-                          if (userprofiledata.mediaItem != null) {
-                            NetworkImage(userprofiledata.mediaItem!.url!);
-                          } else {
-                            const AssetImage("assets/no_media.png");
-                          }
-                        }()),
-
-                        //userprofiledata.mediaItem!=null? NetworkImage(userprofiledata.mediaItem!.url!):AssetImage("assets/no_media.png")
-                      ),
-                      Positioned(
-                          bottom: 0,
-                          right: -25,
-                          child: RawMaterialButton(
-                            onPressed: () async {
-                              var results = await FilePicker.platform.pickFiles(
-                                  allowMultiple: false,
-                                  type: FileType.custom,
-                                  allowedExtensions: ['png', 'jpg']);
-                              if (results == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text("No file selected")));
-                              }
-                              final path = results?.files.single.path;
-                              final fileName = results?.files.single.name;
-                              print(path);
-                              print(fileName);
-                              if (path == null) return;
-                              var mediaItem = await storage.uploadFile(path);
-                              setState(() {
-                                userprofiledata.mediaItem = mediaItem;
-                              });
-                            },
-                            elevation: 2.0,
-                            fillColor: Color(0xFFF5F6F9),
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.blue,
-                            ),
-                            padding: EdgeInsets.all(1.0),
-                            shape: CircleBorder(),
-                          )),
-                    ],
+        body: isLoading
+            ? Center(
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  padding: const EdgeInsets.all(2.0),
+                  child: const CircularProgressIndicator(
+                    color: Color.fromARGB(255, 128, 8, 8),
+                    strokeWidth: 3,
                   ),
+                ),
+              )
+            : Column(children: [
+                MediaSelector(
+                  mediaItem: userprofiledata.mediaItem,
+                  onMediaSelectorPressed: () async {
+                    var results = await FilePicker.platform.pickFiles(
+                        allowMultiple: false,
+                        type: FileType.custom,
+                        allowedExtensions: ['png', 'jpg']);
+                    if (results == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("No file selected")));
+                    }
+                    final path = results?.files.single.path;
+                    // final fileName = results?.files.single.name;
+                    // print(path);
+                    // print(fileName);
+                    if (path == null) return;
+                    setState(() {
+                      isLoading = true;
+                    });
+                    var mediaItem = await storage.uploadFile(path);
+                    userprofiledata.mediaItem = mediaItem;
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -172,15 +145,61 @@ class _ProfileEditState extends State<ProfileEdit> {
                     ),
                   ),
                 ),
-              ]);
-            } else {
-              //no data found
-              return const Text(
-                'no data',
-                textDirection: TextDirection.ltr,
-              );
-            }
-          }),
-    );
+              ]));
   }
 }
+                // SizedBox(
+                //   height: 115,
+                //   width: 115,
+                //   child: Stack(
+                //     clipBehavior: Clip.none,
+                //     fit: StackFit.expand,
+                //     children: [
+                //       userprofiledata.mediaItem != null
+                //           ? CircleAvatar(
+                //               backgroundImage:
+                //                   NetworkImage(userprofiledata.mediaItem!.url!))
+                //           : const CircleAvatar(
+                //               backgroundImage:
+                //                   AssetImage("assets/no_media.png"),
+                //             ),
+                //       Positioned(
+                //           bottom: 0,
+                //           right: -25,
+                //           child: RawMaterialButton(
+                //             onPressed: () async {
+                //               var results = await FilePicker.platform.pickFiles(
+                //                   allowMultiple: false,
+                //                   type: FileType.custom,
+                //                   allowedExtensions: ['png', 'jpg']);
+                //               if (results == null) {
+                //                 ScaffoldMessenger.of(context).showSnackBar(
+                //                     const SnackBar(
+                //                         content: Text("No file selected")));
+                //               }
+                //               final path = results?.files.single.path;
+                //               // final fileName = results?.files.single.name;
+                //               // print(path);
+                //               // print(fileName);
+                //               if (path == null) return;
+                //               setState(() {
+                //                 isLoading = true;
+                //               });
+                //               var mediaItem = await storage.uploadFile(path);
+                //               userprofiledata.mediaItem = mediaItem;
+                //               setState(() {
+                //                 isLoading = false;
+                //               });
+                //             },
+                //             elevation: 2.0,
+                //             fillColor: Color(0xFFF5F6F9),
+                //             child: Icon(
+                //               Icons.camera_alt_outlined,
+                //               color: Colors.blue,
+                //             ),
+                //             padding: EdgeInsets.all(1.0),
+                //             shape: CircleBorder(),
+                //           )),
+                //     ],
+                //   ),
+                // ),

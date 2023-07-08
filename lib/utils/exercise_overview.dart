@@ -29,13 +29,13 @@ class _ExerciseOverviewSingleState extends State<ExerciseOverviewSingle> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      maxRadius: 20,
-                      minRadius: 10,
-                      backgroundImage:
-                          AssetImage(widget.exercise.mediaItem.url),
-                      backgroundColor: Colors.transparent,
-                    ),
+                    // CircleAvatar(
+                    //   maxRadius: 20,
+                    //   minRadius: 10,
+                    //   backgroundImage:
+                    //       AssetImage(widget.exercise.mediaItem.url),
+                    //   backgroundColor: Colors.transparent,
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(

@@ -11,7 +11,7 @@ class Exercise {
   final List<ExerciseSet> currentSets;
   final List<ExerciseSet> previousSets;
   final WeightUnit unit;
-  final String mediaItemId;
+  final MediaItem? mediaItem;
   final Equipment equipment;
 
   Exercise(
@@ -22,7 +22,7 @@ class Exercise {
       required this.unit,
       required this.currentSets,
       required this.previousSets,
-      required this.mediaItemId,
+      required this.mediaItem,
       required this.equipment});
 
   Map<String, dynamic> toMap() {
@@ -34,7 +34,7 @@ class Exercise {
       'unit': unit.index,
       'previousSets': previousSets.map((set) => set.toMap()).toList(),
       'currentSets': currentSets.map((set) => set.toMap()).toList(),
-      'mediaItemId': mediaItemId,
+      'mediaItem': mediaItem?.toMap(),
       'equipment': equipment.index
     };
   }
@@ -56,7 +56,9 @@ class Exercise {
             : List<Map<String, dynamic>>.from(json['previousSets'])
                 .map((setJson) => ExerciseSet.fromJson(setJson))
                 .toList(),
-        mediaItemId: json['mediaItemId'],
+        mediaItem: json['mediaItem'] != null
+            ? MediaItem.fromJson(json['mediaItem'])
+            : null,
         equipment: Equipment.values[json['equipment']]);
   }
 }
