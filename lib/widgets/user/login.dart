@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,67 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 60,
             ),
             const Text(
-              "Hello Again!",
+              "Hello!",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
             const SizedBox(
               height: 30,
             ),
-            //email textfield
-            // const Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: 25),
-            //     child: KawaiiTextbox(hint: "Username")),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-            //password textfield
-            // const Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: 25),
-            //     child: KawaiiTextbox(
-            //       hint: "Password",
-            //       canHideData: true,
-            //     )),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 25),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       Text(
-            //         'Forgot Password?',
-            //         style: TextStyle(color: Colors.grey[700]),
-            //       )
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 25),
-            //   child: TextButton(
-            //     onPressed: () {},
-            //     child: Container(
-            //       padding: const EdgeInsets.all(15),
-            //       decoration: BoxDecoration(
-            //           color: Colors.blue,
-            //           borderRadius: BorderRadius.circular(12)),
-            //       child: const Center(
-            //           child: Text(
-            //         "login",
-            //         style: TextStyle(color: Colors.white),
-            //       )),
-            //     ),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextButton(
                 onPressed: () async {
-                  await AuthService().anonLogin();
-                  await Navigator.of(context)
+                  await _authService.anonLogin();
+                  var username = await Navigator.of(context)
                       .pushNamed(RouteGenerator.usernameGetter);
                 },
                 child: Container(

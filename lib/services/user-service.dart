@@ -56,6 +56,7 @@ class UserService {
 
   Future<List<UserDTO>> getUsersByUsername(String username) async {
     var ref = _db.collection('user');
+    var authUser = AuthService().user;
     var snapshot =
         await ref.where('userName', isEqualTo: username.toLowerCase()).get();
 
@@ -73,5 +74,14 @@ class UserService {
       list.add(user.toDTO());
     }
     return list;
+  }
+
+  Future<bool> checkIfUserExistsandCreateUser(username) async {
+    var users = await getUsersByUsername(username);
+    if (users.isEmpty) {
+      await updateUser(UserProfileDTO(userName: username));
+      return false;
+    }
+    return true;
   }
 }

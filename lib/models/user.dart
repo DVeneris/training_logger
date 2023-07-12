@@ -31,7 +31,7 @@ class AppUser {
     var uid = json['uid'];
     if (uid == null) {
       AuthService().signOut();
-      //throw Exception();
+      throw Exception(); //todo
     }
     var dateTime = null;
     var date = json['createdDate'];

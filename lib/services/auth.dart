@@ -7,12 +7,10 @@ import 'package:training_tracker/services/user-service.dart';
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
   final user = FirebaseAuth.instance.currentUser;
-
+  final userService = UserService();
   Future<void> anonLogin() async {
     try {
       await FirebaseAuth.instance.signInAnonymously();
-      //  await UserService().createUser("username");
-      //
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
       //handle

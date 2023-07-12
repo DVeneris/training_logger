@@ -13,6 +13,7 @@ class UserNameGetter extends StatefulWidget {
 class _UserNameGetterState extends State<UserNameGetter> {
   String username = "";
   bool _usernameExists = false;
+  final _authService = UserService();
   @override
   void initState() {
     _usernameExists = false;
@@ -39,18 +40,17 @@ class _UserNameGetterState extends State<UserNameGetter> {
             children: [
               TextButton(
                 onPressed: () async {
-                  //   var user = AuthService().user;
-                  await UserService().createUser("testUser");
-                  // var users = await UserService().getUsersByUsername(username);
-                  // if (users.isEmpty) {
-                  //   _usernameExists = false;
-
-                  Navigator.of(context).pop(username);
-                  // } else {
-                  //   setState(() {
-                  //     _usernameExists = true;
-                  //   });
-                  //}
+                  //  var user = AuthService().user;
+                  var userExists = await UserService()
+                      .checkIfUserExistsandCreateUser(username);
+                  if (!userExists) {
+                    _usernameExists = false;
+                    Navigator.of(context).pop(username);
+                  } else {
+                    setState(() {
+                      _usernameExists = true;
+                    });
+                  }
                   //close all routes
                   //---todo///
                 },
