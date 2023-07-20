@@ -14,8 +14,10 @@ import '../widgets/workout/workout.dart';
 
 class WorkoutService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService();
+
   Future<void> createWorkout(WorkoutDTO workoutDTO) async {
-    var user = AuthService().user;
+    var user = _authService.getUser();
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,
@@ -48,7 +50,7 @@ class WorkoutService {
   }
 
   Future<void> updateWorkout(WorkoutDTO workoutDTO) async {
-    var user = AuthService().user;
+    var user = _authService.getUser();
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,

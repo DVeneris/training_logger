@@ -8,10 +8,12 @@ import 'package:training_tracker/services/snapshot_object.dart';
 
 class ExerciseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService();
+
   Future<void> createExercise(ExerciseDTO exerciseDTO) async {
-    var user = AuthService().user;
+    var authUser = _authService.getUser();
     var exercise = Exercise(
-        userId: user!.uid,
+        userId: authUser!.uid,
         name: exerciseDTO.name,
         exerciseGroup: exerciseDTO.exerciseGroup,
         unit: WeightUnit.kg,
@@ -24,7 +26,6 @@ class ExerciseService {
   }
 
   Future<void> updateExercise(Exercise exercise) async {
-    var user = AuthService().user!;
     var ref = _db.collection('exercise').doc(exercise.userId);
   }
 

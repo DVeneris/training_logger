@@ -16,7 +16,7 @@ class ExerciseCreator extends StatefulWidget {
 }
 
 class _ExerciseCreatorState extends State<ExerciseCreator> {
-  final user = AuthService().user;
+  final user = AuthService().getUser(); //na vinei me DI
   bool isLoading = false;
   var _exerciseDTO = ExerciseDTO(unit: WeightUnit.kg);
   final TextEditingController _exerciseGroupController =

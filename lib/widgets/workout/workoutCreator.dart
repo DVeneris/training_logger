@@ -23,7 +23,7 @@ class SingleWorkoutCreator extends StatefulWidget {
 
 class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
   var workout = WorkoutDTO(
-      userId: AuthService().user!.uid,
+      userId: AuthService().getUser()!.uid, //na ginei me DI
       name: "",
       createDate: DateTime.now(),
       updateDate: DateTime.now(),

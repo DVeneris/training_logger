@@ -8,65 +8,65 @@ import 'package:training_tracker/utils/popupMenuButton.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workoutSetTextField.dart';
 
-class ExerciseSingle extends StatefulWidget {
-  //Exercise exercise = Exercise(name: "Leg Extension (Mashine)", sets: [Set()]);
+// class ExerciseSingle extends StatefulWidget {
+//   final ExerciseDTO exercise;
+//   late final bool canTrain;
+//   final Function() onSelectParam;
+//   final Function()? onExerciseDeletion;
+//   final Function(bool?) onSetChecked;
+//   ExerciseSingle(
+//       {super.key,
+//       required this.exercise,
+//       required this.onSelectParam,
+//       this.onExerciseDeletion,
+//       bool? canTrain,
+//       required this.onSetChecked}) {
+//     this.canTrain = canTrain ?? true;
+//   }
+
+//   @override
+//   State<ExerciseSingle> createState() => _ExerciseSingleState();
+// }
+
+// class _ExerciseSingleState extends State<ExerciseSingle> {
+//   final weightController = TextEditingController();
+//   final repsController = TextEditingController();
+//   @override
+//   void initState() {
+//     super.initState();
+//     repsController.addListener(_printLatestValue);
+//     weightController.addListener(_printLatestValue);
+//   }
+
+//   void _printLatestValue() {
+//     print('Second text field: ${repsController.text}');
+//   }
+
+//   @override
+//   void dispose() {
+//     repsController.dispose();
+//     weightController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return
+//   }
+// }
+class ExerciseSingle extends StatelessWidget {
   final ExerciseDTO exercise;
-  late final bool canTrain;
+  final bool? canTrain;
   final Function() onSelectParam;
   final Function()? onExerciseDeletion;
   final Function(bool?) onSetChecked;
-  ExerciseSingle(
+  const ExerciseSingle(
       {super.key,
       required this.exercise,
       required this.onSelectParam,
       this.onExerciseDeletion,
-      bool? canTrain,
-      required this.onSetChecked}) {
-    this.canTrain = canTrain ?? true;
-  }
-
-  @override
-  State<ExerciseSingle> createState() => _ExerciseSingleState();
-}
-
-class _ExerciseSingleState extends State<ExerciseSingle> {
-  final weightController = TextEditingController();
-  final repsController = TextEditingController();
-  // var exercise = ExerciseDTO();
-  @override
-  void initState() {
-    super.initState();
-    // exercise = ExerciseDTO(
-    //     id: widget.exercise.id,
-    //     unit: widget.exercise.unit,
-    //     name: widget.exercise.name,
-    //     userId: widget.exercise.userId,
-    //     mediaItem: widget.exercise.mediaItem,
-    //     equipment: widget.exercise.equipment,
-    //     exerciseGroup: widget.exercise.exerciseGroup,
-    //     previousSets: widget.exercise.currentSets,
-    //     currentSets: widget.exercise.currentSets.map((e) {
-    //       return ExerciseSet();
-    //     }).toList());
-    // widget.exercise.mediaItem;
-    repsController.addListener(_printLatestValue);
-    weightController.addListener(_printLatestValue);
-    //exercise.mediaItem?.url ??= "/assets/no_media.png";
-  }
-
-  void _printLatestValue() {
-    print('Second text field: ${repsController.text}');
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
-    repsController.dispose();
-    weightController.dispose();
-    super.dispose();
-  }
-
+      this.canTrain = false,
+      required this.onSetChecked});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -116,11 +116,6 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
                 }
               }),
             )
-            //   IconButton(
-            //     icon: const Icon(Icons.more_vert),
-            //     color: Colors.blue,
-            //     onPressed: () {},
-            //   )
           ],
         ),
         const Row(
@@ -254,131 +249,3 @@ class _ExerciseSingleState extends State<ExerciseSingle> {
     );
   }
 }
-
-// DataTable(
-//                 columnSpacing: 30,
-//                 columns: const <DataColumn>[
-//                   DataColumn(
-//                     label: Expanded(
-//                       child: Text(
-//                         'Set',
-//                         style: TextStyle(fontStyle: FontStyle.normal),
-//                       ),
-//                     ),
-//                   ),
-//                   DataColumn(
-//                     label: Expanded(
-//                       child: Text(
-//                         'Previous',
-//                         style: TextStyle(fontStyle: FontStyle.normal),
-//                       ),
-//                     ),
-//                   ),
-//                   DataColumn(
-//                     label: Expanded(
-//                       child: Text(
-//                         textAlign: TextAlign.center,
-//                         'kg',
-//                         style: TextStyle(fontStyle: FontStyle.normal),
-//                       ),
-//                     ),
-//                   ),
-//                   DataColumn(
-//                     label: Expanded(
-//                       child: Text(
-//                         textAlign: TextAlign.center,
-//                         'Reps',
-//                         style: TextStyle(fontStyle: FontStyle.normal),
-//                       ),
-//                     ),
-//                   ),
-//                   DataColumn(
-//                     label: Expanded(
-//                       child: Text(''),
-//                     ),
-//                   ),
-//                 ],
-//                 rows: widget.exercise.sets.map((set) {
-//                   return DataRow(
-//                     cells: <DataCell>[
-//                       DataCell(Text(
-//                           "${widget.exercise.sets.indexOf(set) + 1}")), //den einai auto
-//                       const DataCell(Text('-')),
-//                       DataCell(WorkoutSetTextield(
-//                         onChange: (data) {
-//                           set.weight = data;
-//                         },
-//                       )),
-//                       DataCell(WorkoutSetTextield(
-//                         onChange: (data) {
-//                           set.reps = data;
-//                         },
-//                       )),
-//                       DataCell(widget.canTrain
-//                           ? Checkbox(
-//                               value: set.isComplete,
-//                               onChanged: (bool? onChanged) {
-//                                 setState(() {
-//                                   set.isComplete = onChanged ?? false;
-//                                 });
-//                               })
-//                           : Dismissible(
-//                               onDismissed: ((direction) {}),
-//                               key: Key(set.toString()),
-//                               child: const Icon(
-//                                 Icons.lock,
-//                                 color: Colors.grey,
-//                               ),
-//                             )),
-//                     ],
-//                   );
-//                 }).toList()),
-
-
-
-// Table(
-//             children: widget.exercise.sets.map((set) {
-//           return TableRow(children: [
-//             ListView.builder(
-//               shrinkWrap: true,
-//               scrollDirection: Axis.vertical,
-//               physics: const NeverScrollableScrollPhysics(),
-//               itemCount: widget.exercise.sets.length,
-//               itemBuilder: (context, index) {
-//                 var set = widget.exercise.sets[index];
-//                 return Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Text("${widget.exercise.sets.indexOf(set) + 1}"),
-//                       const Text('-'),
-//                       WorkoutSetTextield(
-//                         onChange: (data) {
-//                           set.weight = data;
-//                         },
-//                       ),
-//                       WorkoutSetTextield(
-//                         onChange: (data) {
-//                           set.reps = data;
-//                         },
-//                       ),
-//                       widget.canTrain
-//                           ? Checkbox(
-//                               value: set.isComplete,
-//                               onChanged: (bool? onChanged) {
-//                                 setState(() {
-//                                   set.isComplete = onChanged ?? false;
-//                                 });
-//                               })
-//                           : const Icon(
-//                               Icons.lock,
-//                               color: Colors.grey,
-//                             ),
-//                     ],
-//                   ),
-//                 );
-//               },
-//             ),
-//           ]);
-//         }).toList()),

@@ -12,10 +12,12 @@ import 'package:uuid/uuid.dart';
 class FileStorage {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final User? _user = AuthService().user;
+  final AuthService _authService = AuthService();
 
   Future<MediaItem?> uploadFile(String filePath) async {
-    if (_user == null) {
+    var authUser = _authService.getUser();
+
+    if (authUser == null) {
       return null;
     }
     File file = File(filePath);
@@ -25,11 +27,11 @@ class FileStorage {
       // await testCompressAndGetFile(file, filename, _user!.uid);
       // File compressedFile = File("assets/${_user!.uid}/$filename");
       // if (compressedFile == null) return null;
-      await _storage.ref('${_user?.uid}/$filename').putFile(file);
+      await _storage.ref('${authUser?.uid}/$filename').putFile(file);
       var fileurl = await downloadURL(filename);
 
       MediaItem mediaItem = MediaItem(
-          id: filename, userId: _user!.uid, name: filename, url: fileurl);
+          id: filename, userId: authUser!.uid, name: filename, url: fileurl);
       return mediaItem;
     } on firebase_core.FirebaseException catch (e) {
       print(e);
@@ -64,11 +66,14 @@ class FileStorage {
   }
 
   Future<String?> downloadURL(String imageName) async {
-    if (_user == null) {
+    var authUser = _authService.getUser();
+
+    if (authUser == null) {
       return null;
     }
     try {
-      var url = await _storage.ref('${_user?.uid}/$imageName').getDownloadURL();
+      var url =
+          await _storage.ref('${authUser.uid}/$imageName').getDownloadURL();
       return url;
     } on FirebaseException catch (e) {
       return null;

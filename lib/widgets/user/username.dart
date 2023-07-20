@@ -41,16 +41,16 @@ class _UserNameGetterState extends State<UserNameGetter> {
               TextButton(
                 onPressed: () async {
                   //  var user = AuthService().user;
-                  var userExists = await UserService()
-                      .checkIfUserExistsandCreateUser(username);
-                  if (!userExists) {
-                    _usernameExists = false;
-                    Navigator.of(context).pop(username);
-                  } else {
-                    setState(() {
-                      _usernameExists = true;
-                    });
-                  }
+                  // var userExists = await UserService()
+                  //     .checkIfUserExistsandCreateUser(username);
+                  // if (!userExists) {
+                  //   _usernameExists = false;
+                  //   Navigator.of(context).pop(username);
+                  // } else {
+                  //   setState(() {
+                  //     _usernameExists = true;
+                  //   });
+                  // }
                   //close all routes
                   //---todo///
                 },

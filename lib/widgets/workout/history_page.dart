@@ -63,8 +63,8 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             )),
       ),
       body: FutureBuilder<List<WorkoutHistoryDTO>>(
-          future: WorkoutHistoryService()
-              .getWorkoutHistoryList(AuthService().user!.uid),
+          future: WorkoutHistoryService().getWorkoutHistoryList(
+              AuthService().getUser()!.uid), //na ginei me DI
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               //loading icon

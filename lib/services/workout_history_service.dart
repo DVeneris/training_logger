@@ -11,6 +11,8 @@ import 'package:training_tracker/services/workout_service.dart';
 
 class WorkoutHistoryService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService();
+
   // Future<void> createWorkoutHistory(WorkoutHistory workoutHistory) async {
   //   var ref = _db.collection('workoutHistory');
   //   var snapshot = await ref.add(workoutHistory.toMap());
@@ -56,7 +58,7 @@ class WorkoutHistoryService {
   }
 
   Future<void> createWorkoutHistory(WorkoutDTO workoutDTO) async {
-    var user = AuthService().user;
+    var user = _authService.getUser();
 
     var workoutHistory = WorkoutHistory(
         userId: user!.uid,

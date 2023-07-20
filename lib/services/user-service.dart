@@ -9,11 +9,12 @@ import 'package:training_tracker/services/snapshot_object.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService();
 
-  Future<void> createUser(String? username) async {
-    var authUser = AuthService().user;
+  Future<UserDTO?> createUser(String? username) async {
+    var authUser = _authService.getUser();
     if (authUser == null) {
-      return;
+      return null;
     }
 
     var data = authUser.providerData;
@@ -25,13 +26,20 @@ class UserService {
           ? username.toLowerCase()
           : authUser.uid.toLowerCase(),
       createdDate: DateTime.now(),
+      signinDate: DateTime.now(),
     );
     var userMap = usetToAdd.toMap();
     await _db.collection('user').doc(authUser.uid).set(userMap);
+    return UserDTO(
+        uid: usetToAdd.uid,
+        email: usetToAdd.email,
+        userName: usetToAdd.userName,
+        createdDate: usetToAdd.createdDate,
+        signinDate: usetToAdd.signinDate);
   }
 
   Future<void> updateUser(UserProfileDTO userData) async {
-    var authUser = AuthService().user;
+    var authUser = _authService.getUser();
     if (authUser == null) {
       return;
     }
@@ -41,7 +49,7 @@ class UserService {
   }
 
   Future<UserDTO> getCurrentUser() async {
-    var authUser = AuthService().user;
+    var authUser = _authService.getUser();
     if (authUser == null) {
       throw Exception("null user");
     }
@@ -56,7 +64,7 @@ class UserService {
 
   Future<List<UserDTO>> getUsersByUsername(String username) async {
     var ref = _db.collection('user');
-    var authUser = AuthService().user;
+
     var snapshot =
         await ref.where('userName', isEqualTo: username.toLowerCase()).get();
 
@@ -65,10 +73,6 @@ class UserService {
       return SnapshotObject(id: s.id, data: s.data());
     });
     var users = snapshotList.map((e) => AppUser.fromJson(e.data));
-    //  if (users.length ==null 1) {
-    //     return null;
-    //     // throw Exception("Too many users with this username");
-    //   }
     var list = <UserDTO>[];
     for (var user in users) {
       list.add(user.toDTO());
@@ -76,12 +80,13 @@ class UserService {
     return list;
   }
 
-  Future<bool> checkIfUserExistsandCreateUser(username) async {
+  Future<UserDTO?> checkIfUserExistsandCreateUser(username) async {
     var users = await getUsersByUsername(username);
     if (users.isEmpty) {
-      await updateUser(UserProfileDTO(userName: username));
-      return false;
+      //await updateUser(UserProfileDTO(userName: username));
+      var user = await createUser(username);
+      return user;
     }
-    return true;
+    return null;
   }
 }
