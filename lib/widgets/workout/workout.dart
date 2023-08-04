@@ -24,33 +24,33 @@ class SingleWorkout extends StatefulWidget {
 }
 
 class _SingleWorkoutState extends State<SingleWorkout> {
-  int _workoutTime = 0;
-  int _totalWeight = 0;
-  int _remainingTime = 10; //initial time in seconds
-  late Timer _timer;
-  late Timer _workoutDurationTimer;
-  bool _isRunning = false;
+  // int _workoutTime = 0;
+  // int _totalWeight = 0;
+  // int _remainingTime = 10; //initial time in seconds
+  // late Timer _timer;
+  // late Timer _workoutDurationTimer;
+  // bool _isRunning = false;
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    _workoutDurationTimer.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _timer.cancel();
+  //   _workoutDurationTimer.cancel();
+  //   super.dispose();
+  // }
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    _startWorkoutTimer();
-    // if (widget.startUnset) {
-    //var workout = widget.workout;
-    //   exercise.exercise.sets = [];
-    //   exercise.exercise.sets.add(ExerciseSet(isComplete: false));
-    // } // for (var exercise in widget.workout.exerciseList) {
-    // }
-    _totalWeight = _calculateTotalSetsAndWeight();
-  }
+  //   _startWorkoutTimer();
+  //   // if (widget.startUnset) {
+  //   //var workout = widget.workout;
+  //   //   exercise.exercise.sets = [];
+  //   //   exercise.exercise.sets.add(ExerciseSet(isComplete: false));
+  //   // } // for (var exercise in widget.workout.exerciseList) {
+  //   // }
+  //   _totalWeight = _calculateTotalSetsAndWeight();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +79,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   ),
                   foregroundColor: Colors.blue),
               onPressed: () async {
-                workout.totalTime = _workoutTime.toString();
-                workout.totalVolume = _totalWeight;
+                workout.totalTime = provider.workoutTime.toString();
+                workout.totalVolume = provider.totalWeight;
                 await WorkoutService().updateWorkout(workout);
                 Navigator.of(context).pop();
               },
@@ -111,9 +111,9 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                               var addToStart = [
                                 Row(
                                   children: [
-                                    Text(_workoutTime.toString()),
+                                    Text(provider.workoutTime.toString()),
                                     const Text("----------------"),
-                                    Text(_totalWeight.toString()),
+                                    Text(provider.totalWeight.toString()),
 
                                     // Text('data'),
                                   ],
@@ -124,16 +124,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                             var addToBody = [
                               ExerciseSingle(
                                 onSetChecked: (result) {
-                                  _startCountdown();
-                                  setState(() {
-                                    _totalWeight =
-                                        _calculateTotalSetsAndWeight();
-                                  });
+                                  provider.checkExercise();
                                 },
                                 exercise: workout.exerciseList[index].exercise,
-                                onSelectParam: () {
-                                  setState(() {});
-                                },
+                                onSelectParam: () {},
                               )
                             ];
                             result.addAll(addToBody);
@@ -150,12 +144,12 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                                                 .pushNamed(
                                                     RouteGenerator.exerciseList)
                                             as ExerciseDTO?;
+
                                         if (exerciseToAdd != null) {
                                           var options = ExerciseOptionsDTO(
                                               exercise: exerciseToAdd);
-                                          setState(() {
-                                            workout.exerciseList.add(options);
-                                          });
+
+                                          workout.exerciseList.add(options);
                                         }
                                       },
                                       child: const Text(
@@ -212,9 +206,9 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                                 if (exerciseToAdd != null) {
                                   var options = ExerciseOptionsDTO(
                                       exercise: exerciseToAdd);
-                                  setState(() {
-                                    workout.exerciseList.add(options);
-                                  });
+                                  // setState(() {
+                                  workout.exerciseList.add(options);
+                                  // });
                                 }
                               },
                               child: const Text(
@@ -231,7 +225,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                 ),
               ],
             ),
-            if (_isRunning)
+            if (provider.isRunning)
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -248,23 +242,23 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                                 TextButton(
                                   child: const Text("- 15"),
                                   onPressed: () {
-                                    var time = _remainingTime - 15;
+                                    var time = provider.remainingTime - 15;
                                     if (time <= 0) {
                                       setState(() {
-                                        _isRunning = false;
+                                        provider.isRunning = false;
                                       });
-                                      _timer.cancel();
+                                      provider.providerTimer.cancel();
                                     } else {
-                                      _remainingTime = time;
+                                      provider.remainingTime = time;
                                     }
                                   },
                                 ),
-                                Text(_remainingTime.toString()),
+                                Text(provider.remainingTime.toString()),
                                 TextButton(
                                   child: const Text("+ 15"),
                                   onPressed: () {
                                     setState(() {
-                                      _remainingTime += 15;
+                                      provider.remainingTime += 15;
                                     });
                                   },
                                 ),

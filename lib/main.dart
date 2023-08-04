@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:training_tracker/DTOS/user_profile_dto.dart';
+import 'package:training_tracker/providers/exercise_provider.dart';
+import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/database-repository.dart';
@@ -19,7 +24,19 @@ import 'package:path/path.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ExerciseProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -93,8 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: AuthService().userStream,
+    var _authService = AuthService();
+    return StreamBuilder<User?>(
+      stream: _authService.getUserStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text(

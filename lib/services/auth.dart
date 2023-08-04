@@ -1,14 +1,18 @@
 import 'dart:developer';
-import 'dart:js_interop';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:training_tracker/services/user-service.dart';
 
 class AuthService {
-  final userStream = FirebaseAuth.instance.authStateChanges();
+  Stream<User?> getUserStream() {
+    final userStream = FirebaseAuth.instance.authStateChanges();
+    return userStream;
+  }
+
+  // final userStream = FirebaseAuth.instance.authStateChanges();
   //final user = FirebaseAuth.instance.currentUser;
-  final userService = UserService();
+  // final userService = UserService();
   Future<void> anonLogin() async {
     try {
       await FirebaseAuth.instance.signInAnonymously();

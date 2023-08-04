@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 
@@ -15,9 +17,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _authService = AuthService();
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[300],
@@ -42,9 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextButton(
                 onPressed: () async {
-                  await _authService.anonLogin();
-                  var username = await Navigator.of(context)
-                      .pushNamed(RouteGenerator.usernameGetter);
+                  // await _authService.anonLogin();
+                  await provider.anonLoginUser();
+                  // Navigator.of(context)
+                  //     .pushNamed(RouteGenerator.usernameGetter);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(15),

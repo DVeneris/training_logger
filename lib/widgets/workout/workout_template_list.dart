@@ -26,94 +26,90 @@ class WorkoutTemplateList extends StatefulWidget {
 class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ExerciseProvider(),
-      child: FutureBuilder<List<WorkoutDTO>>(
-          future: WorkoutService().getWorkoutList(
-              userId: AuthService().getUser()!.uid), //na ginei me DI
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return const Text(
-                'error in snapshot',
-                textDirection: TextDirection.ltr,
-              );
-            } else if (snapshot.hasData) {
-              // var workoutList = snapshot.data!;
-              final workoutProvider = Provider.of<ExerciseProvider>(context);
-              workoutProvider.workoutList = snapshot.data;
-              return Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  leadingWidth: 60,
-                  title: const Center(
-                    child: Text("Workout",
+    return FutureBuilder<List<WorkoutDTO>>(
+        future: WorkoutService().getWorkoutList(
+            userId: AuthService().getUser()!.uid), //na ginei me DI
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Text(
+              'error in snapshot',
+              textDirection: TextDirection.ltr,
+            );
+          } else if (snapshot.hasData) {
+            // var workoutList = snapshot.data!;
+            final workoutProvider = Provider.of<ExerciseProvider>(context);
+            workoutProvider.workoutList = snapshot.data;
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leadingWidth: 60,
+                title: const Center(
+                  child: Text("Workout",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center),
+                ),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "My Templates",
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
                         ),
-                        textAlign: TextAlign.center),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: (() async {
+                          await Navigator.of(context).pushNamed(
+                            RouteGenerator.workoutCreator,
+                          );
+                        }),
+                      )
+                    ],
                   ),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "My Templates",
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: (() async {
-                            await Navigator.of(context).pushNamed(
-                              RouteGenerator.workoutCreator,
-                            );
-                          }),
-                        )
-                      ],
-                    ),
-                    Expanded(
-                      child: ListView.separated(
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                                onTap: () {
-                                  // Navigator.of(context).pushNamed(
-                                  //   RouteGenerator.singleWorkout,
-                                  //   arguments: {'workout': workoutList[index]},
-                                  // );
-                                  workoutProvider.workout =
-                                      workoutProvider.workoutList[index];
-                                  Navigator.of(context).pushNamed(
-                                    RouteGenerator.singleWorkout,
-                                  );
-                                },
-                                child: RoutineListCard(
-                                    workout:
-                                        workoutProvider.workoutList[index]));
-                          },
-                          separatorBuilder: (context, index) {
-                            return const Divider();
-                          },
-                          itemCount: workoutProvider.workoutList.length),
-                    )
-                  ]),
-                ),
-              );
-            } else {
-              //no data found
-              return const Text(
-                'no data',
-                textDirection: TextDirection.ltr,
-              );
-            }
-          }),
-    );
+                  Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onTap: () {
+                                // Navigator.of(context).pushNamed(
+                                //   RouteGenerator.singleWorkout,
+                                //   arguments: {'workout': workoutList[index]},
+                                // );
+                                workoutProvider.workout =
+                                    workoutProvider.workoutList[index];
+                                Navigator.of(context).pushNamed(
+                                  RouteGenerator.singleWorkout,
+                                );
+                              },
+                              child: RoutineListCard(
+                                  workout: workoutProvider.workoutList[index]));
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider();
+                        },
+                        itemCount: workoutProvider.workoutList.length),
+                  )
+                ]),
+              ),
+            );
+          } else {
+            //no data found
+            return const Text(
+              'no data',
+              textDirection: TextDirection.ltr,
+            );
+          }
+        });
   }
 }

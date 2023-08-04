@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/user-service.dart';
 import 'package:training_tracker/utils/kawaii_textbox.dart';
@@ -12,16 +14,9 @@ class UserNameGetter extends StatefulWidget {
 
 class _UserNameGetterState extends State<UserNameGetter> {
   String username = "";
-  bool _usernameExists = false;
-  final _authService = UserService();
-  @override
-  void initState() {
-    _usernameExists = false;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    // final provider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: Column(
         children: [
@@ -29,7 +24,7 @@ class _UserNameGetterState extends State<UserNameGetter> {
             padding: const EdgeInsets.symmetric(vertical: 50.0),
             child: KawaiiTextbox(
               hint: "User Name",
-              hasError: _usernameExists,
+              hasError: context.watch<UserProvider>().userExists == false,
               errorMessage: "This username already exists",
               onChange: ((data) => setState(() {
                     username = data;
@@ -40,11 +35,12 @@ class _UserNameGetterState extends State<UserNameGetter> {
             children: [
               TextButton(
                 onPressed: () async {
+                  // await provider.anonLoginUser(username);
+                  // await provider.checkIfUserExist(username);
                   //  var user = AuthService().user;
                   // var userExists = await UserService()
                   //     .checkIfUserExistsandCreateUser(username);
-                  // if (!userExists) {
-                  //   _usernameExists = false;
+
                   //   Navigator.of(context).pop(username);
                   // } else {
                   //   setState(() {

@@ -89,4 +89,12 @@ class UserService {
     }
     return null;
   }
+
+  Future<bool> checkIfUserExists(username) async {
+    var users = await getUsersByUsername(username);
+    if (users.isEmpty) {
+      return false;
+    }
+    return true;
+  }
 }

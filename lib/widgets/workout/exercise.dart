@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
@@ -7,6 +8,8 @@ import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/utils/popupMenuButton.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 import 'package:training_tracker/utils/workoutSetTextField.dart';
+
+import '../../providers/exercise_provider.dart';
 
 // class ExerciseSingle extends StatefulWidget {
 //   final ExerciseDTO exercise;
@@ -69,183 +72,186 @@ class ExerciseSingle extends StatelessWidget {
       required this.onSetChecked});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    widget.exercise.mediaItem != null
-                        ? CircleAvatar(
-                            maxRadius: 20,
-                            minRadius: 10,
-                            backgroundImage:
-                                NetworkImage(widget.exercise.mediaItem!.url!))
-                        : const CircleAvatar(
-                            maxRadius: 20,
-                            minRadius: 10,
-                            backgroundImage: AssetImage("assets/no_media.png"),
-                          ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        widget.exercise.name,
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            CustomPopupMenuButton(
-              onItemSelection: ((option) {
-                if (option == Options.delete) {
-                  if (widget.onExerciseDeletion != null) {
-                    widget.onExerciseDeletion!();
-                  }
-                }
-              }),
-            )
-          ],
-        ),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(flex: 1, child: Text("Set")),
-            Expanded(flex: 1, child: Text("Previous")),
-            Expanded(flex: 2, child: Center(child: Text("Weight"))),
-            Expanded(flex: 2, child: Center(child: Text("Reps"))),
-            Expanded(flex: 1, child: Text("")),
-          ],
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: widget.exercise.currentSets.length,
-          itemBuilder: (context, index) {
-            var set = widget.exercise.currentSets.isNotEmpty
-                ? widget.exercise.currentSets[index]
-                : ExerciseSet();
+    final provider = Provider.of<ExerciseProvider>(context);
+    final exercise = provider.exercise;
+    return Scaffold();
+    // return Column(
+    //   children: [
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Column(
+    //           children: [
+    //             Row(
+    //               children: [
+    //                 const SizedBox(
+    //                   height: 50,
+    //                 ),
+    //                 widget.exercise.mediaItem != null
+    //                     ? CircleAvatar(
+    //                         maxRadius: 20,
+    //                         minRadius: 10,
+    //                         backgroundImage:
+    //                             NetworkImage(widget.exercise.mediaItem!.url!))
+    //                     : const CircleAvatar(
+    //                         maxRadius: 20,
+    //                         minRadius: 10,
+    //                         backgroundImage: AssetImage("assets/no_media.png"),
+    //                       ),
+    //                 Padding(
+    //                   padding: const EdgeInsets.only(left: 8.0),
+    //                   child: Text(
+    //                     widget.exercise.name,
+    //                     style: const TextStyle(
+    //                       color: Colors.blue,
+    //                       fontWeight: FontWeight.normal,
+    //                       fontSize: 15,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ],
+    //         ),
+    //         CustomPopupMenuButton(
+    //           onItemSelection: ((option) {
+    //             if (option == Options.delete) {
+    //               if (widget.onExerciseDeletion != null) {
+    //                 widget.onExerciseDeletion!();
+    //               }
+    //             }
+    //           }),
+    //         )
+    //       ],
+    //     ),
+    //     const Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Expanded(flex: 1, child: Text("Set")),
+    //         Expanded(flex: 1, child: Text("Previous")),
+    //         Expanded(flex: 2, child: Center(child: Text("Weight"))),
+    //         Expanded(flex: 2, child: Center(child: Text("Reps"))),
+    //         Expanded(flex: 1, child: Text("")),
+    //       ],
+    //     ),
+    //     ListView.builder(
+    //       shrinkWrap: true,
+    //       scrollDirection: Axis.vertical,
+    //       physics: const NeverScrollableScrollPhysics(),
+    //       itemCount: widget.exercise.currentSets.length,
+    //       itemBuilder: (context, index) {
+    //         var set = widget.exercise.currentSets.isNotEmpty
+    //             ? widget.exercise.currentSets[index]
+    //             : ExerciseSet();
 
-            var prevSet = ExerciseSet();
-            if (index < widget.exercise.previousSets.length) {
-              prevSet = widget.exercise.previousSets.isNotEmpty
-                  ? widget.exercise.previousSets[index]
-                  : ExerciseSet();
-            }
+    //         var prevSet = ExerciseSet();
+    //         if (index < widget.exercise.previousSets.length) {
+    //           prevSet = widget.exercise.previousSets.isNotEmpty
+    //               ? widget.exercise.previousSets[index]
+    //               : ExerciseSet();
+    //         }
 
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Dismissible(
-                key: Key("${widget.exercise.id}-index-$index"),
-                onDismissed: (direction) {
-                  // Remove the item from the data source.
-                  setState(() {
-                    widget.exercise.currentSets.removeAt(index);
-                  });
-                  // Then show a snackbar.
-                  // ScaffoldMessenger.of(context)
-                  //     .showSnackBar(SnackBar(content: Text('item dismissed')));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                            "${widget.exercise.currentSets.indexOf(set) + 1}")),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: prevSet.reps != null || prevSet.weight != null
-                            ? Text('${prevSet.weight} x ${prevSet.reps}')
-                            : const Text('-'),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: WorkoutSetTextield(
-                          hint: prevSet.weight ?? '',
-                          text: set.weight ?? '',
-                          onChange: (data) {
-                            set.weight = data;
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: WorkoutSetTextield(
-                          hint: prevSet.reps ?? '',
-                          text: set.reps ?? '',
-                          onChange: (data) {
-                            set.reps = data;
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: widget.canTrain
-                          ? Checkbox(
-                              value: set.isComplete,
-                              onChanged: (bool? change) {
-                                setState(() {
-                                  set.isComplete = change ?? false;
-                                });
-                                widget.onSetChecked(change);
-                              })
-                          : const Icon(
-                              Icons.lock,
-                              color: Colors.grey,
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(top: 9.0, bottom: 9),
-                child: TextButton(
-                  child: const Text(
-                    "Add Set",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 15,
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      widget.exercise.currentSets.add(ExerciseSet());
-                      widget.onSelectParam();
-                    });
-                    // print(widget.exercise.c.length);
-                  },
-                )),
-          ],
-        ),
-      ],
-    );
+    //         return Padding(
+    //           padding: const EdgeInsets.all(8.0),
+    //           child: Dismissible(
+    //             key: Key("${widget.exercise.id}-index-$index"),
+    //             onDismissed: (direction) {
+    //               // Remove the item from the data source.
+    //               setState(() {
+    //                 widget.exercise.currentSets.removeAt(index);
+    //               });
+    //               // Then show a snackbar.
+    //               // ScaffoldMessenger.of(context)
+    //               //     .showSnackBar(SnackBar(content: Text('item dismissed')));
+    //             },
+    //             child: Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: [
+    //                 Expanded(
+    //                     flex: 1,
+    //                     child: Text(
+    //                         "${widget.exercise.currentSets.indexOf(set) + 1}")),
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: Center(
+    //                     child: prevSet.reps != null || prevSet.weight != null
+    //                         ? Text('${prevSet.weight} x ${prevSet.reps}')
+    //                         : const Text('-'),
+    //                   ),
+    //                 ),
+    //                 Expanded(
+    //                   flex: 2,
+    //                   child: Padding(
+    //                     padding: const EdgeInsets.only(right: 4.0),
+    //                     child: WorkoutSetTextield(
+    //                       hint: prevSet.weight ?? '',
+    //                       text: set.weight ?? '',
+    //                       onChange: (data) {
+    //                         set.weight = data;
+    //                       },
+    //                     ),
+    //                   ),
+    //                 ),
+    //                 Expanded(
+    //                   flex: 2,
+    //                   child: Padding(
+    //                     padding: const EdgeInsets.only(right: 4.0),
+    //                     child: WorkoutSetTextield(
+    //                       hint: prevSet.reps ?? '',
+    //                       text: set.reps ?? '',
+    //                       onChange: (data) {
+    //                         set.reps = data;
+    //                       },
+    //                     ),
+    //                   ),
+    //                 ),
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: widget.canTrain
+    //                       ? Checkbox(
+    //                           value: set.isComplete,
+    //                           onChanged: (bool? change) {
+    //                             setState(() {
+    //                               set.isComplete = change ?? false;
+    //                             });
+    //                             widget.onSetChecked(change);
+    //                           })
+    //                       : const Icon(
+    //                           Icons.lock,
+    //                           color: Colors.grey,
+    //                         ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         Padding(
+    //             padding: const EdgeInsets.only(top: 9.0, bottom: 9),
+    //             child: TextButton(
+    //               child: const Text(
+    //                 "Add Set",
+    //                 style: TextStyle(
+    //                   color: Colors.blue,
+    //                   fontWeight: FontWeight.normal,
+    //                   fontSize: 15,
+    //                 ),
+    //               ),
+    //               onPressed: () {
+    //                 setState(() {
+    //                   widget.exercise.currentSets.add(ExerciseSet());
+    //                   widget.onSelectParam();
+    //                 });
+    //                 // print(widget.exercise.c.length);
+    //               },
+    //             )),
+    //       ],
+    //     ),
+    //   ],
+    // );
   }
 }

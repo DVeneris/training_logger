@@ -53,9 +53,7 @@ class RouteGenerator {
         );
       case singleWorkout:
         return MaterialPageRoute(
-          builder: (_) => SingleWorkout(
-            workout: args!['workout'] as WorkoutDTO,
-          ),
+          builder: (_) => const SingleWorkout(),
         );
       case exerciseList:
         return MaterialPageRoute(

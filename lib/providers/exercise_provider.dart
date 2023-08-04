@@ -36,7 +36,7 @@ class ExerciseProvider with ChangeNotifier {
   set workoutList(List<WorkoutDTO>? newWorkoutList) {
     _workoutList = newWorkoutList ?? [];
     _workoutIsUnset = true;
-    notifyListeners();
+    // notifyListeners();
   }
 
   bool _workoutIsUnset = true;
@@ -49,7 +49,7 @@ class ExerciseProvider with ChangeNotifier {
 
   int _calculateTotalSetsAndWeight() {
     var totalWeight = 0;
-    for (var e in workout.exerciseList) {
+    for (var e in _workoutDTO.exerciseList) {
       for (var s in e.exercise.currentSets) {
         if (s.isComplete && s.weight != null) {
           var weight = int.tryParse(s.weight!);
@@ -65,50 +65,56 @@ class ExerciseProvider with ChangeNotifier {
     return totalWeight;
   }
 
-  int _workoutTime = 0;
-  int _totalWeight = 0;
-  int _remainingTime = 10; //initial time in seconds
-  late Timer _timer;
+  int workoutTime = 0;
+  int totalWeight = 0;
+  int remainingTime = 10; //initial time in seconds
+  late Timer providerTimer;
   late Timer _workoutDurationTimer;
-  bool _isRunning = false;
+  bool isRunning = false;
 
-  void _startWorkoutTimer() {
-    _workoutTime = 0;
+  void checkExercise() {
+    startCountdown();
+
+    totalWeight = _calculateTotalSetsAndWeight();
+  }
+
+  void startWorkoutTimer() {
+    workoutTime = 0;
 
     _workoutDurationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _workoutTime++;
+      workoutTime++;
     });
   }
 
-  void _startTimer() {
-    _remainingTime = 10;
-    _isRunning = true;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_remainingTime > 0) {
-        _remainingTime--;
+  void startTimer() {
+    remainingTime = 10;
+    isRunning = true;
+    providerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingTime > 0) {
+        remainingTime--;
       } else {
-        _timer.cancel();
-        _isRunning = false;
+        providerTimer.cancel();
+        isRunning = false;
       }
     });
   }
 
-  void _startCountdown() {
-    if (_isRunning) {
+  void startCountdown() {
+    if (isRunning) {
       _cancelTimer();
     }
-    _startTimer();
+    startTimer();
   }
 
-  void _stopTimer() {
-    _isRunning = false;
-    _timer.cancel();
+  void stopTimer() {
+    isRunning = false;
+    providerTimer.cancel();
   }
 
   void _cancelTimer() {
-    _isRunning = false;
-    _remainingTime = 10;
+    isRunning = false;
+    remainingTime = 10;
 
-    _timer.cancel();
+    providerTimer.cancel();
   }
 }
