@@ -3,11 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/user_profile_dto.dart';
-import 'package:training_tracker/providers/exercise_provider.dart';
+import 'package:training_tracker/providers/exercise_creator_provider.dart';
+import 'package:training_tracker/providers/exercise_list_provider.dart';
+import 'package:training_tracker/providers/workout_creator_provider.dart';
+import 'package:training_tracker/providers/workout_provider.dart';
 import 'package:training_tracker/providers/user_provider.dart';
+import 'package:training_tracker/providers/workout_template_list_provider.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/database-repository.dart';
+import 'package:training_tracker/services/exercise_service.dart';
+import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/image/image.dart';
 import 'package:training_tracker/widgets/user/login.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
@@ -28,10 +34,28 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ExerciseProvider(),
+          create: (_) => WorkoutProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExerciseCreatorProvider(ExerciseService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExerciseListProvider(AuthService(), ExerciseService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              WorkoutCreatorProvider(AuthService(), WorkoutService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              WorkoutCreatorProvider(AuthService(), WorkoutService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              WorkoutTemplateListProvider(AuthService(), WorkoutService()),
         ),
       ],
       child: const MyApp(),

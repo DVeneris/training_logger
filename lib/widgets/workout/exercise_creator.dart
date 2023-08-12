@@ -1,8 +1,11 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/providers/exercise_creator_provider.dart';
+import 'package:training_tracker/providers/exercise_list_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/exercise_service.dart';
 import 'package:training_tracker/services/file_storage_service.dart';
@@ -16,9 +19,7 @@ class ExerciseCreator extends StatefulWidget {
 }
 
 class _ExerciseCreatorState extends State<ExerciseCreator> {
-  final user = AuthService().getUser(); //na vinei me DI
   bool isLoading = false;
-  var _exerciseDTO = ExerciseDTO(unit: WeightUnit.kg);
   final TextEditingController _exerciseGroupController =
       TextEditingController();
   final TextEditingController _exerciseNameController = TextEditingController();
@@ -26,15 +27,6 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
   final FileStorage storage = FileStorage();
   ExerciseGroup? selectedExerciseGroup;
   Equipment? selectedEquipment;
-  @override
-  void initState() {
-    super.initState();
-    _exerciseNameController.addListener(() => _onExerciseNameChange());
-  }
-
-  _onExerciseNameChange() {
-    _exerciseDTO.name = _exerciseNameController.text;
-  }
 
   @override
   void dispose() {
@@ -60,6 +52,9 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
       equipmentEntries.add(DropdownMenuEntry<Equipment>(
           value: equipment, label: equipment.name));
     }
+    final provider = Provider.of<ExerciseCreatorProvider>(context);
+    final exercise = provider.exercise;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -86,7 +81,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                     ),
                     foregroundColor: Colors.blue),
                 onPressed: () async {
-                  if (_exerciseDTO.name.isEmpty) {
+                  if (exercise.name.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -98,7 +93,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                             TextButton(
                               child: const Text('OK'),
                               onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -107,8 +102,11 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                     );
                     return;
                   }
-                  await ExerciseService().createExercise(_exerciseDTO);
-                  if (context.mounted) Navigator.of(context).pop();
+                  await provider.createExercise(() {
+                    Navigator.of(context).pop();
+                    Provider.of<ExerciseListProvider>(context, listen: false)
+                        .addToList(exercise);
+                  });
                 },
                 child: const Text("Save"),
               ),
@@ -130,7 +128,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
             : Column(
                 children: [
                   MediaSelector(
-                    mediaItem: _exerciseDTO.mediaItem,
+                    mediaItem: exercise.mediaItem,
                     onMediaSelectorPressed: () async {
                       var results = await FilePicker.platform.pickFiles(
                           allowMultiple: false,
@@ -146,7 +144,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                         isLoading = true;
                       });
                       var mediaItem = await storage.uploadFile(path);
-                      _exerciseDTO.mediaItem = mediaItem;
+                      exercise.mediaItem = mediaItem;
                       setState(() {
                         isLoading = false;
                       });
@@ -160,22 +158,20 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: _exerciseNameController,
+                      onChanged: (value) => exercise.name = value,
                     ),
                   ),
                   const Text("Muscle Group"),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: DropdownMenu<ExerciseGroup>(
-                      initialSelection: ExerciseGroup.biceps,
+                      initialSelection: exercise.exerciseGroup,
                       controller: _exerciseGroupController,
                       leadingIcon: const Icon(Icons.search),
                       label: const Text('GROUP'),
                       dropdownMenuEntries: groupEntries,
                       onSelected: (ExerciseGroup? group) {
-                        setState(() {
-                          _exerciseDTO.exerciseGroup =
-                              group ?? ExerciseGroup.biceps;
-                        });
+                        exercise.exerciseGroup = group ?? ExerciseGroup.none;
                       },
                     ),
                   ),
@@ -184,16 +180,13 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: DropdownMenu<Equipment>(
                       enableSearch: false,
-                      initialSelection: Equipment.barbell,
+                      initialSelection: exercise.equipment,
                       controller: _equipmentController,
                       leadingIcon: const Icon(Icons.search),
                       label: const Text('GROUP'),
                       dropdownMenuEntries: equipmentEntries,
                       onSelected: (Equipment? equipment) {
-                        setState(() {
-                          _exerciseDTO.equipment =
-                              equipment ?? Equipment.barbell;
-                        });
+                        exercise.equipment = equipment ?? Equipment.none;
                       },
                     ),
                   )

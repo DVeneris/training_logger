@@ -8,7 +8,9 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
-import 'package:training_tracker/providers/exercise_provider.dart';
+import 'package:training_tracker/providers/workout_creator_provider.dart';
+import 'package:training_tracker/providers/workout_provider.dart';
+import 'package:training_tracker/providers/workout_template_list_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/utils/routine_list_card.dart';
@@ -26,9 +28,13 @@ class WorkoutTemplateList extends StatefulWidget {
 class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
   @override
   Widget build(BuildContext context) {
+    final workoutCreatorProvider = Provider.of<WorkoutCreatorProvider>(
+      context,
+    );
+    final workoutListrovider =
+        Provider.of<WorkoutTemplateListProvider>(context, listen: false);
     return FutureBuilder<List<WorkoutDTO>>(
-        future: WorkoutService().getWorkoutList(
-            userId: AuthService().getUser()!.uid), //na ginei me DI
+        future: workoutListrovider.getWorkoutList(), //na ginei me DI
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -39,7 +45,7 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
             );
           } else if (snapshot.hasData) {
             // var workoutList = snapshot.data!;
-            final workoutProvider = Provider.of<ExerciseProvider>(context);
+            final workoutProvider = Provider.of<WorkoutProvider>(context);
             workoutProvider.workoutList = snapshot.data;
             return Scaffold(
               appBar: AppBar(
@@ -55,52 +61,47 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                       textAlign: TextAlign.center),
                 ),
               ),
-              body: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "My Templates",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
+              body: Selector<WorkoutTemplateListProvider, List<WorkoutDTO>>(
+                selector: (_, service) => service.workoutList,
+                builder: (context, list, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "My Templates",
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: (() {
+                              workoutCreatorProvider.pushWorkout();
+
+                              Navigator.of(context).pushNamed(
+                                RouteGenerator.workoutCreator,
+                              );
+                            }),
+                          )
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: (() async {
-                          await Navigator.of(context).pushNamed(
-                            RouteGenerator.workoutCreator,
-                          );
-                        }),
+                      Expanded(
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return RoutineListCard(workout: list[index]);
+                            },
+                            separatorBuilder: (context, index) {
+                              return const Divider();
+                            },
+                            itemCount: list.length),
                       )
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                              onTap: () {
-                                // Navigator.of(context).pushNamed(
-                                //   RouteGenerator.singleWorkout,
-                                //   arguments: {'workout': workoutList[index]},
-                                // );
-                                workoutProvider.workout =
-                                    workoutProvider.workoutList[index];
-                                Navigator.of(context).pushNamed(
-                                  RouteGenerator.singleWorkout,
-                                );
-                              },
-                              child: RoutineListCard(
-                                  workout: workoutProvider.workoutList[index]));
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider();
-                        },
-                        itemCount: workoutProvider.workoutList.length),
-                  )
-                ]),
+                    ]),
+                  );
+                },
+                shouldRebuild: (previous, next) => true,
               ),
             );
           } else {

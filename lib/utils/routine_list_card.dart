@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/providers/workout_provider.dart';
 import 'package:training_tracker/routes.dart';
 
 class RoutineListCard extends StatelessWidget {
@@ -10,13 +12,14 @@ class RoutineListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<WorkoutProvider>(context, listen: false);
     return ConstrainedBox(
       constraints: const BoxConstraints(
         minHeight: 120,
         maxHeight: 180,
       ),
       child: Card(
-        color: Color.fromARGB(255, 235, 240, 249),
+        color: const Color.fromARGB(255, 235, 240, 249),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -35,7 +38,7 @@ class RoutineListCard extends StatelessWidget {
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                          Icon(Icons.more_horiz)
+                          const Icon(Icons.more_horiz)
                         ],
                       ),
                     ),
@@ -86,13 +89,13 @@ class RoutineListCard extends StatelessWidget {
                   ],
                 ),
                 TextButton(
-                  onPressed: () async {
-                    await Navigator.of(context).pushNamed(
-                      RouteGenerator.singleWorkout,
-                      arguments: {'workout': workout},
-                    ) as WorkoutDTO?;
+                  onPressed: () {
+                    provider.workout = workout;
+                    provider.startWorkoutTimer();
+                    Navigator.of(context)
+                        .pushNamed(RouteGenerator.singleWorkout);
                   },
-                  child: Text("Start"),
+                  child: const Text("Start"),
                 )
               ]),
         ),

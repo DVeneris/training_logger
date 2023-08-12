@@ -1,26 +1,28 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
 
-class ExerciseProvider with ChangeNotifier {
-  late ExerciseDTO _exerciseDTO;
-  ExerciseDTO get exercise => _exerciseDTO;
+class WorkoutProvider with ChangeNotifier {
+  // late ExerciseDTO _exerciseDTO;
+  // ExerciseDTO get exercise => _exerciseDTO;
 
-  set exercise(ExerciseDTO newExercise) {
-    _exerciseDTO = newExercise;
-    notifyListeners();
-  }
+  // set exercise(ExerciseDTO newExercise) {
+  //   _exerciseDTO = newExercise;
+  //   notifyListeners();
+  // }
 
-  List<ExerciseDTO> _exerciseList = [];
-  List<ExerciseDTO> get exerciseList => _exerciseList;
+  // List<ExerciseDTO> _exerciseList = [];
+  // List<ExerciseDTO> get exerciseList => _exerciseList;
 
-  set excerciseList(List<ExerciseDTO> newExerciseList) {
-    _exerciseList = newExerciseList;
-    notifyListeners();
-  }
+  // set excerciseList(List<ExerciseDTO> newExerciseList) {
+  //   _exerciseList = newExerciseList;
+  //   notifyListeners();
+  // }
 
   late WorkoutDTO _workoutDTO;
   WorkoutDTO get workout => _workoutDTO;
@@ -47,6 +49,47 @@ class ExerciseProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void pushExercise(ExerciseOptionsDTO exerciseDTO) {
+    workout.exerciseList.add(exerciseDTO);
+    notifyListeners();
+  }
+
+  void removeExerciseSetAtIndex(ExerciseOptionsDTO exercise, int index) {
+    workout.exerciseList
+        .where((e) => e == exercise)
+        .first
+        .exercise
+        .currentSets
+        .removeAt(index);
+    notifyListeners();
+  }
+
+  void setExerciseSetCheckedAtIndex(
+      ExerciseOptionsDTO exercise, int index, bool checked) {
+    workout.exerciseList
+        .where((e) => e == exercise)
+        .first
+        .exercise
+        .currentSets[index]
+        .isComplete = checked;
+    notifyListeners();
+  }
+
+  void addExerciseSet(ExerciseOptionsDTO exercise) {
+    workout.exerciseList
+        .where((e) => e == exercise)
+        .first
+        .exercise
+        .currentSets
+        .add(ExerciseSet());
+    notifyListeners();
+  }
+
+  void deteteExercise(ExerciseOptionsDTO exerciseDTO) {
+    workout.exerciseList.remove(exerciseDTO);
+    notifyListeners();
+  }
+
   int _calculateTotalSetsAndWeight() {
     var totalWeight = 0;
     for (var e in _workoutDTO.exerciseList) {
@@ -68,13 +111,12 @@ class ExerciseProvider with ChangeNotifier {
   int workoutTime = 0;
   int totalWeight = 0;
   int remainingTime = 10; //initial time in seconds
-  late Timer providerTimer;
+  late Timer _providerTimer;
   late Timer _workoutDurationTimer;
   bool isRunning = false;
 
   void checkExercise() {
     startCountdown();
-
     totalWeight = _calculateTotalSetsAndWeight();
   }
 
@@ -83,19 +125,25 @@ class ExerciseProvider with ChangeNotifier {
 
     _workoutDurationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       workoutTime++;
+      notifyListeners();
     });
+  }
+
+  void stopWorkoutTimer() {
+    _workoutDurationTimer.cancel();
   }
 
   void startTimer() {
     remainingTime = 10;
     isRunning = true;
-    providerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _providerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingTime > 0) {
         remainingTime--;
       } else {
-        providerTimer.cancel();
+        _providerTimer.cancel();
         isRunning = false;
       }
+      notifyListeners();
     });
   }
 
@@ -108,13 +156,13 @@ class ExerciseProvider with ChangeNotifier {
 
   void stopTimer() {
     isRunning = false;
-    providerTimer.cancel();
+    _providerTimer.cancel();
   }
 
   void _cancelTimer() {
     isRunning = false;
     remainingTime = 10;
 
-    providerTimer.cancel();
+    _providerTimer.cancel();
   }
 }

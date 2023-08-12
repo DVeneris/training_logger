@@ -2,11 +2,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/providers/exercise_list_provider.dart';
+import 'package:training_tracker/providers/workout_creator_provider.dart';
+import 'package:training_tracker/providers/workout_template_list_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
@@ -22,59 +26,28 @@ class SingleWorkoutCreator extends StatefulWidget {
 }
 
 class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
-  var workout = WorkoutDTO(
-      userId: AuthService().getUser()!.uid, //na ginei me DI
-      name: "",
-      createDate: DateTime.now(),
-      updateDate: DateTime.now(),
-      exerciseList: [],
-      totalTime: "0",
-      totalVolume: 5);
+  // var workout = WorkoutDTO(
+  //     userId: AuthService().getUser()!.uid, //na ginei me DI
+  //     name: "",
+  //     createDate: DateTime.now(),
+  //     updateDate: DateTime.now(),
+  //     exerciseList: [],
+  //     totalTime: "0",
+  //     totalVolume: 5);
   final TextEditingController _workoutNameController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _workoutNameController.addListener(() => _onWorkoutNameChange());
-  }
-
-  _onWorkoutNameChange() {
-    workout.name = _workoutNameController.text;
-  }
-
   @override
   void dispose() {
     super.dispose();
     _workoutNameController.dispose();
   }
 
-  Future<void> _handleRoutineSave() async {
-    if (workout.name.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Empty Workout Name'),
-            content: Text('Please enter a name for the workout.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-    await WorkoutService().createWorkout(workout);
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final workoutListProvider =
+        Provider.of<WorkoutTemplateListProvider>(context);
+    final provider = Provider.of<WorkoutCreatorProvider>(context);
+    final workout = provider.workout;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -88,7 +61,9 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                 fontSize: 15,
               ),
               foregroundColor: Colors.blue),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           child: const Text("cancel"),
         ),
         actions: [
@@ -101,7 +76,31 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   ),
                   foregroundColor: Colors.blue),
               onPressed: () async {
-                await _handleRoutineSave();
+                if (workout.name.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Empty Workout Name'),
+                        content:
+                            const Text('Please enter a name for the workout.'),
+                        actions: [
+                          TextButton(
+                            child: const Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                await provider.createWorkout(() {
+                  workoutListProvider.addToList(workout);
+                  Navigator.of(context).pop();
+                });
               },
               child: const Text("Save"),
             ),
@@ -128,6 +127,9 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: _workoutNameController,
+                  onChanged: (value) {
+                    workout.name = value;
+                  },
                 ),
               ),
               Expanded(
@@ -135,14 +137,18 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   itemCount: workout.exerciseList.length,
                   itemBuilder: (context, index) {
                     return ExerciseSingle(
-                      onSetChecked: (result) {},
-                      onExerciseDeletion: () {
-                        workout.exerciseList.removeAt(index);
-                      },
                       exercise: workout.exerciseList[index].exercise,
-                      canTrain: false,
-                      onSelectParam: () {
-                        setState(() {});
+                      onExerciseDeletion: () {
+                        provider.deteteExercise(workout.exerciseList[index]);
+                      },
+                      onAddExerciseSet: () {
+                        provider.addExerciseSet(workout.exerciseList[index]);
+                      },
+                      onExerciseSetDeletion: (int setIndex) {
+                        provider.removeExerciseSetAtIndex(
+                            workout.exerciseList[index], setIndex);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('item dismissed')));
                       },
                     );
                   },
@@ -153,15 +159,11 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var exerciseToAdd = await Navigator.of(context)
+                      Provider.of<ExerciseListProvider>(context, listen: false)
+                          .calledByCreator = true;
+                      await Navigator.of(context)
                               .pushNamed(RouteGenerator.exerciseList)
                           as ExerciseDTO?;
-                      if (exerciseToAdd != null) {
-                        setState(() {
-                          workout.exerciseList
-                              .add(ExerciseOptionsDTO(exercise: exerciseToAdd));
-                        });
-                      }
                     },
                     child: const Text(
                       "Add Exercise",
@@ -174,26 +176,6 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   ),
                 ],
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     TextButton(
-              //       onPressed: () {
-              //         if (Navigator.of(context).canPop()) {
-              //           Navigator.of(context).pop();
-              //         }
-              //       },
-              //       child: const Text(
-              //         "Cancel Workout",
-              //         style: TextStyle(
-              //           color: Colors.redAccent,
-              //           fontWeight: FontWeight.normal,
-              //           fontSize: 15,
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // )
             ],
           ),
         ),
