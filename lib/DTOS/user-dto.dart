@@ -9,9 +9,9 @@ class UserDTO {
   String? name;
   String? description;
   String? link;
-  final DateTime? createdDate;
-  final DateTime? signinDate;
-  final MediaItem? mediaItem;
+  DateTime? createdDate;
+  DateTime? signinDate;
+  MediaItem? mediaItem;
   UserDTO(
       {required this.uid,
       required this.userName,

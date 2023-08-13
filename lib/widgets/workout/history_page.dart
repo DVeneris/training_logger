@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/DTOS/workout_history_dto.dart';
@@ -7,6 +8,8 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/providers/workout_history_provider.dart';
+import 'package:training_tracker/providers/workout_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/workout_history_service.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
@@ -25,6 +28,9 @@ class WorkoutHistory extends StatefulWidget {
 class _WorkoutHistoryState extends State<WorkoutHistory> {
   @override
   Widget build(BuildContext context) {
+    final workoutHistoryProvider = Provider.of<WorkoutHistoryProvider>(context);
+    final workoutProvider = Provider.of<WorkoutProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -63,8 +69,7 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             )),
       ),
       body: FutureBuilder<List<WorkoutHistoryDTO>>(
-          future: WorkoutHistoryService().getWorkoutHistoryList(
-              AuthService().getUser()!.uid), //na ginei me DI
+          future: workoutHistoryProvider.getWorkoutHistoryList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               //loading icon
@@ -92,12 +97,11 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
                               height: 440,
                               child: GestureDetector(
                                 onTap: () async {
+                                  // workoutProvider.workout =
+                                  //     _toWorkoutDTO(workoutHistoryList[index]);
                                   await Navigator.of(context).pushNamed(
                                     RouteGenerator.workoutOverview,
-                                    arguments: {
-                                      'workout': workoutHistoryList[index]
-                                    },
-                                  ) as WorkoutDTO?;
+                                  );
                                 },
                                 child: HomeCard(
                                   workoutHistory: workoutHistoryList[index],
@@ -119,4 +123,8 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
           }),
     );
   }
+
+  // WorkoutDTO _toWorkoutDTO(WorkoutHistoryDTO workoutHistoryDto) {
+  //   return WorkoutDTO(userId: workoutHistoryDto.userId, exerciseList: workoutHistoryDto.exerciseList)
+  // }
 }

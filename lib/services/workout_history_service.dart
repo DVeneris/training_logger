@@ -77,14 +77,14 @@ class WorkoutHistoryService {
   List<WorkoutHistoryExerciseOptions> _getExerciseOptions(
       List<ExerciseOptionsDTO> exerciselist) {
     var list = <WorkoutHistoryExerciseOptions>[];
-    exerciselist.forEach((element) {
+    for (var element in exerciselist) {
       var options = WorkoutHistoryExerciseOptions(
           id: element.exercise.id!,
           name: element.exercise.name,
           currentSets: element.exercise.currentSets,
           previousSets: element.exercise.previousSets);
       list.add(options);
-    });
+    }
     return list;
   }
 }

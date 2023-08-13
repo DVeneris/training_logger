@@ -8,22 +8,6 @@ import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
 
 class WorkoutProvider with ChangeNotifier {
-  // late ExerciseDTO _exerciseDTO;
-  // ExerciseDTO get exercise => _exerciseDTO;
-
-  // set exercise(ExerciseDTO newExercise) {
-  //   _exerciseDTO = newExercise;
-  //   notifyListeners();
-  // }
-
-  // List<ExerciseDTO> _exerciseList = [];
-  // List<ExerciseDTO> get exerciseList => _exerciseList;
-
-  // set excerciseList(List<ExerciseDTO> newExerciseList) {
-  //   _exerciseList = newExerciseList;
-  //   notifyListeners();
-  // }
-
   late WorkoutDTO _workoutDTO;
   WorkoutDTO get workout => _workoutDTO;
 

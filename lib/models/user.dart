@@ -33,11 +33,17 @@ class AppUser {
       AuthService().signOut();
       throw Exception(); //todo
     }
-    var dateTime = null;
-    var date = json['createdDate'];
-    if (date != null) {
-      var timestamp = date as Timestamp;
-      dateTime = timestamp.toDate();
+    DateTime createdDateTime = DateTime.now();
+    var createdDate = json['createdDate'];
+    if (createdDate != null) {
+      var timestamp = createdDate as Timestamp;
+      createdDateTime = timestamp.toDate();
+    }
+    DateTime signinDateTime = DateTime.now();
+    var signinDate = json['signinDate'];
+    if (signinDate != null) {
+      var timestamp = signinDate as Timestamp;
+      signinDateTime = timestamp.toDate();
     }
     return AppUser(
       uid: json['uid'],
@@ -45,8 +51,8 @@ class AppUser {
       email: json['email'],
       identifier: json['identifier'],
       provider: json['provider'],
-      createdDate: dateTime,
-      signinDate: json['signinDate'],
+      createdDate: createdDateTime,
+      signinDate: signinDateTime,
       name: json['name'],
       link: json['link'],
       description: json['description'],

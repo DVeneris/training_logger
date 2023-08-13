@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/user-dto.dart';
+import 'package:training_tracker/DTOS/user_profile_dto.dart';
+import 'package:training_tracker/providers/auth_provider.dart';
+import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/user-service.dart';
@@ -9,11 +13,13 @@ class UserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
     return FutureBuilder<UserDTO>(
-        future: UserService().getCurrentUser(),
+        future: userProvider.getCurrentUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            //loading icon
             return const Text(
               'loading',
               textDirection: TextDirection.ltr,
@@ -27,7 +33,7 @@ class UserView extends StatelessWidget {
           } else if (snapshot.hasData) {
             var user = snapshot.data;
             if (user == null) {
-              AuthService().signOut(); //test this
+              authProvider.signOut(() {});
             }
             return Scaffold(
               body: SafeArea(
@@ -47,7 +53,7 @@ class UserView extends StatelessWidget {
                           ),
                     Text(
                       user.userName,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                     const SizedBox(
                       height: 10,
@@ -63,10 +69,14 @@ class UserView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20)),
                           child: GestureDetector(
                             onTap: () async {
-                              await Navigator.of(context).pushNamed(
-                                RouteGenerator.profileEdit,
-                                arguments: {'user': user},
-                              );
+                              userProvider.userProfile = UserProfileDTO(
+                                  description: userProvider.user.description,
+                                  link: userProvider.user.link,
+                                  name: userProvider.user.name,
+                                  mediaItem: userProvider.user.mediaItem);
+
+                              await Navigator.of(context)
+                                  .pushNamed(RouteGenerator.profileEdit);
                             },
                             child: const Center(
                                 child: Text(
@@ -81,32 +91,6 @@ class UserView extends StatelessWidget {
                       thickness: 0.5,
                       color: Colors.grey,
                     ),
-                    //list tiles/////
-                    // ListTile(
-                    //   leading: Container(
-                    //     width: 40,
-                    //     height: 40,
-                    //     decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(100),
-                    //         color: Colors.blue[100]),
-                    //     child: const Icon(
-                    //       Icons.settings,
-                    //       color: Colors.blue,
-                    //     ),
-                    //   ),
-                    //   title: const Text("Settings"),
-                    //   trailing: Container(
-                    //     width: 40,
-                    //     height: 40,
-                    //     decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(100),
-                    //         color: Colors.grey[100]),
-                    //     child: Icon(
-                    //       Icons.chevron_right,
-                    //       color: Colors.grey[700],
-                    //     ),
-                    //   ),
-                    // ),
                     ListTile(
                         leading: Container(
                           width: 40,
@@ -121,9 +105,10 @@ class UserView extends StatelessWidget {
                         ),
                         title: GestureDetector(
                           onTap: () async {
-                            await AuthService().signOut();
-                            Navigator.of(context)
-                                .pushNamedAndRemoveUntil('/', (route) => false);
+                            await authProvider.signOut(() {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/', (route) => false);
+                            });
                           },
                           child: const Text(
                             "Logout",

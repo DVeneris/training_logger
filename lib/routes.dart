@@ -61,9 +61,7 @@ class RouteGenerator {
         );
       case workoutOverview:
         return MaterialPageRoute(
-          builder: (_) => WorkoutOverView(
-            workout: args!['workout'] as WorkoutDTO,
-          ),
+          builder: (_) => const WorkoutOverView(),
         );
       case workoutCreator:
         return MaterialPageRoute(
@@ -87,7 +85,7 @@ class RouteGenerator {
         );
       case profileEdit:
         return MaterialPageRoute(
-          builder: (_) => ProfileEdit(user: args!['user'] as UserDTO),
+          builder: (_) => const ProfileEdit(),
         );
       default:
         throw FormatException("Route not found");

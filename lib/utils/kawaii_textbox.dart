@@ -8,6 +8,7 @@ class KawaiiTextbox extends StatefulWidget {
   final bool? hasError;
   final String? errorMessage;
   final String? initialValue;
+  final int? maxlines;
 
   final Function(String) onChange;
 
@@ -18,7 +19,8 @@ class KawaiiTextbox extends StatefulWidget {
       this.initialValue,
       required this.onChange,
       this.hasError,
-      this.errorMessage});
+      this.errorMessage,
+      this.maxlines});
 
   @override
   State<KawaiiTextbox> createState() => _KawaiiTextboxState();
@@ -55,6 +57,7 @@ class _KawaiiTextboxState extends State<KawaiiTextbox> {
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0),
         child: TextField(
+          maxLines: widget.maxlines,
           controller: _kawaiiEditingController,
           obscureText: widget.canHideData ?? false,
           decoration: InputDecoration(
