@@ -145,9 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var _authService = AuthService();
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
     return StreamBuilder<User?>(
-      stream: _authService.getUserStream(),
+      stream: userProvider.getUserStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text(
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
             textDirection: TextDirection.ltr,
           );
         } else if (snapshot.hasData) {
-          // _selectedIndex = 0;
+          userProvider.getCurrentUser();
           return Scaffold(
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(

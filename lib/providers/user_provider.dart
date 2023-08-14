@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/user-dto.dart';
 import 'package:training_tracker/DTOS/user_profile_dto.dart';
+import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/models/user.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/user-service.dart';
@@ -20,6 +22,11 @@ class UserProvider with ChangeNotifier {
   UserDTO get user => _user;
   set user(UserDTO newUser) {
     _user = newUser;
+    notifyListeners();
+  }
+
+  void setMediaItem(MediaItem mediaItem) {
+    _userProfile.mediaItem = mediaItem;
     notifyListeners();
   }
 
@@ -81,5 +88,9 @@ class UserProvider with ChangeNotifier {
   Future<UserDTO> getCurrentUser() async {
     _user = await _userService.getCurrentUser();
     return user;
+  }
+
+  Stream<User?> getUserStream() {
+    return _authService.getUserStream();
   }
 }

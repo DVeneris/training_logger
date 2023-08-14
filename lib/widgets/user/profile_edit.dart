@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +29,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<UserProvider>(context);
+    final provider = Provider.of<UserProvider>(context, listen: true);
 
     return Scaffold(
         appBar: AppBar(
@@ -55,19 +57,17 @@ class _ProfileEditState extends State<ProfileEdit> {
                 MediaSelector(
                   mediaItem: provider.userProfile.mediaItem,
                   onMediaSelectorPressed: () async {
-                    var results = await FilePicker.platform.pickFiles(
-                        allowMultiple: false,
-                        type: FileType.custom,
-                        allowedExtensions: ['png', 'jpg']);
-                    if (results == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("No file selected")));
+                    final pickedFile = await ImagePicker().pickImage(
+                        source: ImageSource.gallery, imageQuality: 25);
+                    File imageFile;
+                    if (pickedFile == null) {
+                      return;
                     }
-                    final path = results?.files.single.path;
-                    if (path == null) return;
+                    imageFile = File(pickedFile.path);
                     provider.isLoading = true;
-                    var mediaItem = await storage.uploadFile(path);
-                    provider.user.mediaItem = mediaItem;
+                    var mediaItem = await storage.uploadFile(imageFile);
+                    if (mediaItem == null) return;
+                    provider.setMediaItem(mediaItem);
                     provider.isLoading = false;
                   },
                 ),

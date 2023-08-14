@@ -43,7 +43,7 @@ class UserView extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    user!.mediaItem != null
+                    user!.mediaItem != null && user.mediaItem!.url != null
                         ? CircleAvatar(
                             radius: 50,
                             backgroundImage: NetworkImage(user.mediaItem!.url!))

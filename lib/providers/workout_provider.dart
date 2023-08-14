@@ -60,12 +60,12 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   void addExerciseSet(ExerciseOptionsDTO exercise) {
-    workout.exerciseList
+    var ex = workout.exerciseList
         .where((e) => e == exercise)
         .first
         .exercise
-        .currentSets
-        .add(ExerciseSet());
+        .currentSets;
+    ex.add(ExerciseSet());
     notifyListeners();
   }
 

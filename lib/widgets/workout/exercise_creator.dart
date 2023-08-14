@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +21,6 @@ class ExerciseCreator extends StatefulWidget {
 }
 
 class _ExerciseCreatorState extends State<ExerciseCreator> {
-  bool isLoading = false;
   final TextEditingController _exerciseGroupController =
       TextEditingController();
   final TextEditingController _exerciseNameController = TextEditingController();
@@ -113,7 +114,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
             ),
           ],
         ),
-        body: isLoading
+        body: provider.isLoading
             ? Center(
                 child: Container(
                   width: 24,
@@ -130,24 +131,18 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                   MediaSelector(
                     mediaItem: exercise.mediaItem,
                     onMediaSelectorPressed: () async {
-                      var results = await FilePicker.platform.pickFiles(
-                          allowMultiple: false,
-                          type: FileType.custom,
-                          allowedExtensions: ['png', 'jpg']);
-                      if (results == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("No file selected")));
+                      final pickedFile = await ImagePicker().pickImage(
+                          source: ImageSource.gallery, imageQuality: 25);
+                      File imageFile;
+                      if (pickedFile == null) {
+                        return;
                       }
-                      final path = results?.files.single.path;
-                      if (path == null) return;
-                      setState(() {
-                        isLoading = true;
-                      });
-                      var mediaItem = await storage.uploadFile(path);
-                      exercise.mediaItem = mediaItem;
-                      setState(() {
-                        isLoading = false;
-                      });
+                      imageFile = File(pickedFile.path);
+                      provider.isLoading = true;
+                      var mediaItem = await storage.uploadFile(imageFile);
+                      if (mediaItem == null) return;
+                      provider.setMediaItem(mediaItem);
+                      provider.isLoading = false;
                     },
                   ),
                   const Padding(

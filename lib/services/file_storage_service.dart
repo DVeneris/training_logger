@@ -8,53 +8,43 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:uuid/uuid.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class FileStorage {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
 
-  Future<MediaItem?> uploadFile(String filePath) async {
+  Future<MediaItem?> uploadFile(File file) async {
     var authUser = _authService.getUser();
-
     if (authUser == null) {
       return null;
     }
-    File file = File(filePath);
     const uuid = Uuid();
     var filename = uuid.v4();
     try {
-      // await testCompressAndGetFile(file, filename, _user!.uid);
-      // File compressedFile = File("assets/${_user!.uid}/$filename");
-      // if (compressedFile == null) return null;
-      await _storage.ref('${authUser?.uid}/$filename').putFile(file);
-      var fileurl = await downloadURL(filename);
+      final fileExtension = p.extension(file.path);
+      Map<String, String> metadata = {"extension": fileExtension};
+      await _storage.ref('${authUser.uid}/$filename').putFile(
+          file,
+          SettableMetadata(
+            customMetadata: metadata,
+          ));
+
+      var fileurl = await getURL(filename);
+      if (fileurl != null) {
+        await downloadFile("$filename$fileExtension", fileurl);
+      }
 
       MediaItem mediaItem = MediaItem(
-          id: filename, userId: authUser!.uid, name: filename, url: fileurl);
+          id: filename, userId: authUser.uid, name: filename, url: fileurl);
       return mediaItem;
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
-  }
-
-  Future<void> testCompressAndGetFile(
-      File file, String fileName, String userId) async {
-    var filesplit = file.absolute.path.split('/');
-    var _fileName = filesplit.last.split('.');
-    // var result = await FlutterImageCompress.compressAssetImage(
-    //   fileName,
-    //   minHeight: 640,
-    //   minWidth: 480,
-    //   quality: 25,
-    // );
-    final filePath = file.absolute.path;
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      "assets/$userId/$fileName.${_fileName.last}",
-      quality: 25,
-    );
-    if (result == null) return null;
+    return null;
   }
 
   Future<ListResult> listFiles() async {
@@ -65,9 +55,8 @@ class FileStorage {
     return results;
   }
 
-  Future<String?> downloadURL(String imageName) async {
+  Future<String?> getURL(String imageName) async {
     var authUser = _authService.getUser();
-
     if (authUser == null) {
       return null;
     }
@@ -77,8 +66,24 @@ class FileStorage {
       return url;
     } on FirebaseException catch (e) {
       return null;
-      // if (e.code == 'storage/object-not-found'){}
-      // TODO
+    }
+  }
+
+  Future<void> downloadFile(String fileName, String url) async {
+    var authUser = _authService.getUser();
+    if (authUser == null) {
+      return;
+    }
+    try {
+      final Directory appDocDir = await getApplicationDocumentsDirectory();
+      final filePath = "${appDocDir.path}/${authUser.uid}/$fileName";
+      final file = await File(filePath).create(recursive: true);
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        await file.writeAsBytes(response.bodyBytes);
+      }
+    } on FirebaseException catch (e) {
+      return;
     }
   }
 }

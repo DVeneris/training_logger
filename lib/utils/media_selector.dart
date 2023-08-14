@@ -24,7 +24,7 @@ class _MediaSelectorState extends State<MediaSelector> {
         clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
-          widget.mediaItem != null
+          widget.mediaItem != null && widget.mediaItem!.url != null
               ? CircleAvatar(
                   backgroundImage: NetworkImage(widget.mediaItem!.url!))
               : const CircleAvatar(
@@ -38,13 +38,13 @@ class _MediaSelectorState extends State<MediaSelector> {
                   await widget.onMediaSelectorPressed();
                 },
                 elevation: 2.0,
-                fillColor: Color(0xFFF5F6F9),
-                child: Icon(
+                fillColor: const Color(0xFFF5F6F9),
+                padding: const EdgeInsets.all(1.0),
+                shape: const CircleBorder(),
+                child: const Icon(
                   Icons.camera_alt_outlined,
                   color: Colors.blue,
                 ),
-                padding: EdgeInsets.all(1.0),
-                shape: CircleBorder(),
               )),
         ],
       ),

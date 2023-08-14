@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/DTOS/workout_history_dto.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
 
 import '../routes.dart';
@@ -20,6 +22,8 @@ class HomeCard extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.only(
         top: 10.0,
@@ -33,22 +37,23 @@ class HomeCard extends StatelessWidget {
           child: Column(children: [
             Row(
               children: [
-                const CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 201, 78, 223),
-                  maxRadius: 20,
-                  minRadius: 10,
-                  child: Text(
-                    "D",
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  ),
-                ),
+                userProvider.user.mediaItem != null &&
+                        userProvider.user.mediaItem!.url != null
+                    ? CircleAvatar(
+                        radius: 25,
+                        backgroundImage:
+                            NetworkImage(userProvider.user.mediaItem!.url!))
+                    : const CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage("assets/no_media.png"),
+                      ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Dveneris",
+                      Text(
+                        userProvider.user.userName,
                         textAlign: TextAlign.left,
                       ),
                       Text(
