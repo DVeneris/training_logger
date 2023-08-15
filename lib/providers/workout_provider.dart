@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/services/workout_service.dart';
@@ -14,6 +15,7 @@ class WorkoutProvider with ChangeNotifier {
   WorkoutProvider(WorkoutService workoutService) {
     _workoutService = workoutService;
   }
+  late WorkoutDTO? _tmpWorkoutDTO;
 
   late WorkoutDTO? _workoutDTO;
   WorkoutDTO? get workout => _workoutDTO;
@@ -40,6 +42,10 @@ class WorkoutProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void resetWorkout() {
+    _workoutDTO = _tmpWorkoutDTO;
+  }
+
   void initWorkout(WorkoutDTO newWorkout) {
     for (var exercise in newWorkout.exerciseList) {
       for (var set in exercise.exercise.currentSets) {
@@ -47,6 +53,8 @@ class WorkoutProvider with ChangeNotifier {
       }
     }
     _workoutDTO = newWorkout;
+    _tmpWorkoutDTO = _workoutDTO;
+
     startWorkoutTimer();
   }
 
@@ -56,12 +64,28 @@ class WorkoutProvider with ChangeNotifier {
     onSuccess.call();
   }
 
+  Future<void> saveAndCreateWorkoutHistory(VoidCallback onSuccess) async {
+    if (_workoutDTO == null) return;
+
+    await _workoutService.saveAndCreateWorkoutHistory(
+        _workoutDTO!, workoutTime.toString(), totalWeight);
+    onSuccess.call();
+  }
+
   Future<void> createWorkoutHistory(VoidCallback onSuccess) async {
     if (_workoutDTO == null) return;
-    _workoutDTO!.exerciseList.map((e) {
-      e.exercise.
-    });
-    await _workoutService.createWorkoutHistory(_workoutDTO!);
+    var exList = _workoutDTO!.exerciseList;
+    for (var exercise in _tmpWorkoutDTO!.exerciseList) {
+      exList.map((e) {
+        if (e.exercise.id == exercise.exercise.id) {
+          exercise.exercise.currentSets = e.exercise.currentSets;
+          exercise.exercise.previousSets = e.exercise.previousSets;
+        }
+      });
+    }
+    _workoutDTO = _tmpWorkoutDTO;
+    await _workoutService.saveAndCreateWorkoutHistory(
+        _workoutDTO!, workoutTime.toString(), totalWeight);
     onSuccess.call();
   }
 

@@ -6,8 +6,8 @@ class AppUser {
   final String uid;
   final String? email;
   final String userName;
-  final String? identifier;
-  final String? provider;
+  // final String? identifier;
+  // final String? provider;
   final DateTime? createdDate;
   final DateTime? signinDate;
   final String? name;
@@ -19,8 +19,8 @@ class AppUser {
       {required this.uid,
       required this.userName,
       this.email,
-      this.identifier,
-      this.provider,
+      // this.identifier,
+      // this.provider,
       this.createdDate,
       this.signinDate,
       this.description,
@@ -49,8 +49,8 @@ class AppUser {
       uid: json['uid'],
       userName: json['userName'],
       email: json['email'],
-      identifier: json['identifier'],
-      provider: json['provider'],
+      // identifier: json['identifier'],
+      // provider: json['provider'],
       createdDate: createdDateTime,
       signinDate: signinDateTime,
       name: json['name'],
@@ -67,8 +67,8 @@ class AppUser {
       'uid': uid,
       'userName': userName,
       'email': email,
-      'identifier': identifier,
-      'provider': provider,
+      // 'identifier': identifier,
+      // 'provider': provider,
       'createdDate': createdDate,
       'signinDate': signinDate,
       'name': name,

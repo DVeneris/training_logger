@@ -1,4 +1,5 @@
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/workout.dart';
 
@@ -40,15 +41,12 @@ extension WorkoutMapping on WorkoutDTO {
       exerciseList: exerciseList
           .map((exerciseOptionsDTO) => exerciseOptionsDTO.toExerciseOptions())
           .toList(),
-      totalTime: totalTime,
-      totalVolume: totalVolume,
     );
   }
 }
 
 extension WorkoutDTOMapping on Workout {
   WorkoutDTO toWorkoutDTO(List<ExerciseDTO> exercises) {
-    //
     return WorkoutDTO(
       id: id,
       userId: userId,
@@ -59,8 +57,6 @@ extension WorkoutDTOMapping on Workout {
       exerciseList: exerciseList
           .map((options) => options.toExerciseOptionsDTO(exercises))
           .toList(),
-      totalTime: totalTime,
-      totalVolume: totalVolume,
     );
   }
 }

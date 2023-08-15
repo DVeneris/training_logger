@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/media-item-dto.dart';
 import 'package:training_tracker/mappers/exercise_mapper.dart';
 import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise.dart';
+import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/snapshot_object.dart';
 
@@ -19,10 +21,19 @@ class ExerciseService {
         unit: WeightUnit.kg,
         currentSets: exerciseDTO.currentSets,
         previousSets: exerciseDTO.previousSets,
-        mediaItem: exerciseDTO.mediaItem,
+        mediaItem: getMediaItem(exerciseDTO.mediaItem),
         equipment: Equipment.none);
 
     var snapshot = await _db.collection("exercise").add(exercise.toMap());
+  }
+
+  MediaItem? getMediaItem(MediaItemDTO? mediaItemDTO) {
+    if (mediaItemDTO == null) return null;
+    return MediaItem(
+        id: mediaItemDTO.id,
+        userId: mediaItemDTO.userId,
+        name: mediaItemDTO.name,
+        url: mediaItemDTO.url);
   }
 
   Future<void> updateExercise(Exercise exercise) async {
@@ -54,16 +65,4 @@ class ExerciseService {
     var snapshot = await ref.get(); //read collection once
     return Exercise.fromJson(snapshot.data() ?? {}, snapshot.id).toDTO();
   }
-
-  // Stream<Exercise> streamReport(){//kai kala otan dimiourgithei mia nea Exrcise na tin kalesei pisw
-  //   return AuthService().userStream.switchMap((user) {//apo rfdart
-  //     if(user!=null){
-
-  //     }
-  //     else{
-  //       return Stream.fromIterable([Exercise()])
-  //     }
-  //   });
-
-  // }
 }

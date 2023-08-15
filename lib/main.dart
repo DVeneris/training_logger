@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:training_tracker/DTOS/user-dto.dart';
 import 'package:training_tracker/DTOS/user_profile_dto.dart';
 import 'package:training_tracker/providers/auth_provider.dart';
 import 'package:training_tracker/providers/exercise_creator_provider.dart';
@@ -18,7 +19,6 @@ import 'package:training_tracker/services/exercise_service.dart';
 import 'package:training_tracker/services/user-service.dart';
 import 'package:training_tracker/services/workout_history_service.dart';
 import 'package:training_tracker/services/workout_service.dart';
-import 'package:training_tracker/widgets/image/image.dart';
 import 'package:training_tracker/widgets/user/login.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
@@ -28,9 +28,8 @@ import 'package:training_tracker/utils/workout_history_card.dart';
 import 'package:training_tracker/widgets/workout/workoutCreator.dart';
 import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 import 'dart:async';
-
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:path/path.dart';
-//import 'package:sqflite/sqflite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,24 +76,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  /// The future is part of the state of our widget. We should not call `initializeApp`
-  /// directly inside [build].
-  final Future<FirebaseApp> _initialization =
-      Firebase.initializeApp(); //connection to firebase
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   void initState() {
     super.initState();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        // Initialize FlutterFire:
         future: _initialization,
         builder: (context, snapshot) {
-          // Check for errors
           if (snapshot.hasError) {
             return const Text(
               'error',
@@ -111,8 +104,10 @@ class _MyAppState extends State<MyApp> {
               ),
             );
           }
-          // Otherwise, show something whilst waiting for initialization to complete
-          return const Text('loading', textDirection: TextDirection.ltr);
+          return const Text(
+            "",
+            textDirection: TextDirection.ltr,
+          );
         });
   }
 }
@@ -140,22 +135,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
-    return StreamBuilder<User?>(
-      stream: userProvider.getUserStream(),
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    return FutureBuilder<UserDTO?>(
+      future: userProvider.getCurrentUser(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text(
-            "Waiting",
-            textDirection: TextDirection.ltr,
+          return Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.blue,
+              size: 100,
+            ),
           );
         } else if (snapshot.hasError) {
-          return const Text(
-            "error",
-            textDirection: TextDirection.ltr,
+          return const Center(
+            child: Text(
+              "error",
+              textDirection: TextDirection.ltr,
+            ),
           );
         } else if (snapshot.hasData) {
-          userProvider.getCurrentUser();
           return Scaffold(
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(
@@ -174,7 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
               backgroundColor: Colors.blue[100],
-              selectedIconTheme: IconThemeData(color: Colors.blue, size: 30),
+              selectedIconTheme:
+                  const IconThemeData(color: Colors.blue, size: 30),
               currentIndex: _selectedIndex,
               selectedItemColor: Colors.blue,
               onTap: _onItemTapped,

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:training_tracker/DTOS/media-item-dto.dart';
 import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:uuid/uuid.dart';
@@ -17,7 +18,7 @@ class FileStorage {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
 
-  Future<MediaItem?> uploadFile(File file) async {
+  Future<MediaItemDTO?> uploadFile(File file) async {
     var authUser = _authService.getUser();
     if (authUser == null) {
       return null;
@@ -38,7 +39,7 @@ class FileStorage {
         await downloadFile("$filename$fileExtension", fileurl);
       }
 
-      MediaItem mediaItem = MediaItem(
+      MediaItemDTO mediaItem = MediaItemDTO(
           id: filename, userId: authUser.uid, name: filename, url: fileurl);
       return mediaItem;
     } on firebase_core.FirebaseException catch (e) {

@@ -13,7 +13,7 @@ class ExerciseDTO {
   List<ExerciseSet> previousSets;
   WeightUnit unit;
   Equipment equipment;
-  MediaItem? mediaItem;
+  MediaItemDTO? mediaItem;
 
   ExerciseDTO(
       {this.id,
@@ -25,4 +25,62 @@ class ExerciseDTO {
       this.unit = WeightUnit.kg,
       this.equipment = Equipment.none,
       this.mediaItem});
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'name': name,
+      'exerciseGroup': exerciseGroup.index,
+      'unit': unit.index,
+      'previousSets': previousSets.map((set) => set.toMap()).toList(),
+      'currentSets': currentSets.map((set) => set.toMap()).toList(),
+      'mediaItem': mediaItem?.toMap(),
+      'equipment': equipment.index
+    };
+  }
+
+  factory ExerciseDTO.fromJsonWithId(Map<String, dynamic> json, String id) {
+    return ExerciseDTO(
+        id: id,
+        userId: json['userId'],
+        name: json['name'],
+        exerciseGroup: ExerciseGroup.values[json['exerciseGroup']],
+        unit: WeightUnit.values[json['unit']],
+        currentSets: json['currentSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['currentSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
+        previousSets: json['previousSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['previousSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
+        mediaItem: json['mediaItem'] != null
+            ? MediaItemDTO.fromJson(json['mediaItem'])
+            : null,
+        equipment: Equipment.values[json['equipment']]);
+  }
+  factory ExerciseDTO.fromJson(Map<String, dynamic> json) {
+    return ExerciseDTO(
+        id: json['id'],
+        userId: json['userId'],
+        name: json['name'],
+        exerciseGroup: ExerciseGroup.values[json['exerciseGroup']],
+        unit: WeightUnit.values[json['unit']],
+        currentSets: json['currentSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['currentSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
+        previousSets: json['previousSets'] == null
+            ? []
+            : List<Map<String, dynamic>>.from(json['previousSets'])
+                .map((setJson) => ExerciseSet.fromJson(setJson))
+                .toList(),
+        mediaItem: json['mediaItem'] != null
+            ? MediaItemDTO.fromJson(json['mediaItem'])
+            : null,
+        equipment: Equipment.values[json['equipment']]);
+  }
 }

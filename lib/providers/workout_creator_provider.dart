@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise_set.dart';
@@ -15,6 +16,7 @@ class WorkoutCreatorProvider with ChangeNotifier {
     _workoutService = workoutService;
   }
 
+  late WorkoutDTO _tmpWorkoutDTO;
   late WorkoutDTO _workoutDTO;
   WorkoutDTO get workout => _workoutDTO;
 
@@ -33,6 +35,15 @@ class WorkoutCreatorProvider with ChangeNotifier {
   Future<void> createWorkout(VoidCallback onSuccess) async {
     _workoutDTO = await _workoutService.createWorkout(workout);
     onSuccess.call();
+  }
+
+  void initWorkout(WorkoutDTO newWorkout) {
+    _workoutDTO = newWorkout;
+    _tmpWorkoutDTO = _workoutDTO;
+  }
+
+  void resetWorkout() {
+    _workoutDTO = _tmpWorkoutDTO;
   }
 
   Future<void> updateWorkout(VoidCallback onSuccess) async {
@@ -83,13 +94,12 @@ class WorkoutCreatorProvider with ChangeNotifier {
 
   void pushWorkout() {
     var newWorkout = WorkoutDTO(
-        //na ginei allagi
-        name: "",
-        createDate: DateTime.now(),
-        updateDate: DateTime.now(),
-        exerciseList: [],
-        totalTime: "0",
-        totalVolume: 5);
+      name: "",
+      createDate: DateTime.now(),
+      updateDate: DateTime.now(),
+      exerciseList: [],
+    );
     workout = newWorkout;
+    _tmpWorkoutDTO = _workoutDTO;
   }
 }

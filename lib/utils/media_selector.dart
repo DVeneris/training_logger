@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:training_tracker/DTOS/media-item-dto.dart';
 import 'package:training_tracker/models/media_item.dart';
 
 class MediaSelector extends StatefulWidget {
-  final MediaItem? mediaItem;
+  final MediaItemDTO? mediaItem;
   final Future<void> Function() onMediaSelectorPressed;
   const MediaSelector(
       {required this.mediaItem,

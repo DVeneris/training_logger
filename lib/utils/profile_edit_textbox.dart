@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class KawaiiTextbox extends StatefulWidget {
+class ProfileEditTextbox extends StatefulWidget {
   final String? hint;
   final bool? canHideData;
   final bool? hasError;
@@ -12,7 +12,7 @@ class KawaiiTextbox extends StatefulWidget {
 
   final Function(String) onChange;
 
-  const KawaiiTextbox(
+  const ProfileEditTextbox(
       {super.key,
       this.hint,
       this.canHideData,
@@ -23,10 +23,10 @@ class KawaiiTextbox extends StatefulWidget {
       this.maxlines});
 
   @override
-  State<KawaiiTextbox> createState() => _KawaiiTextboxState();
+  State<ProfileEditTextbox> createState() => _ProfileEditTextboxState();
 }
 
-class _KawaiiTextboxState extends State<KawaiiTextbox> {
+class _ProfileEditTextboxState extends State<ProfileEditTextbox> {
   final TextEditingController _kawaiiEditingController =
       TextEditingController();
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/mappers/workout-mapper.dart';
 import 'package:training_tracker/models/enums/enums.dart';
@@ -22,11 +23,10 @@ class WorkoutService {
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,
+        note: workoutDTO.note,
         createDate: DateTime.now(),
         updateDate: DateTime.now(),
-        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
-        totalTime: "0",
-        totalVolume: 0);
+        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList));
 
     var ref = _db.collection('workout');
     var workoutMap = workout.toMap();
@@ -51,21 +51,27 @@ class WorkoutService {
     return list;
   }
 
-  Future<void> createWorkoutHistory(WorkoutDTO workoutDTO) async {
+  Future<void> saveAndCreateWorkoutHistory(
+      WorkoutDTO workoutDTO, String totalTime, int totalVolume) async {
     var user = _authService.getUser();
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,
         createDate: workoutDTO.createDate ?? DateTime.now(),
         updateDate: DateTime.now(),
-        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
-        totalTime: workoutDTO.totalTime,
-        totalVolume: workoutDTO.totalVolume);
+        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList));
 
     var ref = _db.collection('workout').doc(workoutDTO.id);
     var workoutMap = workout.toMap();
     var snapshot = await ref.update(workoutMap);
-    await _historyService.createWorkoutHistory(workoutDTO);
+    await _historyService.createWorkoutHistory(
+        workoutDTO, totalTime, totalVolume);
+  }
+
+  Future<void> createWorkoutHistory(
+      WorkoutDTO workoutDTO, String totalTime, int totalVolume) async {
+    await _historyService.createWorkoutHistory(
+        workoutDTO, totalTime, totalVolume);
   }
 
   Future<void> editWorkout(WorkoutDTO workoutDTO) async {
@@ -73,11 +79,10 @@ class WorkoutService {
     var workout = Workout(
         userId: user!.uid,
         name: workoutDTO.name,
+        note: workoutDTO.note,
         createDate: workoutDTO.createDate ?? DateTime.now(),
         updateDate: DateTime.now(),
-        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
-        totalTime: workoutDTO.totalTime,
-        totalVolume: workoutDTO.totalVolume);
+        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList));
 
     var ref = _db.collection('workout').doc(workoutDTO.id);
     var workoutMap = workout.toMap();

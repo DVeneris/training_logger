@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/providers/exercise_creator_provider.dart';
@@ -199,55 +198,3 @@ class ExerciseSingle extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-// class ExerciseSingle extends StatefulWidget {
-//   final ExerciseDTO exercise;
-//   late final bool canTrain;
-//   final Function() onSelectParam;
-//   final Function()? onExerciseDeletion;
-//   final Function(bool?) onSetChecked;
-//   ExerciseSingle(
-//       {super.key,
-//       required this.exercise,
-//       required this.onSelectParam,
-//       this.onExerciseDeletion,
-//       bool? canTrain,
-//       required this.onSetChecked}) {
-//     this.canTrain = canTrain ?? true;
-//   }
-
-//   @override
-//   State<ExerciseSingle> createState() => _ExerciseSingleState();
-// }
-
-// class _ExerciseSingleState extends State<ExerciseSingle> {
-//   final weightController = TextEditingController();
-//   final repsController = TextEditingController();
-//   @override
-//   void initState() {
-//     super.initState();
-//     repsController.addListener(_printLatestValue);
-//     weightController.addListener(_printLatestValue);
-//   }
-
-//   void _printLatestValue() {
-//     print('Second text field: ${repsController.text}');
-//   }
-
-//   @override
-//   void dispose() {
-//     repsController.dispose();
-//     weightController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }

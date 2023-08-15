@@ -63,13 +63,16 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
           title: const Center(
               child: Text("Create new exercise",
                   style: TextStyle(color: Colors.black))),
+          leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
                 textStyle: const TextStyle(
                   fontSize: 15,
                 ),
                 foregroundColor: Colors.blue),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
             child: const Text("cancel"),
           ),
           actions: [

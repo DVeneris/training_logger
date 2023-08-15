@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/DTOS/workout_history_dto.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/providers/user_provider.dart';
@@ -66,7 +66,7 @@ class HomeCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    workoutHistory.workout.name,
+                    workoutHistory.workoutName,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )
@@ -117,8 +117,7 @@ class HomeCard extends StatelessWidget {
                           DataCell(Text('${workoutHistory.totalVolume} kg')),
                           DataCell(
                             Text(
-                              _calculateTotalSets(
-                                  workoutHistory.workout.exerciseList),
+                              _calculateTotalSets(workoutHistory.exerciseList),
                             ),
                           ),
                         ],
@@ -150,26 +149,24 @@ class HomeCard extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount:
-                      workoutHistory.workout.exerciseList.length.clamp(0, 3),
+                  itemCount: workoutHistory.exerciseList.length.clamp(0, 3),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
                           Text(
-                              "${workoutHistory.workout.exerciseList[index].exercise.currentSets.length} x  "),
+                              "${workoutHistory.exerciseList[index].exercise.currentSets.length} x  "),
                           const SizedBox(
                             height: 50,
                           ),
-                          workoutHistory.workout.exerciseList[index].exercise
-                                      .mediaItem !=
+                          workoutHistory
+                                      .exerciseList[index].exercise.mediaItem !=
                                   null
                               ? CircleAvatar(
                                   maxRadius: 20,
                                   minRadius: 10,
                                   backgroundImage: NetworkImage(workoutHistory
-                                      .workout
                                       .exerciseList[index]
                                       .exercise
                                       .mediaItem!
@@ -184,7 +181,7 @@ class HomeCard extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(workoutHistory
-                                  .workout.exerciseList[index].exercise.name),
+                                  .exerciseList[index].exercise.name),
                             ),
                           )
                         ],
@@ -192,7 +189,7 @@ class HomeCard extends StatelessWidget {
                     );
                   }),
             ),
-            if (workoutHistory.workout.exerciseList.length >= 3) ...[
+            if (workoutHistory.exerciseList.length >= 3) ...[
               Row(
                 children: [
                   Expanded(
@@ -200,7 +197,7 @@ class HomeCard extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Center(
                         child: Text(
-                          "And ${workoutHistory.workout.exerciseList.length - 3} more excersises",
+                          "And ${workoutHistory.exerciseList.length - 3} more excersises",
                           style: TextStyle(
                             color: Colors.grey.shade600,
                           ),

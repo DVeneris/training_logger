@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
+import 'package:training_tracker/models/exercise_set.dart';
 
 import '../widgets/workout/workout.dart';
 
-class ExerciseOverviewSingle extends StatefulWidget {
+class ExerciseOverviewSingle extends StatelessWidget {
   final ExerciseDTO exercise;
 
   const ExerciseOverviewSingle({
@@ -13,11 +13,6 @@ class ExerciseOverviewSingle extends StatefulWidget {
     required this.exercise,
   });
 
-  @override
-  State<ExerciseOverviewSingle> createState() => _ExerciseOverviewSingleState();
-}
-
-class _ExerciseOverviewSingleState extends State<ExerciseOverviewSingle> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,17 +24,24 @@ class _ExerciseOverviewSingleState extends State<ExerciseOverviewSingle> {
               children: [
                 Row(
                   children: [
-                    // CircleAvatar(
-                    //   maxRadius: 20,
-                    //   minRadius: 10,
-                    //   backgroundImage:
-                    //       AssetImage(widget.exercise.mediaItem.url),
-                    //   backgroundColor: Colors.transparent,
-                    // ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    exercise.mediaItem != null
+                        ? CircleAvatar(
+                            maxRadius: 20,
+                            minRadius: 10,
+                            backgroundImage:
+                                NetworkImage(exercise.mediaItem!.url!))
+                        : const CircleAvatar(
+                            maxRadius: 20,
+                            minRadius: 10,
+                            backgroundImage: AssetImage("assets/no_media.png"),
+                          ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        widget.exercise.name,
+                        exercise.name,
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.normal,
@@ -49,89 +51,74 @@ class _ExerciseOverviewSingleState extends State<ExerciseOverviewSingle> {
                     ),
                   ],
                 ),
-                DataTable(
-                  columns: const <DataColumn>[
-                    DataColumn(
-                      label: Expanded(
-                        child: Text(
-                          'Set',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text(
-                          'Weight',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text(
-                          'Reps',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: widget.exercise.currentSets.map((set) {
-                    return DataRow(
-                      cells: <DataCell>[
-                        DataCell(Text(
-                            "${widget.exercise.currentSets.indexOf(set) + 1}")),
-                        DataCell(Text(set.weight ?? '')),
-                        DataCell(Text(set.reps ?? '')),
-                      ],
-                    );
-                  }).toList(),
-                )
               ],
             ),
           ],
+        ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(flex: 1, child: Text("Set")),
+            Expanded(flex: 1, child: Text("Previous")),
+            Expanded(flex: 2, child: Center(child: Text("Weight"))),
+            Expanded(flex: 2, child: Center(child: Text("Reps"))),
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: exercise.currentSets.length,
+          itemBuilder: (context, index) {
+            var set = exercise.currentSets.isNotEmpty
+                ? exercise.currentSets[index]
+                : ExerciseSet();
+
+            var prevSet = ExerciseSet();
+            if (index < exercise.previousSets.length) {
+              prevSet = exercise.previousSets.isNotEmpty
+                  ? exercise.previousSets[index]
+                  : ExerciseSet();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text("${exercise.currentSets.indexOf(set) + 1}")),
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                      child: prevSet.reps != null || prevSet.weight != null
+                          ? Text('${prevSet.weight} x ${prevSet.reps}')
+                          : const Text('-'),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Text(set.weight ?? "")),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Text(set.reps ?? "")),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
   }
 }
-// Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: const [
-//             Expanded(flex: 1, child: Text("Set")),
-//             Expanded(flex: 2, child: Center(child: Text("Weight"))),
-//             Expanded(flex: 2, child: Center(child: Text("Reps"))),
-//           ],
-//         ),
-//         ListView.builder(
-//           shrinkWrap: true,
-//           scrollDirection: Axis.vertical,
-//           physics: const NeverScrollableScrollPhysics(),
-//           itemCount: widget.exercise.sets.length,
-//           itemBuilder: (context, index) {
-//             var set = widget.exercise.sets[index];
-//             return Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Expanded(
-//                       flex: 1,
-//                       child: Text("${widget.exercise.sets.indexOf(set) + 1}")),
-//                   Expanded(
-//                     flex: 2,
-//                     child: Padding(
-//                         padding: const EdgeInsets.only(right: 4.0),
-//                         child: Text(set.weight ?? '')),
-//                   ),
-//                   Expanded(
-//                     flex: 2,
-//                     child: Padding(
-//                         padding: const EdgeInsets.only(right: 4.0),
-//                         child: Text(set.reps ?? '')),
-//                   ),
-//                 ],
-//               ),
-//             );
-//           },
-//         ),

@@ -6,8 +6,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
@@ -29,8 +29,6 @@ class SingleWorkout extends StatefulWidget {
 class _SingleWorkoutState extends State<SingleWorkout> {
   @override
   Widget build(BuildContext context) {
-    final workoutHistoryProvider = Provider.of<WorkoutHistoryProvider>(context);
-
     final provider = Provider.of<WorkoutProvider>(context);
     final workout = provider.workout;
     return WillPopScope(
@@ -50,6 +48,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                 ),
                 TextButton(
                   onPressed: () {
+                    provider.resetWorkout();
                     provider.stopWorkoutTimer();
                     Navigator.pop(context, true);
                   },
@@ -68,6 +67,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           title: Center(
               child: Text(workout!.name,
                   style: const TextStyle(color: Colors.black))),
+          leadingWidth: 60,
           leading: TextButton(
             style: TextButton.styleFrom(
                 textStyle: const TextStyle(
@@ -76,6 +76,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                 foregroundColor: Colors.blue),
             onPressed: () {
               showDialog(
+                  useRootNavigator: false,
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
@@ -90,8 +91,11 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                         ),
                         TextButton(
                           onPressed: () {
+                            provider.resetWorkout();
+
                             provider.stopWorkoutTimer();
                             Navigator.of(context).pop(true);
+                            Navigator.of(context).pop();
                           },
                           child: const Text('Yes, cancel!'),
                         ),
@@ -99,7 +103,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                     );
                   });
             },
-            child: const Text("cancel"),
+            child: const Text("Cancel"),
           ),
           actions: [
             Padding(
@@ -111,12 +115,45 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                     ),
                     foregroundColor: Colors.blue),
                 onPressed: () async {
-                  provider.stopWorkoutTimer();
-                  workout.totalTime = provider.workoutTime.toString();
-                  workout.totalVolume = provider.totalWeight;
-                  await provider.createWorkoutHistory(() {
-                    Navigator.of(context).pop(); //do sth
-                  });
+                  showDialog(
+                      useRootNavigator: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Save workout'),
+                          content: const Text(
+                              'Do you want to save your progress or keep the old one?'),
+                          actionsAlignment: MainAxisAlignment.spaceBetween,
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                provider.stopWorkoutTimer();
+                                await provider.createWorkoutHistory(() {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                              child: const Text('No, keep the old'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                provider.stopWorkoutTimer();
+                                await provider.saveAndCreateWorkoutHistory(() {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                              child: const Text('Yes, Save'),
+                            ),
+                          ],
+                        );
+                      });
                 },
                 child: const Text("Finish"),
               ),
@@ -142,7 +179,10 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                             itemBuilder: (context, index) {
                               List<Widget> result = [];
                               if (index == 0) {
-                                var addToStart = [const WorkoutStats()];
+                                var addToStart = [
+                                  const WorkoutStats(),
+                                  Text(provider.workout!.note)
+                                ];
                                 result.addAll(addToStart);
                               }
                               var addToBody = [
@@ -284,43 +324,54 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 60.0),
                     child: Container(
-                      color: Color.fromARGB(255, 182, 182, 182),
+                      color: const Color.fromARGB(255, 164, 204, 241),
                       height: 100,
-                      child: Row(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  TextButton(
-                                    child: const Text("- 15"),
-                                    onPressed: () {
-                                      var time = provider.remainingTime - 15;
-                                      if (time <= 0) {
-                                        provider.isRunning = false;
-                                        provider.stopTimer();
-                                      } else {
-                                        provider.remainingTime = time;
-                                      }
-                                    },
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                TextButton(
+                                  child: const Text(
+                                    "- 15",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  Selector<WorkoutProvider, int>(
-                                    selector: (_, service) =>
-                                        service.remainingTime,
-                                    builder: (context, time, child) {
-                                      return Text(time.toString());
-                                    },
-                                    shouldRebuild: (previous, next) => true,
-                                  ),
-                                  TextButton(
-                                    child: const Text("+ 15"),
-                                    onPressed: () {
-                                      provider.remainingTime += 15;
-                                    },
-                                  ),
-                                ],
-                              )
-                            ],
+                                  onPressed: () {
+                                    var time = provider.remainingTime - 15;
+                                    if (time <= 0) {
+                                      provider.isRunning = false;
+                                      provider.stopTimer();
+                                    } else {
+                                      provider.remainingTime = time;
+                                    }
+                                  },
+                                ),
+                                Selector<WorkoutProvider, int>(
+                                  selector: (_, service) =>
+                                      service.remainingTime,
+                                  builder: (context, time, child) {
+                                    return Text(time.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ));
+                                  },
+                                  shouldRebuild: (previous, next) => true,
+                                ),
+                                TextButton(
+                                  child: const Text("+ 15",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      )),
+                                  onPressed: () {
+                                    provider.remainingTime += 15;
+                                  },
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/enums/enums.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/providers/exercise_list_provider.dart';
@@ -39,6 +38,7 @@ class SingleWorkoutCreator extends StatelessWidget {
                     style: TextStyle(color: Colors.black))
                 : const Text("Edit workout",
                     style: TextStyle(color: Colors.black))),
+        leadingWidth: 60,
         leading: TextButton(
           style: TextButton.styleFrom(
               textStyle: const TextStyle(
@@ -46,7 +46,31 @@ class SingleWorkoutCreator extends StatelessWidget {
               ),
               foregroundColor: Colors.blue),
           onPressed: () {
-            Navigator.of(context).pop();
+            showDialog(
+                useRootNavigator: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Do you want to cancel workout?'),
+                    actionsAlignment: MainAxisAlignment.spaceBetween,
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                        child: const Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          provider.resetWorkout();
+                          Navigator.of(context).pop(true);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Yes, cancel!'),
+                      ),
+                    ],
+                  );
+                });
           },
           child: const Text("cancel"),
         ),
@@ -72,6 +96,7 @@ class SingleWorkoutCreator extends StatelessWidget {
                           TextButton(
                             child: const Text('OK'),
                             onPressed: () {
+                              provider.resetWorkout();
                               Navigator.of(context).pop(); // Close the dialog
                             },
                           ),
@@ -96,76 +121,119 @@ class SingleWorkoutCreator extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GestureDetector(
-          //close keyboard on outside tap
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text("Workout Name"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  initialValue: workout.name,
-                  onChanged: (value) {
-                    workout.name = value;
-                  },
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: workout.exerciseList.length,
-                  itemBuilder: (context, index) {
-                    return ExerciseSingle(
-                      exercise: workout.exerciseList[index].exercise,
-                      onExerciseDeletion: () {
-                        provider.deteteExercise(workout.exerciseList[index]);
-                      },
-                      onAddExerciseSet: () {
-                        provider.addExerciseSet(workout.exerciseList[index]);
-                      },
-                      onExerciseSetDeletion: (int setIndex) {
-                        provider.removeExerciseSetAtIndex(
-                            workout.exerciseList[index], setIndex);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('item dismissed')));
-                      },
-                    );
-                  },
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+      body: WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Do you want to cancel workout?'),
+                actionsAlignment: MainAxisAlignment.spaceBetween,
+                actions: [
                   TextButton(
-                    onPressed: () async {
-                      Provider.of<ExerciseListProvider>(context, listen: false)
-                          .calledByCreator = true;
-                      await Navigator.of(context)
-                              .pushNamed(RouteGenerator.exerciseList)
-                          as ExerciseDTO?;
+                    onPressed: () {
+                      Navigator.pop(context, false);
                     },
-                    child: const Text(
-                      "Add Exercise",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                      ),
-                    ),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      provider.resetWorkout();
+                      Navigator.pop(context, true);
+                    },
+                    child: const Text('Yes, cancel!'),
                   ),
                 ],
-              ),
-            ],
+              );
+            },
+          );
+          return shouldPop!;
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text("Workout Name"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TextFormField(
+                    initialValue: workout.name,
+                    onChanged: (value) {
+                      workout.name = value;
+                    },
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text("Workout notes"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: TextFormField(
+                    maxLines: 2,
+                    initialValue: workout.note,
+                    onChanged: (value) {
+                      workout.note = value;
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: workout.exerciseList.length,
+                    itemBuilder: (context, index) {
+                      return ExerciseSingle(
+                        exercise: workout.exerciseList[index].exercise,
+                        onExerciseDeletion: () {
+                          provider.deteteExercise(workout.exerciseList[index]);
+                        },
+                        onAddExerciseSet: () {
+                          provider.addExerciseSet(workout.exerciseList[index]);
+                        },
+                        onExerciseSetDeletion: (int setIndex) {
+                          provider.removeExerciseSetAtIndex(
+                              workout.exerciseList[index], setIndex);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('item dismissed')));
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        Provider.of<ExerciseListProvider>(context,
+                                listen: false)
+                            .calledByCreator = true;
+                        await Navigator.of(context)
+                                .pushNamed(RouteGenerator.exerciseList)
+                            as ExerciseDTO?;
+                      },
+                      child: const Text(
+                        "Add Exercise",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -15,6 +15,7 @@ enum Equipment {
   barbell,
   dumbell,
   ketbell,
+  mashine,
 }
 
 enum WeightUnit { kg, lbs }

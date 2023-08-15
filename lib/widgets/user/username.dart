@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/user-service.dart';
-import 'package:training_tracker/utils/kawaii_textbox.dart';
+import 'package:training_tracker/utils/profile_edit_textbox.dart';
 
 class UserNameGetter extends StatefulWidget {
   const UserNameGetter({super.key});
@@ -22,7 +22,7 @@ class _UserNameGetterState extends State<UserNameGetter> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 50.0),
-            child: KawaiiTextbox(
+            child: ProfileEditTextbox(
               hint: "User Name",
               hasError: context.watch<UserProvider>().userExists == false,
               errorMessage: "This username already exists",

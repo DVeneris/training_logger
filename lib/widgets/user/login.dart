@@ -6,7 +6,7 @@ import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/routes.dart';
 import 'package:training_tracker/services/auth.dart';
 
-import '../../utils/kawaii_textbox.dart';
+import '../../utils/profile_edit_textbox.dart';
 import '../../utils/social_tile.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,10 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: TextButton(
                 onPressed: () async {
-                  // await _authService.anonLogin();
                   await provider.anonLoginUser();
-                  // Navigator.of(context)
-                  //     .pushNamed(RouteGenerator.usernameGetter);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(15),
@@ -65,26 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 20,
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     const Text("Not a member? "),
-            //     TextButton(
-            //       onPressed: () {
-            //         Navigator.of(context).pushNamed(
-            //           RouteGenerator.register,
-            //         );
-            //       },
-            //       child: const Text(
-            //         "Register now!",
-            //         style: TextStyle(
-            //             color: Colors.blue, fontWeight: FontWeight.bold),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Expanded(
                   child: Divider(
                     thickness: 0.5,
@@ -103,21 +82,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              // SocialTile(
-              //   assetUrl: "assets/facebook-logo.png",
-              // ),
-              // SizedBox(
-              //   width: 20,
-              // ),
-              SocialTile(
-                onClickFunction: AuthService().googleLogin,
-                assetUrl: "assets/google_logo.png",
-              ),
-            ]),
+            // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            // SocialTile(
+            //   assetUrl: "assets/facebook-logo.png",
+            // ),
+            // SizedBox(
+            //   width: 20,
+            // ),
+            // SocialTile(
+            //   onClickFunction: AuthService().googleLogin,
+            //   assetUrl: "assets/google_logo.png",
+            // ),
+            // ]),
           ]),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:training_tracker/DTOS/media-item-dto.dart';
 import 'package:training_tracker/models/media_item.dart';
 
 class UserProfileDTO {
@@ -5,7 +6,7 @@ class UserProfileDTO {
   String? description;
   String? link;
   String? userName;
-  MediaItem? mediaItem;
+  MediaItemDTO? mediaItem;
 
   // final MediaItem? mediaItemId;
   UserProfileDTO(

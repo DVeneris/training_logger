@@ -11,7 +11,7 @@ import 'package:training_tracker/services/file_storage_service.dart';
 import 'package:training_tracker/services/user-service.dart';
 import 'package:training_tracker/utils/media_selector.dart';
 
-import '../../utils/kawaii_textbox.dart';
+import '../../utils/profile_edit_textbox.dart';
 
 class ProfileEdit extends StatefulWidget {
   const ProfileEdit({super.key});
@@ -75,32 +75,41 @@ class _ProfileEditState extends State<ProfileEdit> {
                   height: 20,
                 ),
                 const Text("Name"),
-                KawaiiTextbox(
-                  initialValue: provider.userProfile.name,
-                  onChange: (change) {
-                    provider.userProfile.name = change;
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ProfileEditTextbox(
+                    initialValue: provider.userProfile.name,
+                    onChange: (change) {
+                      provider.userProfile.name = change;
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 const Text("Link"),
-                KawaiiTextbox(
-                  initialValue: provider.userProfile.link,
-                  onChange: (change) {
-                    provider.userProfile.link = change;
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ProfileEditTextbox(
+                    initialValue: provider.userProfile.link,
+                    onChange: (change) {
+                      provider.userProfile.link = change;
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 const Text("Description"),
-                KawaiiTextbox(
-                  maxlines: 3,
-                  initialValue: provider.user.description,
-                  onChange: (change) {
-                    provider.userProfile.description = change;
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ProfileEditTextbox(
+                    maxlines: 3,
+                    initialValue: provider.user.description,
+                    onChange: (change) {
+                      provider.userProfile.description = change;
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 10,

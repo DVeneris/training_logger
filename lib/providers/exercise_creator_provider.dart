@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/media-item-dto.dart';
 import 'package:training_tracker/models/media_item.dart';
 import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/exercise_service.dart';
@@ -32,7 +33,7 @@ class ExerciseCreatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setMediaItem(MediaItem mediaItem) {
+  void setMediaItem(MediaItemDTO mediaItem) {
     _exerciseDTO.mediaItem = mediaItem;
     notifyListeners();
   }

@@ -1,6 +1,5 @@
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/enums/enums.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 
@@ -12,8 +11,6 @@ class Workout {
   final DateTime createDate;
   final DateTime updateDate;
   final List<ExerciseOptions> exerciseList;
-  final String totalTime;
-  final int totalVolume;
 
   Workout({
     this.id,
@@ -23,8 +20,6 @@ class Workout {
     required this.createDate,
     required this.updateDate,
     required this.exerciseList,
-    required this.totalTime,
-    required this.totalVolume,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,8 +31,6 @@ class Workout {
       'createDate': createDate.toIso8601String(),
       'updateDate': updateDate.toIso8601String(),
       'exerciseList': exerciseList.map((exercise) => exercise.toMap()).toList(),
-      'totalTime': totalTime,
-      'totalVolume': totalVolume,
     };
   }
 
@@ -56,8 +49,6 @@ class Workout {
       exerciseList: List<dynamic>.from(json['exerciseList'])
           .map((exerciseJson) => ExerciseOptions.fromJson(exerciseJson))
           .toList(),
-      totalTime: json['totalTime'],
-      totalVolume: json['totalVolume'],
     );
   }
 }

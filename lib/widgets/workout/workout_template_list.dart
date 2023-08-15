@@ -4,7 +4,6 @@ import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/main.dart';
 import 'package:training_tracker/models/enums/enums.dart';
-import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
@@ -15,6 +14,7 @@ import 'package:training_tracker/services/auth.dart';
 import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/utils/routine_list_card.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../routes.dart';
 
@@ -37,7 +37,12 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
         future: workoutListrovider.getWorkoutList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.blue,
+                size: 100,
+              ),
+            );
           } else if (snapshot.hasError) {
             return const Text(
               'error in snapshot',
@@ -88,22 +93,35 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                           )
                         ],
                       ),
-                      Expanded(
-                        child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              return RoutineListCard(
-                                workout: list[index],
-                                onDelete: () async {
-                                  await workoutListrovider
-                                      .getWorkoutListAndNotify();
-                                },
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return const Divider();
-                            },
-                            itemCount: list.length),
-                      )
+                      list.isEmpty
+                          ? const Center(
+                              child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Text(
+                                "We couldn't find any workouts. Please create a new workout and and start your progress now.",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ))
+                          : Expanded(
+                              child: ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    return RoutineListCard(
+                                      workout: list[index],
+                                      onDelete: () async {
+                                        await workoutListrovider
+                                            .getWorkoutListAndNotify();
+                                      },
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return const Divider();
+                                  },
+                                  itemCount: list.length),
+                            )
                     ]),
                   );
                 },

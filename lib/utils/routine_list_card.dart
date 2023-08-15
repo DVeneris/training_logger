@@ -86,7 +86,7 @@ class RoutineListCard extends StatelessWidget {
                               if (option == PopUpOptions.edit) {
                                 workoutCreatorProvider.operationMode =
                                     WorkoutCreatorOperationMode.edit;
-                                workoutCreatorProvider.workout = workout;
+                                workoutCreatorProvider.initWorkout(workout);
                                 Navigator.of(context)
                                     .pushNamed(RouteGenerator.workoutCreator);
                               }
