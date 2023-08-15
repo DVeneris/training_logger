@@ -28,7 +28,7 @@ class _WorkoutOverViewState extends State<WorkoutOverView> {
         backgroundColor: Colors.white,
         elevation: 2,
         title: Center(
-            child: Text(workout.name,
+            child: Text(workout!.name,
                 style: const TextStyle(color: Colors.black))),
         leading: TextButton(
           style: TextButton.styleFrom(

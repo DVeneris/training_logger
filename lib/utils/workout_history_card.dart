@@ -8,18 +8,13 @@ import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/providers/user_provider.dart';
 import 'package:training_tracker/widgets/workout/workout.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../routes.dart';
 
 class HomeCard extends StatelessWidget {
   final WorkoutHistoryDTO workoutHistory;
-  HomeCard({super.key, required this.workoutHistory}) {
-    // int totalSets = 0;
-
-    // for (var exercise in workoutHistory.workout.exerciseList) {
-    //   totalSets += exercise.exercise.currentSets.length;
-    // }
-  }
+  const HomeCard({super.key, required this.workoutHistory});
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -31,7 +26,7 @@ class HomeCard extends StatelessWidget {
         right: 10.0,
       ),
       child: Card(
-        color: Color.fromARGB(255, 206, 229, 250),
+        color: const Color.fromARGB(255, 206, 229, 250),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: [
@@ -56,10 +51,11 @@ class HomeCard extends StatelessWidget {
                         userProvider.user.userName,
                         textAlign: TextAlign.left,
                       ),
-                      Text(
-                        "333 days ago",
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
+                      if (workoutHistory.workoutDate != null)
+                        Text(
+                          timeago.format(workoutHistory.workoutDate!),
+                          style: TextStyle(color: Colors.grey.shade600),
+                        )
                     ],
                   ),
                 )
@@ -68,10 +64,10 @@ class HomeCard extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
                     workoutHistory.workout.name,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )
               ],
@@ -83,7 +79,6 @@ class HomeCard extends StatelessWidget {
                 Expanded(
                   child: DataTable(
                     dividerThickness: 0,
-                    // dataRowHeight: 25,
                     headingRowHeight: 25,
                     dataTextStyle: TextStyle(
                       fontStyle: FontStyle.italic,

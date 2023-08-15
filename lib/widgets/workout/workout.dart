@@ -11,6 +11,7 @@ import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
+import 'package:training_tracker/providers/workout_history_provider.dart';
 import 'package:training_tracker/providers/workout_provider.dart';
 import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/utils/workout_stats.dart';
@@ -28,6 +29,8 @@ class SingleWorkout extends StatefulWidget {
 class _SingleWorkoutState extends State<SingleWorkout> {
   @override
   Widget build(BuildContext context) {
+    final workoutHistoryProvider = Provider.of<WorkoutHistoryProvider>(context);
+
     final provider = Provider.of<WorkoutProvider>(context);
     final workout = provider.workout;
     return WillPopScope(
@@ -63,7 +66,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           backgroundColor: Colors.white,
           elevation: 2,
           title: Center(
-              child: Text(workout.name, style: TextStyle(color: Colors.black))),
+              child: Text(workout!.name,
+                  style: const TextStyle(color: Colors.black))),
           leading: TextButton(
             style: TextButton.styleFrom(
                 textStyle: const TextStyle(
@@ -110,8 +114,9 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                   provider.stopWorkoutTimer();
                   workout.totalTime = provider.workoutTime.toString();
                   workout.totalVolume = provider.totalWeight;
-                  await WorkoutService().updateWorkout(workout);
-                  Navigator.of(context).pop(); //do sth
+                  await provider.createWorkoutHistory(() {
+                    Navigator.of(context).pop(); //do sth
+                  });
                 },
                 child: const Text("Finish"),
               ),

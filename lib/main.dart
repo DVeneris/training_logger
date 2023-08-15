@@ -38,7 +38,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => WorkoutProvider(),
+          create: (_) => WorkoutProvider(WorkoutService()),
         ),
         ChangeNotifierProvider(
           create: (_) => ExerciseCreatorProvider(ExerciseService()),
@@ -47,12 +47,7 @@ void main() async {
           create: (_) => ExerciseListProvider(AuthService(), ExerciseService()),
         ),
         ChangeNotifierProvider(
-          create: (_) =>
-              WorkoutCreatorProvider(AuthService(), WorkoutService()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) =>
-              WorkoutCreatorProvider(AuthService(), WorkoutService()),
+          create: (_) => WorkoutCreatorProvider(WorkoutService()),
         ),
         ChangeNotifierProvider(
           create: (_) =>

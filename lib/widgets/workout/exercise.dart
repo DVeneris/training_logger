@@ -68,8 +68,9 @@ class ExerciseSingle extends StatelessWidget {
               ],
             ),
             CustomPopupMenuButton(
+              operation: PopupOperationOptions.delete,
               onItemSelection: ((option) {
-                if (option == Options.delete) {
+                if (option == PopUpOptions.delete) {
                   onExerciseDeletion();
                 }
               }),
@@ -108,11 +109,7 @@ class ExerciseSingle extends StatelessWidget {
               child: Dismissible(
                 key: Key("${exercise.id}-index-$index"),
                 onDismissed: (direction) {
-                  // Remove the item from the data source.
-                  // setState(() {
                   onExerciseSetDeletion(index);
-                  // });
-                  // Then show a snackbar.
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

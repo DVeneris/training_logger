@@ -34,7 +34,7 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
     final workoutListrovider =
         Provider.of<WorkoutTemplateListProvider>(context, listen: false);
     return FutureBuilder<List<WorkoutDTO>>(
-        future: workoutListrovider.getWorkoutList(), //na ginei me DI
+        future: workoutListrovider.getWorkoutList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -44,7 +44,6 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
               textDirection: TextDirection.ltr,
             );
           } else if (snapshot.hasData) {
-            // var workoutList = snapshot.data!;
             final workoutProvider = Provider.of<WorkoutProvider>(context);
             workoutProvider.workoutList = snapshot.data;
             return Scaffold(
@@ -80,7 +79,8 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                             icon: const Icon(Icons.add),
                             onPressed: (() {
                               workoutCreatorProvider.pushWorkout();
-
+                              workoutCreatorProvider.operationMode =
+                                  WorkoutCreatorOperationMode.create;
                               Navigator.of(context).pushNamed(
                                 RouteGenerator.workoutCreator,
                               );
@@ -91,7 +91,13 @@ class _WorkoutTemplateListState extends State<WorkoutTemplateList> {
                       Expanded(
                         child: ListView.separated(
                             itemBuilder: (context, index) {
-                              return RoutineListCard(workout: list[index]);
+                              return RoutineListCard(
+                                workout: list[index],
+                                onDelete: () async {
+                                  await workoutListrovider
+                                      .getWorkoutListAndNotify();
+                                },
+                              );
                             },
                             separatorBuilder: (context, index) {
                               return const Divider();

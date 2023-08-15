@@ -5,8 +5,8 @@ import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 
 class Workout {
-  String? id;
-  final String userId;
+  final String? id;
+  final String? userId;
   final String name;
   final String? note;
   final DateTime createDate;
@@ -17,7 +17,7 @@ class Workout {
 
   Workout({
     this.id,
-    required this.userId,
+    this.userId,
     required this.name,
     this.note,
     required this.createDate,

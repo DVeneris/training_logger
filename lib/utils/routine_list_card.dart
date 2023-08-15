@@ -3,16 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
+import 'package:training_tracker/providers/workout_creator_provider.dart';
 import 'package:training_tracker/providers/workout_provider.dart';
+import 'package:training_tracker/providers/workout_template_list_provider.dart';
 import 'package:training_tracker/routes.dart';
+import 'package:training_tracker/utils/popupMenuButton.dart';
+import 'package:training_tracker/widgets/workout/workout_template_list.dart';
 
 class RoutineListCard extends StatelessWidget {
   final WorkoutDTO workout;
-  const RoutineListCard({super.key, required this.workout});
+  final Function onDelete;
+
+  const RoutineListCard(
+      {super.key, required this.workout, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<WorkoutProvider>(context, listen: false);
+    final workoutProvider =
+        Provider.of<WorkoutProvider>(context, listen: false);
+    final workoutCreatorProvider = Provider.of<WorkoutCreatorProvider>(context);
+
     return ConstrainedBox(
       constraints: const BoxConstraints(
         minHeight: 120,
@@ -21,7 +32,7 @@ class RoutineListCard extends StatelessWidget {
       child: Card(
         color: const Color.fromARGB(255, 235, 240, 249),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -38,7 +49,49 @@ class RoutineListCard extends StatelessWidget {
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                          const Icon(Icons.more_horiz)
+                          CustomPopupMenuButton(
+                            operation: PopupOperationOptions.both,
+                            onItemSelection: ((option) {
+                              if (option == PopUpOptions.delete) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Delete Workout'),
+                                      content: const Text(
+                                          'Are you sure you want to delete this wrkout?'),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('Yes, Delete'),
+                                          onPressed: () async {
+                                            workoutProvider.workout = workout;
+                                            await workoutProvider
+                                                .deleteWorkout(() async {
+                                              onDelete();
+                                              Navigator.of(context).pop(true);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                              if (option == PopUpOptions.edit) {
+                                workoutCreatorProvider.operationMode =
+                                    WorkoutCreatorOperationMode.edit;
+                                workoutCreatorProvider.workout = workout;
+                                Navigator.of(context)
+                                    .pushNamed(RouteGenerator.workoutCreator);
+                              }
+                            }),
+                          )
                         ],
                       ),
                     ),
@@ -90,8 +143,8 @@ class RoutineListCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    provider.workout = workout;
-                    provider.startWorkoutTimer();
+                    workoutProvider.initWorkout(workout);
+
                     Navigator.of(context)
                         .pushNamed(RouteGenerator.singleWorkout);
                   },

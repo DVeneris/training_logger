@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise_complete.dart';
 import 'package:training_tracker/models/exercise.dart';
 import 'package:training_tracker/models/workout.dart';
@@ -18,28 +19,8 @@ import 'package:training_tracker/widgets/workout/workout.dart';
 import '../../routes.dart';
 import 'exercise.dart';
 
-class SingleWorkoutCreator extends StatefulWidget {
+class SingleWorkoutCreator extends StatelessWidget {
   const SingleWorkoutCreator({super.key});
-
-  @override
-  State<SingleWorkoutCreator> createState() => _SingleWorkoutCreatorState();
-}
-
-class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
-  // var workout = WorkoutDTO(
-  //     userId: AuthService().getUser()!.uid, //na ginei me DI
-  //     name: "",
-  //     createDate: DateTime.now(),
-  //     updateDate: DateTime.now(),
-  //     exerciseList: [],
-  //     totalTime: "0",
-  //     totalVolume: 5);
-  final TextEditingController _workoutNameController = TextEditingController();
-  @override
-  void dispose() {
-    super.dispose();
-    _workoutNameController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +33,12 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
-        title: const Center(
-            child:
-                Text("Create workout", style: TextStyle(color: Colors.black))),
+        title: Center(
+            child: provider.operationMode == WorkoutCreatorOperationMode.create
+                ? const Text("Create workout",
+                    style: TextStyle(color: Colors.black))
+                : const Text("Edit workout",
+                    style: TextStyle(color: Colors.black))),
         leading: TextButton(
           style: TextButton.styleFrom(
               textStyle: const TextStyle(
@@ -97,10 +81,15 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
                   );
                   return;
                 }
-                await provider.createWorkout(() {
-                  workoutListProvider.addToList(workout);
-                  Navigator.of(context).pop();
-                });
+                provider.operationMode == WorkoutCreatorOperationMode.create
+                    ? await provider.createWorkout(() {
+                        workoutListProvider.addToList(provider.workout);
+                        Navigator.of(context).pop();
+                      })
+                    : await provider.updateWorkout(() {
+                        workoutListProvider.getWorkoutList();
+                        Navigator.of(context).pop();
+                      });
               },
               child: const Text("Save"),
             ),
@@ -121,12 +110,12 @@ class _SingleWorkoutCreatorState extends State<SingleWorkoutCreator> {
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text("Routune Name"),
+                child: Text("Workout Name"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _workoutNameController,
+                child: TextFormField(
+                  initialValue: workout.name,
                   onChanged: (value) {
                     workout.name = value;
                   },

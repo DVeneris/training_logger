@@ -18,3 +18,5 @@ enum Equipment {
 }
 
 enum WeightUnit { kg, lbs }
+
+enum WorkoutCreatorOperationMode { edit, create }

@@ -4,7 +4,7 @@ import 'package:training_tracker/models/workout.dart';
 
 class WorkoutDTO {
   String? id;
-  String userId;
+  String? userId;
   String name;
   String note;
   DateTime? createDate;
@@ -15,7 +15,7 @@ class WorkoutDTO {
 
   WorkoutDTO({
     this.id,
-    required this.userId,
+    this.userId,
     this.name = "",
     this.note = "",
     this.createDate,

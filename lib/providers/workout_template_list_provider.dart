@@ -27,8 +27,14 @@ class WorkoutTemplateListProvider with ChangeNotifier {
   Future<List<WorkoutDTO>> getWorkoutList() async {
     final user = _authService.getUser();
     final wList = await _workoutService.getWorkoutList(userId: user!.uid);
-    workoutList = wList;
+    _workoutList = wList;
     return wList;
+  }
+
+  Future<void> getWorkoutListAndNotify() async {
+    final user = _authService.getUser();
+    final wList = await _workoutService.getWorkoutList(userId: user!.uid);
+    workoutList = wList;
   }
 
   void addToList(WorkoutDTO workoutDTO) {

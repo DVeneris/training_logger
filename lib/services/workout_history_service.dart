@@ -35,19 +35,19 @@ class WorkoutHistoryService {
         await WorkoutService().getWorkoutList(userId: userId, workoutIds: ids);
     var workoutHistoryDtoList = <WorkoutHistoryDTO>[];
     for (var e in workoutHistoryList) {
-      var workoutToAdd = workoutDtoListraw
-          .toList()
-          .where((element) => element.id == e.workoutId)
-          .first;
-      var workoutHistoryDto = WorkoutHistoryDTO(
-          id: e.id,
-          totalTime: e.totalTime,
-          totalVolume: e.totalVolume,
-          userId: e.userId,
-          workoutDate: e.workoutDate,
-          workout: workoutToAdd,
-          exerciseOptions: e.exerciseOptions);
-      workoutHistoryDtoList.add(workoutHistoryDto);
+      // var workoutToAdd = workoutDtoListraw
+      //     .toList()
+      //     .where((element) => element.id == e.workoutId)
+      //     .first;
+      // var workoutHistoryDto = WorkoutHistoryDTO(
+      //     id: e.id,
+      //     totalTime: e.totalTime,
+      //     totalVolume: e.totalVolume,
+      //     userId: e.userId,
+      //     workoutDate: e.workoutDate,
+      //     workout: workoutToAdd,
+      //     exerciseOptions: e.exerciseOptions);
+      // workoutHistoryDtoList.add(workoutHistoryDto);
     }
     return workoutHistoryDtoList;
     // workoutHistoryList.forEach((workout) {

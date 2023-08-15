@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
+import 'package:training_tracker/models/enums/enums.dart';
 import 'package:training_tracker/models/exercise_set.dart';
 import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/services/auth.dart';
@@ -9,11 +10,8 @@ import 'package:training_tracker/services/workout_service.dart';
 
 class WorkoutCreatorProvider with ChangeNotifier {
   late final WorkoutService _workoutService;
-  late final AuthService _authService;
 
-  WorkoutCreatorProvider(
-      AuthService authService, WorkoutService workoutService) {
-    _authService = authService;
+  WorkoutCreatorProvider(WorkoutService workoutService) {
     _workoutService = workoutService;
   }
 
@@ -25,8 +23,20 @@ class WorkoutCreatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  late WorkoutCreatorOperationMode _operationMode;
+  WorkoutCreatorOperationMode get operationMode => _operationMode;
+
+  set operationMode(WorkoutCreatorOperationMode mode) {
+    _operationMode = mode;
+  }
+
   Future<void> createWorkout(VoidCallback onSuccess) async {
-    await _workoutService.createWorkout(workout);
+    _workoutDTO = await _workoutService.createWorkout(workout);
+    onSuccess.call();
+  }
+
+  Future<void> updateWorkout(VoidCallback onSuccess) async {
+    await _workoutService.editWorkout(workout);
     onSuccess.call();
   }
 
@@ -74,7 +84,6 @@ class WorkoutCreatorProvider with ChangeNotifier {
   void pushWorkout() {
     var newWorkout = WorkoutDTO(
         //na ginei allagi
-        userId: _authService.getUser()!.uid,
         name: "",
         createDate: DateTime.now(),
         updateDate: DateTime.now(),

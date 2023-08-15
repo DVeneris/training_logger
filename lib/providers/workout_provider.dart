@@ -5,13 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/models/exercise_set.dart';
+import 'package:training_tracker/services/workout_service.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
 
 class WorkoutProvider with ChangeNotifier {
-  late WorkoutDTO _workoutDTO;
-  WorkoutDTO get workout => _workoutDTO;
+  late final WorkoutService _workoutService;
 
-  set workout(WorkoutDTO newWorkout) {
+  WorkoutProvider(WorkoutService workoutService) {
+    _workoutService = workoutService;
+  }
+
+  late WorkoutDTO? _workoutDTO;
+  WorkoutDTO? get workout => _workoutDTO;
+
+  set workout(WorkoutDTO? newWorkout) {
     _workoutDTO = newWorkout;
     notifyListeners();
   }
@@ -33,13 +40,42 @@ class WorkoutProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void initWorkout(WorkoutDTO newWorkout) {
+    for (var exercise in newWorkout.exerciseList) {
+      for (var set in exercise.exercise.currentSets) {
+        set.isComplete = false;
+      }
+    }
+    _workoutDTO = newWorkout;
+    startWorkoutTimer();
+  }
+
+  Future<void> deleteWorkout(VoidCallback onSuccess) async {
+    if (_workoutDTO == null || _workoutDTO!.id == null) return;
+    await _workoutService.deleteWorkout(_workoutDTO!.id!);
+    onSuccess.call();
+  }
+
+  Future<void> createWorkoutHistory(VoidCallback onSuccess) async {
+    if (_workoutDTO == null) return;
+    _workoutDTO!.exerciseList.map((e) {
+      e.exercise.
+    });
+    await _workoutService.createWorkoutHistory(_workoutDTO!);
+    onSuccess.call();
+  }
+
   void pushExercise(ExerciseOptionsDTO exerciseDTO) {
-    workout.exerciseList.add(exerciseDTO);
+    if (_workoutDTO == null) return;
+
+    workout!.exerciseList.add(exerciseDTO);
     notifyListeners();
   }
 
   void removeExerciseSetAtIndex(ExerciseOptionsDTO exercise, int index) {
-    workout.exerciseList
+    if (_workoutDTO == null) return;
+
+    workout!.exerciseList
         .where((e) => e == exercise)
         .first
         .exercise
@@ -50,7 +86,9 @@ class WorkoutProvider with ChangeNotifier {
 
   void setExerciseSetCheckedAtIndex(
       ExerciseOptionsDTO exercise, int index, bool checked) {
-    workout.exerciseList
+    if (_workoutDTO == null) return;
+
+    workout!.exerciseList
         .where((e) => e == exercise)
         .first
         .exercise
@@ -60,7 +98,9 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   void addExerciseSet(ExerciseOptionsDTO exercise) {
-    var ex = workout.exerciseList
+    if (_workoutDTO == null) return;
+
+    var ex = workout!.exerciseList
         .where((e) => e == exercise)
         .first
         .exercise
@@ -70,13 +110,15 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   void deteteExercise(ExerciseOptionsDTO exerciseDTO) {
-    workout.exerciseList.remove(exerciseDTO);
+    if (_workoutDTO == null) return;
+
+    workout!.exerciseList.remove(exerciseDTO);
     notifyListeners();
   }
 
   int _calculateTotalSetsAndWeight() {
     var totalWeight = 0;
-    for (var e in _workoutDTO.exerciseList) {
+    for (var e in _workoutDTO!.exerciseList) {
       for (var s in e.exercise.currentSets) {
         if (s.isComplete && s.weight != null) {
           var weight = int.tryParse(s.weight!);

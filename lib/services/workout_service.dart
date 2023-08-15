@@ -15,8 +15,9 @@ import '../widgets/workout/workout.dart';
 class WorkoutService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
+  final WorkoutHistoryService _historyService = WorkoutHistoryService();
 
-  Future<void> createWorkout(WorkoutDTO workoutDTO) async {
+  Future<WorkoutDTO> createWorkout(WorkoutDTO workoutDTO) async {
     var user = _authService.getUser();
     var workout = Workout(
         userId: user!.uid,
@@ -30,7 +31,8 @@ class WorkoutService {
     var ref = _db.collection('workout');
     var workoutMap = workout.toMap();
     var snapshot = await ref.add(workoutMap);
-    //return Exercise.fromJson(snapshot. ?? {});
+    var dto = await getWorkout(snapshot.id);
+    return dto;
   }
 
   List<ExerciseOptions> _calculateExerciseOptionList(
@@ -49,7 +51,7 @@ class WorkoutService {
     return list;
   }
 
-  Future<void> updateWorkout(WorkoutDTO workoutDTO) async {
+  Future<void> createWorkoutHistory(WorkoutDTO workoutDTO) async {
     var user = _authService.getUser();
     var workout = Workout(
         userId: user!.uid,
@@ -63,7 +65,35 @@ class WorkoutService {
     var ref = _db.collection('workout').doc(workoutDTO.id);
     var workoutMap = workout.toMap();
     var snapshot = await ref.update(workoutMap);
-    await WorkoutHistoryService().createWorkoutHistory(workoutDTO);
+    await _historyService.createWorkoutHistory(workoutDTO);
+  }
+
+  Future<void> editWorkout(WorkoutDTO workoutDTO) async {
+    var user = _authService.getUser();
+    var workout = Workout(
+        userId: user!.uid,
+        name: workoutDTO.name,
+        createDate: workoutDTO.createDate ?? DateTime.now(),
+        updateDate: DateTime.now(),
+        exerciseList: _calculateExerciseOptionList(workoutDTO.exerciseList),
+        totalTime: workoutDTO.totalTime,
+        totalVolume: workoutDTO.totalVolume);
+
+    var ref = _db.collection('workout').doc(workoutDTO.id);
+    var workoutMap = workout.toMap();
+    var snapshot = await ref.update(workoutMap);
+  }
+
+  Future<WorkoutDTO> getWorkout(String workoutId) async {
+    var ref = _db.collection('workout').doc(workoutId);
+    var snapshot = await ref.get(); //read collection once
+    var workout = Workout.fromJson(snapshot.data() ?? {}, snapshot.id);
+    var exerciseIds = <String>[];
+    exerciseIds.addAll(workout.exerciseList.map((e) => e.exerciseId));
+    var exerciseList =
+        await ExerciseService().getExerciseList(null, exerciseIds);
+    var dto = workout.toWorkoutDTO(exerciseList);
+    return dto;
   }
 
   Future<List<WorkoutDTO>> getWorkoutList(
@@ -99,12 +129,6 @@ class WorkoutService {
   }
 
   Future<void> deleteWorkout(String workoutId) async {
-    await _db.collection("workout").doc("workoutId").delete();
+    await _db.collection("workout").doc(workoutId).delete();
   }
-
-  // Future<ExerciseDTO> getWorkout(String exerciseId) async {
-  //   var ref = _db.collection('exercise').doc(exerciseId);
-  //   var snapshot = await ref.get(); //read collection once
-  //   return Exercise.fromJson(snapshot.data() ?? {}, snapshot.id).toDTO();
-  // }
 }
