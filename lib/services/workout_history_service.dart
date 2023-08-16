@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:training_tracker/DTOS/exercise_dto.dart';
+import 'package:training_tracker/DTOS/exercise_options_dto.dart';
 import 'package:training_tracker/DTOS/workout_dto.dart';
 import 'package:training_tracker/DTOS/workout_history_dto.dart';
 import 'package:training_tracker/mappers/workout_history_mapper.dart';
@@ -35,10 +36,15 @@ class WorkoutHistoryService {
   Future<void> createWorkoutHistory(
       WorkoutDTO workoutDTO, String totalTime, int totalVolume) async {
     var user = _authService.getUser();
-
+    var exerciseList = <ExerciseOptionsDTO>[];
+    for (var ex in workoutDTO.exerciseList) {
+      if (ex.exercise.currentSets.isNotEmpty) {
+        exerciseList.add(ex);
+      }
+    }
     var workoutHistory = WorkoutHistory(
       userId: user!.uid,
-      exerciseList: workoutDTO.exerciseList,
+      exerciseList: exerciseList,
       note: workoutDTO.note,
       totalTime: totalTime,
       totalVolume: totalVolume,
