@@ -31,8 +31,9 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
   Widget build(BuildContext context) {
     final workoutHistoryProvider =
         Provider.of<WorkoutHistoryProvider>(context, listen: false);
-    final workoutProvider = Provider.of<WorkoutProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context);
+    final workoutProvider =
+        Provider.of<WorkoutProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
