@@ -17,10 +17,14 @@ class SimpleExerciseTile extends StatelessWidget {
             height: 50,
           ),
           exercise.mediaItem != null
-              ? CircleAvatar(
-                  maxRadius: 20,
-                  minRadius: 10,
-                  backgroundImage: NetworkImage(exercise.mediaItem!.url!))
+              ? ClipOval(
+                  child: Image.network(
+                    exercise.mediaItem!.url!,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.contain,
+                  ),
+                )
               : const CircleAvatar(
                   maxRadius: 20,
                   minRadius: 10,

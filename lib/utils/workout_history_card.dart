@@ -32,12 +32,12 @@ class HomeCard extends StatelessWidget {
           child: Column(children: [
             Row(
               children: [
-                userProvider.user.mediaItem != null &&
-                        userProvider.user.mediaItem!.url != null
+                userProvider.user!.mediaItem != null &&
+                        userProvider.user!.mediaItem!.url != null
                     ? CircleAvatar(
                         radius: 25,
                         backgroundImage:
-                            NetworkImage(userProvider.user.mediaItem!.url!))
+                            NetworkImage(userProvider.user!.mediaItem!.url!))
                     : const CircleAvatar(
                         radius: 25,
                         backgroundImage: AssetImage("assets/no_media.png"),
@@ -48,7 +48,7 @@ class HomeCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userProvider.user.userName,
+                        userProvider.user!.userName,
                         textAlign: TextAlign.left,
                       ),
                       if (workoutHistory.workoutDate != null)
@@ -149,6 +149,7 @@ class HomeCard extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: workoutHistory.exerciseList.length.clamp(0, 3),
                   itemBuilder: (context, index) {
                     return Padding(
@@ -158,19 +159,19 @@ class HomeCard extends StatelessWidget {
                           Text(
                               "${workoutHistory.exerciseList[index].exercise.currentSets.length} x  "),
                           const SizedBox(
-                            height: 50,
+                            height: 10,
                           ),
                           workoutHistory
                                       .exerciseList[index].exercise.mediaItem !=
                                   null
-                              ? CircleAvatar(
-                                  maxRadius: 20,
-                                  minRadius: 10,
-                                  backgroundImage: NetworkImage(workoutHistory
-                                      .exerciseList[index]
-                                      .exercise
-                                      .mediaItem!
-                                      .url!))
+                              ? ClipOval(
+                                  child: Image.network(
+                                  workoutHistory.exerciseList[index].exercise
+                                      .mediaItem!.url!,
+                                  width: 50,
+                                  height: 40,
+                                  fit: BoxFit.contain,
+                                ))
                               : const CircleAvatar(
                                   maxRadius: 20,
                                   minRadius: 10,
@@ -189,7 +190,7 @@ class HomeCard extends StatelessWidget {
                     );
                   }),
             ),
-            if (workoutHistory.exerciseList.length >= 3) ...[
+            if (workoutHistory.exerciseList.length > 3) ...[
               Row(
                 children: [
                   Expanded(

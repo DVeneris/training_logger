@@ -44,8 +44,8 @@ class WorkoutService {
         note: option.note,
         unit: option.exercise.unit,
         exerciseId: option.exercise.id ?? "",
-        currentSets: option.exercise.currentSets,
-        previousSets: option.exercise.previousSets,
+        currentSets: [],
+        previousSets: option.exercise.currentSets,
       ));
     }
     return list;
@@ -64,6 +64,7 @@ class WorkoutService {
     var ref = _db.collection('workout').doc(workoutDTO.id);
     var workoutMap = workout.toMap();
     var snapshot = await ref.update(workoutMap);
+
     await _historyService.createWorkoutHistory(
         workoutDTO, totalTime, totalVolume);
   }
@@ -135,5 +136,26 @@ class WorkoutService {
 
   Future<void> deleteWorkout(String workoutId) async {
     await _db.collection("workout").doc(workoutId).delete();
+  }
+
+  Future<void> bulkCreate(List<WorkoutDTO> list) async {
+    final ref = _db.collection('workout');
+    WriteBatch batch = _db.batch();
+
+    for (WorkoutDTO dto in list) {
+      final newItem = ref.doc();
+      var user = _authService.getUser();
+      var workout = Workout(
+          userId: user!.uid,
+          name: dto.name,
+          note: dto.note,
+          createDate: DateTime.now(),
+          updateDate: DateTime.now(),
+          exerciseList: _calculateExerciseOptionList(dto.exerciseList));
+
+      var workoutMap = workout.toMap();
+      batch.set(newItem, workoutMap);
+    }
+    batch.commit();
   }
 }

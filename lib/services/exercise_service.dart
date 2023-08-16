@@ -27,6 +27,36 @@ class ExerciseService {
     var snapshot = await _db.collection("exercise").add(exercise.toMap());
   }
 
+  Future<ExerciseDTO> createAndGetExercise(ExerciseDTO exerciseDTO) async {
+    var authUser = _authService.getUser();
+    var exercise = Exercise(
+        userId: authUser!.uid,
+        name: exerciseDTO.name,
+        exerciseGroup: exerciseDTO.exerciseGroup,
+        unit: WeightUnit.kg,
+        currentSets: exerciseDTO.currentSets,
+        previousSets: exerciseDTO.previousSets,
+        mediaItem: getMediaItem(exerciseDTO.mediaItem),
+        equipment: Equipment.none);
+
+    var snapshot = await _db.collection("exercise").add(exercise.toMap());
+    return await getExercise(snapshot.id);
+  }
+
+  Future<void> bulkCreate(List<ExerciseDTO> list) async {
+    final ref = _db.collection('workout');
+    WriteBatch batch = _db.batch();
+
+    for (ExerciseDTO dto in list) {
+      final newItem = ref.doc();
+      var user = _authService.getUser();
+
+      var workoutMap = dto.toMap();
+      batch.set(newItem, workoutMap);
+    }
+    batch.commit();
+  }
+
   MediaItem? getMediaItem(MediaItemDTO? mediaItemDTO) {
     if (mediaItemDTO == null) return null;
     return MediaItem(
@@ -43,21 +73,25 @@ class ExerciseService {
   Future<List<ExerciseDTO>> getExerciseList(
       String? userId, List<String>? exerciseIds) async {
     Query<Map<String, dynamic>> ref;
-    if (exerciseIds != null && exerciseIds.isNotEmpty) {
-      ref = _db
-          .collection('exercise')
-          .where('userId', isEqualTo: userId)
-          .where(FieldPath.documentId, whereIn: exerciseIds);
-    } else {
-      ref = _db.collection('exercise').where('userId', isEqualTo: userId);
+    try {
+      if (exerciseIds != null && exerciseIds.isNotEmpty) {
+        ref = _db
+            .collection('exercise')
+            .where('userId', isEqualTo: userId)
+            .where(FieldPath.documentId, whereIn: exerciseIds);
+      } else {
+        ref = _db.collection('exercise').where('userId', isEqualTo: userId);
+      }
+      var snapshot = await ref.get(); //read collection once
+      Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
+      snapshotList = snapshot.docs.map((s) {
+        return SnapshotObject(id: s.id, data: s.data());
+      });
+      var exercises = snapshotList.map((e) => Exercise.fromJson(e.data, e.id));
+      return exercises.toDTOList();
+    } catch (e) {
+      return [];
     }
-    var snapshot = await ref.get(); //read collection once
-    Iterable<SnapshotObject> snapshotList = <SnapshotObject>[];
-    snapshotList = snapshot.docs.map((s) {
-      return SnapshotObject(id: s.id, data: s.data());
-    });
-    var exercises = snapshotList.map((e) => Exercise.fromJson(e.data, e.id));
-    return exercises.toDTOList();
   }
 
   Future<ExerciseDTO> getExercise(String exerciseId) async {

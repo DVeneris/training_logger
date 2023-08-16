@@ -19,8 +19,8 @@ extension ExerciseOptionsMapping on ExerciseOptionsDTO {
 extension ExerciseOptionsDTOMapping on ExerciseOptions {
   ExerciseOptionsDTO toExerciseOptionsDTO(List<ExerciseDTO> exercises) {
     var exercise = exercises.firstWhere((element) => element.id == exerciseId);
-    exercise.previousSets = previousSets;
-    exercise.currentSets = currentSets;
+    exercise.previousSets = currentSets;
+    exercise.currentSets = [];
     return ExerciseOptionsDTO(
       note: note,
       time: time,
@@ -47,17 +47,20 @@ extension WorkoutMapping on WorkoutDTO {
 
 extension WorkoutDTOMapping on Workout {
   WorkoutDTO toWorkoutDTO(List<ExerciseDTO> exercises) {
-    return WorkoutDTO(
-      id: id,
-      userId: userId,
-      name: name,
-      note: note ?? "",
-      createDate: createDate,
-      updateDate: updateDate,
-      exerciseList: exerciseList
+    var list = <ExerciseOptionsDTO>[];
+    if (exercises.isNotEmpty) {
+      list = exerciseList
           .map((options) => options.toExerciseOptionsDTO(exercises))
-          .toList(),
-    );
+          .toList();
+    }
+    return WorkoutDTO(
+        id: id,
+        userId: userId,
+        name: name,
+        note: note ?? "",
+        createDate: createDate,
+        updateDate: updateDate,
+        exerciseList: list);
   }
 }
 

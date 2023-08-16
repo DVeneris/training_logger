@@ -5,7 +5,6 @@ import 'package:training_tracker/models/workout.dart';
 import 'package:training_tracker/widgets/user/profile_edit.dart';
 import 'package:training_tracker/widgets/user/username.dart';
 import 'package:training_tracker/widgets/workout/exercise_creator.dart';
-import 'package:training_tracker/widgets/user/register.dart';
 import 'package:training_tracker/widgets/user/user_screen.dart';
 import 'package:training_tracker/widgets/workout/exercise_list.dart';
 import 'package:training_tracker/widgets/workout/history_page.dart';

@@ -67,7 +67,7 @@ class _SingleWorkoutState extends State<SingleWorkout> {
           title: Center(
               child: Text(workout!.name,
                   style: const TextStyle(color: Colors.black))),
-          leadingWidth: 60,
+          leadingWidth: 70,
           leading: TextButton(
             style: TextButton.styleFrom(
                 textStyle: const TextStyle(
@@ -121,8 +121,8 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Save workout'),
-                          content: const Text(
-                              'Do you want to save your progress or keep the old one?'),
+                          content:
+                              const Text('Do you want to save your progress?'),
                           actionsAlignment: MainAxisAlignment.spaceBetween,
                           actions: [
                             TextButton(
@@ -131,18 +131,19 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                               },
                               child: const Text('Cancel'),
                             ),
+                            // TextButton(
+                            //   onPressed: () async {
+                            //     provider.stopWorkoutTimer();
+                            //     await provider.createWorkoutHistory(() {
+                            //       Navigator.of(context).pop(true);
+                            //       Navigator.of(context).pop();
+                            //     });
+                            //   },
+                            //   child: const Text('No, keep the old'),
+                            // ),
                             TextButton(
                               onPressed: () async {
-                                provider.stopWorkoutTimer();
-                                await provider.createWorkoutHistory(() {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                });
-                              },
-                              child: const Text('No, keep the old'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
+                                provider.totalWeight = 0;
                                 provider.stopWorkoutTimer();
                                 await provider.saveAndCreateWorkoutHistory(() {
                                   Navigator.of(context).pop(true);

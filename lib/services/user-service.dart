@@ -51,9 +51,10 @@ class UserService {
   Future<UserDTO> getCurrentUser() async {
     var authUser = _authService.getUser();
     if (authUser == null) {
+      AuthService().signOut();
       throw Exception("null user");
     }
-    return getUserByUid(authUser.uid);
+    return getUserByUid(authUser!.uid);
   }
 
   Future<UserDTO> getUserByUid(String uid) async {

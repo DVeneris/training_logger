@@ -24,7 +24,12 @@ class WorkoutHistoryService {
     });
     var workoutHistoryList =
         snapshotList.map((e) => WorkoutHistory.fromJson(e.data, e.id)).toList();
-    return workoutHistoryList.toDtoList();
+    var list = workoutHistoryList.toDtoList();
+    list.sort(
+      (a, b) => a.workoutDate!.compareTo(b.workoutDate!),
+    );
+
+    return list.reversed.toList();
   }
 
   Future<void> createWorkoutHistory(

@@ -44,7 +44,7 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
               bottom: Radius.circular(15),
             ),
           ),
-          title: Text("Welcome ${userProvider.user.userName}")),
+          title: Text("Welcome ${userProvider.user!.userName}")),
       body: FutureBuilder<List<WorkoutHistoryDTO>>(
           future: workoutHistoryProvider.getWorkoutHistoryList(),
           builder: (context, snapshot) {

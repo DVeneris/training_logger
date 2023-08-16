@@ -48,7 +48,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   height: 24,
                   padding: const EdgeInsets.all(2.0),
                   child: const CircularProgressIndicator(
-                    color: Color.fromARGB(255, 128, 8, 8),
+                    color: Colors.blue,
                     strokeWidth: 3,
                   ),
                 ),
@@ -105,7 +105,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   padding: const EdgeInsets.all(4.0),
                   child: ProfileEditTextbox(
                     maxlines: 3,
-                    initialValue: provider.user.description,
+                    initialValue: provider.user!.description,
                     onChange: (change) {
                       provider.userProfile.description = change;
                     },

@@ -124,7 +124,7 @@ class _ExerciseCreatorState extends State<ExerciseCreator> {
                   height: 24,
                   padding: const EdgeInsets.all(2.0),
                   child: const CircularProgressIndicator(
-                    color: Color.fromARGB(255, 128, 8, 8),
+                    color: Colors.blue,
                     strokeWidth: 3,
                   ),
                 ),

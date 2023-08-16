@@ -136,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return FutureBuilder<UserDTO?>(
       future: userProvider.getCurrentUser(),
       builder: (context, snapshot) {
@@ -147,13 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         } else if (snapshot.hasError) {
-          return const Center(
-            child: Text(
-              "error",
-              textDirection: TextDirection.ltr,
-            ),
-          );
+          authProvider.signOut(() {});
+          return const LoginScreen();
         } else if (snapshot.hasData) {
+          if (snapshot.data == null) {
+            Navigator.of(context).pushNamed(RouteGenerator.login);
+          }
           return Scaffold(
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(

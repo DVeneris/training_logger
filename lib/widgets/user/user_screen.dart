@@ -24,18 +24,18 @@ class UserView extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            userProvider.user.mediaItem != null &&
-                    userProvider.user.mediaItem!.url != null
+            userProvider.user!.mediaItem != null &&
+                    userProvider.user!.mediaItem!.url != null
                 ? CircleAvatar(
                     radius: 50,
                     backgroundImage:
-                        NetworkImage(userProvider.user.mediaItem!.url!))
+                        NetworkImage(userProvider.user!.mediaItem!.url!))
                 : const CircleAvatar(
                     radius: 50,
                     backgroundImage: AssetImage("assets/no_media.png"),
                   ),
             Text(
-              userProvider.user.userName,
+              userProvider.user!.userName,
               style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(
@@ -53,10 +53,10 @@ class UserView extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () async {
                       userProvider.userProfile = UserProfileDTO(
-                          description: userProvider.user.description,
-                          link: userProvider.user.link,
-                          name: userProvider.user.name,
-                          mediaItem: userProvider.user.mediaItem);
+                          description: userProvider.user!.description,
+                          link: userProvider.user!.link,
+                          name: userProvider.user!.name,
+                          mediaItem: userProvider.user!.mediaItem);
 
                       await Navigator.of(context)
                           .pushNamed(RouteGenerator.profileEdit);
@@ -88,6 +88,7 @@ class UserView extends StatelessWidget {
                 ),
                 title: GestureDetector(
                   onTap: () async {
+                    userProvider.removeUser();
                     await authProvider.signOut(() {
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil('/', (route) => false);

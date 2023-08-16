@@ -27,7 +27,7 @@ class RoutineListCard extends StatelessWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints(
         minHeight: 120,
-        maxHeight: 180,
+        maxHeight: 210,
       ),
       child: Card(
         color: const Color.fromARGB(255, 235, 240, 249),
@@ -122,9 +122,9 @@ class RoutineListCard extends StatelessWidget {
                               },
                             ),
                           ),
-                          if (workout.exerciseList.length >= 3) ...[
+                          if (workout.exerciseList.length > 3) ...[
                             Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
+                              padding: const EdgeInsets.only(top: 10.0),
                               child: Row(
                                 children: [
                                   Text(
