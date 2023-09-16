@@ -96,6 +96,7 @@ class _MyAppState extends State<MyApp> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               onGenerateTitle: (context) => "Random App",
               onGenerateInitialRoutes: RouteGenerator.generateInitialRoutes,
               onGenerateRoute: RouteGenerator.generateRoute,

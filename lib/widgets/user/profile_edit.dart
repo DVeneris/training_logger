@@ -87,7 +87,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text("Link"),
+                const Text("Last Name"),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ProfileEditTextbox(
@@ -100,7 +100,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text("Description"),
+                const Text("Notes"),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ProfileEditTextbox(

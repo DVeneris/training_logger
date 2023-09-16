@@ -143,11 +143,11 @@ class _SingleWorkoutState extends State<SingleWorkout> {
                             // ),
                             TextButton(
                               onPressed: () async {
-                                provider.totalWeight = 0;
                                 provider.stopWorkoutTimer();
                                 await provider.saveAndCreateWorkoutHistory(() {
                                   Navigator.of(context).pop(true);
                                   Navigator.of(context).pop();
+                                  provider.totalWeight = 0;
                                 });
                               },
                               child: const Text('Yes, Save'),

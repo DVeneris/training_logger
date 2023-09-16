@@ -64,17 +64,17 @@ class ExcerciseList extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center),
               ),
-              actions: [
-                TextButton(
-                  child: const Text("Create"),
-                  onPressed: () async {
-                    Provider.of<ExerciseCreatorProvider>(context, listen: false)
-                        .exercise = ExerciseDTO();
-                    Navigator.of(context)
-                        .pushNamed(RouteGenerator.exerciseCreator);
-                  },
-                )
-              ],
+              // actions: [
+              //   TextButton(
+              //     child: const Text("Create"),
+              //     onPressed: () async {
+              //       Provider.of<ExerciseCreatorProvider>(context, listen: false)
+              //           .exercise = ExerciseDTO();
+              //       Navigator.of(context)
+              //           .pushNamed(RouteGenerator.exerciseCreator);
+              //     },
+              //   )
+              // ],
             ),
             body: Selector<ExerciseListProvider, List<ExerciseDTO>>(
               selector: (_, service) => service.exerciseList,
